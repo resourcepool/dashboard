@@ -3,7 +3,6 @@ package com.excilys.shoofleurs.dashboard.entities;
 
 public abstract class AbstractContent {
 
-
 	private int mId;
 
 	private String mTitle;

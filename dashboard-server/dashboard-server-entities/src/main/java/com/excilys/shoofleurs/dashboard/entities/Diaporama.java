@@ -1,6 +1,7 @@
 package com.excilys.shoofleurs.dashboard.entities;
 
 
+
 import java.time.LocalDateTime;
 
 public class Diaporama {
@@ -12,6 +13,10 @@ public class Diaporama {
 	private LocalDateTime mStartDateTime;
 
 	private LocalDateTime mEndDateTime;
+
+	public Diaporama() {
+
+	}
 
 	public Diaporama(String title, LocalDateTime startDateTime, LocalDateTime endDateTime) {
 		mTitle = title;
