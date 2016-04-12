@@ -57,7 +57,6 @@ public class ContentsAdapter extends RecyclerView.Adapter<ContentsAdapter.ViewHo
             // - replace the contents of the view with that element
             //holder.mTextView.setText(mDataset[position]);
             mDataset.get(position).displayContent(mContext, holder.mLinearLayout);
-            Log.i(getClass().getSimpleName(), "adapter pos "+position);
         }
 
         // Return the size of your dataset (invoked by the layout manager)

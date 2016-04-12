@@ -12,7 +12,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import excilys.dashboardadministrator.R;
 import excilys.dashboardadministrator.adapters.ContentsAdapter;
@@ -36,6 +38,8 @@ public class ContentsFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+
+    private List<Displayable> mDisplayables;
 
     private OnContentsFragmentInteractionListener mListener;
 
@@ -79,7 +83,7 @@ public class ContentsFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_contents, container, false);
-
+        mDisplayables = new ArrayList<>();
         setUpRecyclerView(rootView);
 
         return rootView;
@@ -93,7 +97,7 @@ public class ContentsFragment extends Fragment {
         mRecyclerView.setHasFixedSize(true);
 
         // use a linear layout manager
-        mLayoutManager = new GridLayoutManager(getContext(), 2);
+        mLayoutManager = new GridLayoutManager(getContext(), 3);
         mRecyclerView.setLayoutManager(mLayoutManager);
 
 
@@ -110,9 +114,10 @@ public class ContentsFragment extends Fragment {
         displayables[8] = new ImageDisplayable("https://pbs.twimg.com/profile_images/578893796676612096/biGGRXHl.png");
         displayables[9] = new ImageDisplayable("https://pbs.twimg.com/profile_images/510058837374550017/VmbQIxTG_400x400.png");
 
-        mAdapter = new ContentsAdapter(Arrays.asList(displayables));
-        mRecyclerView.setAdapter(mAdapter);
+        mDisplayables.addAll(Arrays.asList(displayables));
 
+        mAdapter = new ContentsAdapter(mDisplayables);
+        mRecyclerView.setAdapter(mAdapter);
     }
 
 
@@ -133,8 +138,6 @@ public class ContentsFragment extends Fragment {
                     + " must implement OnFragmentInteractionListener");
         }
     }
-
-
 
     @Override
     public void onDetach() {

@@ -9,6 +9,7 @@
     <string name="screen_title">Screens</string>
     <string name="diaporama_title">Diaporamas</string>
     <string name="content_title">Contents</string>
+    <string name="dialog_choose_content_image">Choose image from Gallery</string>
 
     <string-array name="navigationTitles">
         <item>@string/screen_title</item>

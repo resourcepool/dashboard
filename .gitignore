@@ -1,4 +1,25 @@
-*.iml
-.idea
+target/
+
+# Mac
 .DS_STORE
-target
+
+# Package Files #
+*.jar
+*.war
+*.ear
+
+# Intellij project files
+*.iml
+*.ipr
+*.iws
+.idea
+
+# Local configuration file (sdk path, etc)
+local.properties
+
+# Java class files
+*.class
+ 
+# generated files
+bin/
+gen/
