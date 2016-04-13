@@ -3,6 +3,8 @@ package excilys.dashboardadministrator.fragments;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
@@ -18,6 +20,7 @@ import java.util.List;
 
 import excilys.dashboardadministrator.R;
 import excilys.dashboardadministrator.adapters.ContentsAdapter;
+import excilys.dashboardadministrator.dialogs.ChooseContentDialog;
 import excilys.dashboardadministrator.displayables.Displayable;
 import excilys.dashboardadministrator.displayables.ImageDisplayable;
 
@@ -46,6 +49,8 @@ public class ContentsFragment extends Fragment {
     private RecyclerView mRecyclerView;
     private RecyclerView.LayoutManager mLayoutManager;
     private RecyclerView.Adapter mAdapter;
+
+    private FloatingActionButton mAddFloatingActionButton;
 
     public ContentsFragment() {
         // Required empty public constructor
@@ -83,10 +88,22 @@ public class ContentsFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_contents, container, false);
+        setUpAddFloatingActionButton();
         mDisplayables = new ArrayList<>();
         setUpRecyclerView(rootView);
 
         return rootView;
+    }
+
+    private void setUpAddFloatingActionButton() {
+        mAddFloatingActionButton = (FloatingActionButton) getActivity().findViewById(R.id.add_fab);
+        mAddFloatingActionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ChooseContentDialog chooseContentDialog = new ChooseContentDialog();
+                chooseContentDialog.show(getActivity().getSupportFragmentManager(), ChooseContentDialog.class.getSimpleName());
+            }
+        });
     }
 
     private void setUpRecyclerView(View rootView) {
@@ -124,6 +141,7 @@ public class ContentsFragment extends Fragment {
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {
+
             mListener.onContentsFragmentInteraction(uri);
         }
     }
@@ -144,8 +162,6 @@ public class ContentsFragment extends Fragment {
         super.onDetach();
         mListener = null;
     }
-
-
 
     /**
      * This interface must be implemented by activities that contain this
