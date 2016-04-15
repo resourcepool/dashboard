@@ -1,8 +1,13 @@
 package excilys.dashboardadministrator.fragments;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.DocumentsContract;
+import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
@@ -10,6 +15,7 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,6 +29,7 @@ import excilys.dashboardadministrator.adapters.ContentsAdapter;
 import excilys.dashboardadministrator.dialogs.ChooseContentDialog;
 import excilys.dashboardadministrator.displayables.Displayable;
 import excilys.dashboardadministrator.displayables.ImageDisplayable;
+import excilys.dashboardadministrator.utils.Utils;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -48,7 +55,7 @@ public class ContentsFragment extends Fragment {
 
     private RecyclerView mRecyclerView;
     private RecyclerView.LayoutManager mLayoutManager;
-    private RecyclerView.Adapter mAdapter;
+    private ContentsAdapter mAdapter;
 
     private FloatingActionButton mAddFloatingActionButton;
 
@@ -137,11 +144,31 @@ public class ContentsFragment extends Fragment {
         mRecyclerView.setAdapter(mAdapter);
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Log.i(getClass().getSimpleName(), "onActivityResult: "+requestCode);
+        if (resultCode == Activity.RESULT_OK) {
+            if (requestCode == ChooseContentDialog.PICK_IMAGE_REQUEST) {
+                String realPath = Utils.getPath(getContext(), data.getData());
+                Log.i(getClass().getSimpleName(), "onActivityResult: PICK_IMAGE " + realPath);
 
-    // TODO: Rename method, update argument and hook method into UI event
+
+                /*
+
+                Log.i(getClass().getSimpleName(), "RealPath: "+realPath);
+                mAdapter.addDisplayable(new ImageDisplayable(realPath));*/
+            }
+
+            else if (requestCode == ChooseContentDialog.PICK_VIDEO_REQUEST) {
+                String realPath = Utils.getPath(getContext(), data.getData());
+                Log.i(getClass().getSimpleName(), "onActivityResult: PICK_VIDEO " + realPath);
+
+            }
+        }
+    }
+
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {
-
             mListener.onContentsFragmentInteraction(uri);
         }
     }
@@ -162,6 +189,7 @@ public class ContentsFragment extends Fragment {
         super.onDetach();
         mListener = null;
     }
+
 
     /**
      * This interface must be implemented by activities that contain this

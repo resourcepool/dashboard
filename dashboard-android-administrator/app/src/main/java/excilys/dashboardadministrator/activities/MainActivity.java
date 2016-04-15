@@ -1,13 +1,12 @@
 package excilys.dashboardadministrator.activities;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.view.View;
+import android.util.Log;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -26,8 +25,9 @@ public class MainActivity extends AppCompatActivity
         ScreensFragment.OnScreensFragmentInteractionListener,
         ContentsFragment.OnContentsFragmentInteractionListener {
 
-    private FragmentManager fragmentManager;
-    private Toolbar toolbar;
+    private FragmentManager mFragmentManager;
+    private Toolbar mToolbar;
+    private Fragment mCurrentFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,8 +41,8 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void setUpToolbar() {
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(mToolbar);
     }
 
     private void setUpFloatingActionButton() {
@@ -59,7 +59,7 @@ public class MainActivity extends AppCompatActivity
     private void setUpNavigationDrawer() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+                this, drawer, mToolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
@@ -70,10 +70,11 @@ public class MainActivity extends AppCompatActivity
     private void setUpFragmentManager() {
 
         if (findViewById(R.id.fragment_container) != null) {
-            fragmentManager = getSupportFragmentManager();
+            mFragmentManager = getSupportFragmentManager();
 
-            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+            FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
             ScreensFragment screensFragment = new ScreensFragment();
+            mCurrentFragment = screensFragment;
 
             fragmentTransaction.add(R.id.fragment_container, screensFragment).commit();
 
@@ -81,9 +82,16 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void replaceFragment(Fragment fragment) {
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-
+        FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.fragment_container, fragment).commit();
+        mCurrentFragment = fragment;
+    }
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        mCurrentFragment.onActivityResult(requestCode, resultCode, data);
     }
 
     @Override

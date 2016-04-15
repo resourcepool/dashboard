@@ -50,6 +50,7 @@ public class ContentsAdapter extends RecyclerView.Adapter<ContentsAdapter.ViewHo
             return viewHolder;
         }
 
+
         // Replace the contents of a view (invoked by the layout manager)
         @Override
         public void onBindViewHolder(ViewHolder holder, int position) {
@@ -63,5 +64,10 @@ public class ContentsAdapter extends RecyclerView.Adapter<ContentsAdapter.ViewHo
         @Override
         public int getItemCount() {
             return mDataset.size();
+        }
+
+        public void addDisplayable(Displayable displayable) {
+            mDataset.add(displayable);
+            notifyDataSetChanged();
         }
 }
