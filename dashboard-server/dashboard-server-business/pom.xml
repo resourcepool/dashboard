@@ -10,28 +10,28 @@
         <version>1.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>dashboard-server-entities</artifactId>
+    <artifactId>dashboard-server-business</artifactId>
     <version>1.0-SNAPSHOT</version>
-    <name>dashboard-server-entities</name>
+    <name>dashboard-server-business</name>
     <url>http://maven.apache.org</url>
     <packaging>jar</packaging>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <jpa.version>2.6.3-M1</jpa.version>
     </properties>
 
     <dependencies>
         <dependency>
-            <groupId>org.eclipse.persistence</groupId>
-            <artifactId>org.eclipse.persistence.jpa</artifactId>
-            <version>${jpa.version}</version>
+            <groupId>com.excilys.shoofleurs.dashboard</groupId>
+            <artifactId>dashboard-server-entities</artifactId>
+            <version>1.0-SNAPSHOT</version>
         </dependency>
 
         <dependency>
             <groupId>com.sun.jersey</groupId>
-            <artifactId>jersey-json</artifactId>
+            <artifactId>jersey-servlet</artifactId>
             <version>1.19</version>
         </dependency>
+
     </dependencies>
 </project>

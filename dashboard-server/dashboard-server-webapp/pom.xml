@@ -28,19 +28,12 @@
             <version>1.0-SNAPSHOT</version>
         </dependency>
 
-        <!-- JEE -->
         <dependency>
-            <groupId>org.glassfish</groupId>
-            <artifactId>javax.ejb</artifactId>
-            <version>3.1</version>
-            <scope>provided</scope>
+            <groupId>com.excilys.shoofleurs.dashboard</groupId>
+            <artifactId>dashboard-server-business</artifactId>
+            <version>1.0-SNAPSHOT</version>
         </dependency>
 
-        <dependency>
-            <groupId>javax</groupId>
-            <artifactId>javaee-web-api</artifactId>
-            <version>7.0</version>
-            <scope>provided</scope>
-        </dependency>
+
     </dependencies>
 </project>

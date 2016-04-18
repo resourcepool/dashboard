@@ -9,6 +9,12 @@
         <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
         <jta-data-source>jdbc/mysql-pool</jta-data-source>
 
+        <class>com.excilys.shoofleurs.dashboard.entities.AbstractContent</class>
+        <class>com.excilys.shoofleurs.dashboard.entities.ImageContent</class>
+        <class>com.excilys.shoofleurs.dashboard.entities.PdfContent</class>
+        <class>com.excilys.shoofleurs.dashboard.entities.VideoContent</class>
+        <class>com.excilys.shoofleurs.dashboard.entities.WebContent</class>
+
         <properties>
             <property name="javax.persistence.schema-generation.database.action" value="create-or-extend-tables"/>
             <property name="javax.persistence.schema-generation.create-source" value="metadata"/>

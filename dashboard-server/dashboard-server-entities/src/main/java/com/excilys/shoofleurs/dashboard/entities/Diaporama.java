@@ -2,16 +2,40 @@ package com.excilys.shoofleurs.dashboard.entities;
 
 
 
+import com.excilys.shoofleurs.dashboard.json.Views;
+import org.codehaus.jackson.annotate.JsonProperty;
+import org.codehaus.jackson.map.annotate.JsonView;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import java.time.LocalDateTime;
 
+@Entity(name = "diaporama")
 public class Diaporama {
 
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	@Column(name = "diaporama_id")
+	@JsonProperty("id")
+	@JsonView(Views.LightContent.class)
 	private int mId;
 
+	@Column(name = "title")
+	@JsonProperty("title")
+	@JsonView(Views.LightContent.class)
 	private String mTitle;
 
+	@Column(name = "start")
+	@JsonProperty("start")
+	@JsonView(Views.FullContent.class)
 	private LocalDateTime mStartDateTime;
 
+	@Column(name = "end")
+	@JsonProperty("end")
+	@JsonView(Views.FullContent.class)
 	private LocalDateTime mEndDateTime;
 
 	public Diaporama() {

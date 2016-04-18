@@ -1,10 +1,21 @@
 package com.excilys.shoofleurs.dashboard.entities;
 
+import com.excilys.shoofleurs.dashboard.json.Views;
+import org.codehaus.jackson.map.annotate.JsonView;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+
+@Entity(name = "pdf")
 public class PdfContent extends AbstractContent {
 
+	@Column(name = "page_duration")
+	@JsonView(Views.FullContent.class)
 	private int mDurationPerPage;
 
+	public PdfContent() {
+		super();
+	}
 
 	public PdfContent(String title) {
 		super(title);
