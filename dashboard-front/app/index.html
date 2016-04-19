@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en" ng-app="dashboardFrontApp">
+<head>
+<meta charset="utf-8">
+<title>Dashboard</title>
+<link rel="stylesheet"
+	href="bower_components/bootstrap/dist/css/bootstrap.css">
+<link rel="stylesheet" href="css/app.css">
+<script src="bower_components/angular/angular.js"></script>
+<script src="scripts/controllers/controllers.js"></script>
+</head>
+<body>
+	<header class="navbar navbar-inverse navbar-fixed-top">
+		<div class="container">
+			<a class="navbar-brand" href="dashboard">Dashboard</a>
+		</div>
+	</header>
+
+	<section id="main" ng-controller="Home">
+		<div class="container">
+			<h1 id="homeTitle"></h1>
+			<ul>
+				<li ng-repeat="phone in phones"><span>{{phone.name}}</span>
+					<p>{{phone.snippet}}</p>
+				</li>
+			</ul>
+		</div>
+	</section>
+</body>
+</html>
