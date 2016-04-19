@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">TVDiapo</string>
+    <string name="action_settings">Settings</string>
+    <string name="content_description_diapo_image">Diaporama images</string>
+</resources>
