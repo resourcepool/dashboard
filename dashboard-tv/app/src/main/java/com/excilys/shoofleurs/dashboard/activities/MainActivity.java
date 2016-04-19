@@ -1,10 +1,15 @@
-package com.excilys.shoofleurs.dashboard;
+package com.excilys.shoofleurs.dashboard.activities;
 
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.ImageView;
+
+import com.excilys.shoofleurs.dashboard.R;
+import com.excilys.shoofleurs.dashboard.requests.Download;
+import com.excilys.shoofleurs.dashboard.requests.Get;
+import com.excilys.shoofleurs.dashboard.requests.ICallback;
 
 import org.json.JSONObject;
 
@@ -24,8 +29,6 @@ import java.util.List;
  * le type du résultat.
  */
 public class MainActivity extends AppCompatActivity implements ICallback {
-
-
     /**
      * Affichage des images.
      */
@@ -124,7 +127,7 @@ public class MainActivity extends AppCompatActivity implements ICallback {
             public void run() {
                 // On teste d'abord si le cache est bien rempli afin d'éviter une
                 // exception OutOfBounds. Cela permet aussi d'attendre éventuellement que
-                // le prochain fichier soit "caché".
+                // le prochain fichier soit sauvegardé en cache.
                 if (mCurrentBitmap >= mBitmapList.size()) mCurrentBitmap = 0;
                 // On affiche la nouvelle image
                 mImageView.setImageBitmap(mBitmapList.get(mCurrentBitmap));

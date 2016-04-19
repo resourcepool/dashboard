@@ -1,4 +1,4 @@
-package com.excilys.shoofleurs.dashboard;
+package com.excilys.shoofleurs.dashboard.requests;
 
 import android.os.AsyncTask;
 
@@ -10,8 +10,6 @@ import org.springframework.web.client.RestTemplate;
 
 
 public class Post<T> extends AsyncTask<Void, Void, T> {
-
-
     private static final String BASE_URL = "http://192.168.99.100:8080/dashboard-server-webapp-1.0-SNAPSHOT/api/";
 
     private ICallback mCallback;

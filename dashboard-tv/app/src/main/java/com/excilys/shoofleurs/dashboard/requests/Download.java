@@ -1,4 +1,4 @@
-package com.excilys.shoofleurs.dashboard;
+package com.excilys.shoofleurs.dashboard.requests;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -11,8 +11,6 @@ import java.net.URL;
  * Télécharge une image depuis une URL.
  */
 public class Download extends AsyncTask<Void, Void, Bitmap> {
-
-
     private int mCode;
 
     private ICallback mCallback;

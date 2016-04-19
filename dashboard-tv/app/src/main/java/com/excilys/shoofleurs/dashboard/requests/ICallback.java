@@ -1,4 +1,4 @@
-package com.excilys.shoofleurs.dashboard;
+package com.excilys.shoofleurs.dashboard.requests;
 
 
 public interface ICallback {

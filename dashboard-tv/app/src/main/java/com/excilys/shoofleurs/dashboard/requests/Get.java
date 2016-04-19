@@ -1,4 +1,4 @@
-package com.excilys.shoofleurs.dashboard;
+package com.excilys.shoofleurs.dashboard.requests;
 
 
 import android.os.AsyncTask;
