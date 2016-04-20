@@ -2,9 +2,10 @@ package com.excilys.shoofleurs.dashboard.entities;
 
 
 import com.excilys.shoofleurs.dashboard.json.Views;
-import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonView;
 
 import javax.persistence.Column;
@@ -21,9 +22,13 @@ import javax.persistence.NamedQuery;
 @Entity(name = "abstract_content")
 @NamedQuery(name = "findAll", query = "SELECT a FROM abstract_content a")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@JsonAutoDetect(fieldVisibility= JsonAutoDetect.Visibility.ANY, getterVisibility=JsonAutoDetect.Visibility.NONE,
-		isGetterVisibility=JsonAutoDetect.Visibility.NONE, setterVisibility=JsonAutoDetect.Visibility.NONE)
+@JsonTypeInfo(use=JsonTypeInfo.Id.NAME,
+		include=JsonTypeInfo.As.PROPERTY, property="@type")
+@JsonSubTypes({
+		@JsonSubTypes.Type(value = ImageContent.class, name = "ImageContent")
+})
 public abstract class AbstractContent {
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name = "content_id")
