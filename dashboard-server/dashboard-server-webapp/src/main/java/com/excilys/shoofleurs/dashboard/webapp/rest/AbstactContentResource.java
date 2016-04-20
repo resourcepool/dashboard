@@ -1,8 +1,8 @@
-package com.excilys.shoofleurs.dashboard.business.rest;
+package com.excilys.shoofleurs.dashboard.webapp.rest;
 
 import com.excilys.shoofleurs.dashboard.business.dao.AbstractContentDao;
-import com.excilys.shoofleurs.dashboard.business.json.Response;
-import com.excilys.shoofleurs.dashboard.business.json.mapper.JsonMapper;
+import com.excilys.shoofleurs.dashboard.webapp.json.Response;
+import com.excilys.shoofleurs.dashboard.webapp.json.mapper.JsonMapper;
 import com.excilys.shoofleurs.dashboard.business.service.DiaporamaService;
 import com.excilys.shoofleurs.dashboard.entities.AbstractContent;
 import com.excilys.shoofleurs.dashboard.entities.ImageContent;

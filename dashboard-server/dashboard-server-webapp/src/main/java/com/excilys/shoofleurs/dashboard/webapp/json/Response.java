@@ -1,4 +1,4 @@
-package com.excilys.shoofleurs.dashboard.business.json;
+package com.excilys.shoofleurs.dashboard.webapp.json;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonRootName;
@@ -11,6 +11,10 @@ public class Response {
 
 	@JsonProperty("infoCode")
 	private int mInfoCode;
+
+	public Response() {
+
+	}
 
 
 	public Response(String objectAsJson, int errorCode) {

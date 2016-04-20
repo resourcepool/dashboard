@@ -3,8 +3,6 @@ package com.excilys.shoofleurs.dashboard.entities;
 
 
 import com.excilys.shoofleurs.dashboard.json.Views;
-import com.fasterxml.jackson.annotation.JsonAutoDetect;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonView;
 
 import javax.persistence.CascadeType;
@@ -13,9 +11,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
@@ -25,34 +20,27 @@ import java.util.List;
 
 @Entity(name = "diaporama")
 @NamedQueries({@NamedQuery(name = "diaporamas.findAll", query = "Select d FROM diaporama d")})
-@JsonAutoDetect(fieldVisibility= JsonAutoDetect.Visibility.ANY, getterVisibility=JsonAutoDetect.Visibility.NONE,
-		isGetterVisibility=JsonAutoDetect.Visibility.NONE, setterVisibility=JsonAutoDetect.Visibility.NONE)
 public class Diaporama {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name = "diaporama_id")
-	@JsonProperty("id")
 	@JsonView(Views.LightContent.class)
 	private int mId;
 
 	@Column(name = "title")
-	@JsonProperty("title")
 	@JsonView(Views.LightContent.class)
 	private String mTitle;
 
 	@Column(name = "start")
-	@JsonProperty("start")
 	@JsonView(Views.FullContent.class)
 	private String mStartDateTime;
 
 	@Column(name = "end")
-	@JsonProperty("end")
 	@JsonView(Views.FullContent.class)
 	private String mEndDateTime;
 
 	@OneToMany(mappedBy = "mDiaporama", cascade = CascadeType.ALL)
-	@JsonProperty("contents")
 	@JsonView(Views.TvContent.class)
 	private List<AbstractContent> mContents = new ArrayList<>();
 

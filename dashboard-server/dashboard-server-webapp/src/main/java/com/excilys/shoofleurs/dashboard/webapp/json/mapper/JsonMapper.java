@@ -1,4 +1,4 @@
-package com.excilys.shoofleurs.dashboard.business.json.mapper;
+package com.excilys.shoofleurs.dashboard.webapp.json.mapper;
 
 
 
@@ -11,7 +11,7 @@ public class JsonMapper {
 
 	public static String objectAsJson(Object object, Class viewsClass) {
 		ObjectMapper objectMapper = new ObjectMapper();
-		objectMapper.findAndRegisterModules();
+		//objectMapper.findAndRegisterModules();
 		String objectAsJson = null;
 		try {
 			objectAsJson = objectMapper.writerWithView(viewsClass).writeValueAsString(object);
