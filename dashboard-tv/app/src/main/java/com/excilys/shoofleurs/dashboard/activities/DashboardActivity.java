@@ -1,11 +1,18 @@
 package com.excilys.shoofleurs.dashboard.activities;
 
+import android.animation.AnimatorSet;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
+import android.view.View;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 
 import com.excilys.shoofleurs.dashboard.R;
+import com.excilys.shoofleurs.dashboard.factory.AnimatorFactory;
+import com.excilys.shoofleurs.dashboard.managers.DiaporamaManager;
+import com.excilys.shoofleurs.dashboard.model.entities.Diaporama;
 import com.excilys.shoofleurs.dashboard.requests.Get;
 import com.excilys.shoofleurs.dashboard.requests.ICallback;
 
@@ -30,7 +37,9 @@ public class DashboardActivity extends AppCompatActivity {
     /**
      * Affichage des images.
      */
-    private ImageView mImageView;
+    private RelativeLayout mContentLayout;
+
+    private AnimatorSet mProgressAnimatorSet1, mProgressAnimatorSet2;
 
     /**
      * Liste des configurations.
@@ -43,6 +52,11 @@ public class DashboardActivity extends AppCompatActivity {
     private int mCurrentBitmap = 0;
 
     /**
+     * Le diaporama courant qui doit être affiché
+     */
+    private Diaporama mCurrentDiaporama;
+
+    /**
      * Création d'un interval entre les affichages.
      */
     private Handler mHandler = new Handler();
@@ -52,10 +66,48 @@ public class DashboardActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        mImageView = (ImageView) findViewById(R.id.diapo_images);
+        startProgressView();
+        DiaporamaManager.getInstance(this).checkUpdates();
+        mContentLayout = (RelativeLayout) findViewById(R.id.current_content_layout);
         mConfigList = new ArrayList<>();
-
     }
 
+    public void startProgressView() {
+        View point1 = findViewById(R.id.progress_view_point1);
+        View point2 = findViewById(R.id.progress_view_point2);
+        RelativeLayout progressViewLayout = (RelativeLayout) findViewById(R.id.progress_view_layout);
+        mProgressAnimatorSet1 = AnimatorFactory.createProgressPointAnimatorSet(point1, progressViewLayout.getLayoutParams().width);
+        mProgressAnimatorSet2 = AnimatorFactory.createProgressPointAnimatorSet(point2, progressViewLayout.getLayoutParams().width);
+
+        mProgressAnimatorSet1.start();
+        mProgressAnimatorSet2.setStartDelay(1000);
+        mProgressAnimatorSet2.start();
+    }
+
+    public void stopProgressView() {
+        if (mProgressAnimatorSet1 != null) {
+            mProgressAnimatorSet1.cancel();
+        }
+        if (mProgressAnimatorSet2 != null) {
+            mProgressAnimatorSet2.cancel();
+        }
+    }
+
+
+    public Diaporama getCurrentDiaporama() {
+        return mCurrentDiaporama;
+    }
+
+
+    public void setCurrentDiaporama(Diaporama mCurrentDiaporama) {
+        this.mCurrentDiaporama = mCurrentDiaporama;
+        Log.i(DashboardActivity.class.getSimpleName(), "setCurrentDiaporama: "+mCurrentDiaporama);
+        startDiaporama();
+    }
+
+    public void startDiaporama() {
+        stopProgressView();
+
+
+    }
 }

@@ -9,23 +9,60 @@
     tools:context=".activities.MainActivity"
     tools:showIn="@layout/activity_main">
 
-    <ImageView
-        android:id="@+id/diapo_images"
+
+    <RelativeLayout
+        android:id="@+id/title_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="50dp"
+        android:gravity="center">
+        <com.excilys.shoofleurs.dashboard.utils.TextViewNormalFont
+            android:id="@+id/title_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:padding="20dp"
+            android:text="@string/title"
+            android:textSize="70sp"
+            android:textColor="@android:color/white"/>
+    </RelativeLayout>
+    <RelativeLayout
+        android:id="@+id/progress_view_layout"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/title_layout">
+        <View
+            android:id="@+id/progress_view_point1"
+            android:layout_width="3dp"
+            android:layout_height="3dp"
+            android:background="@drawable/progress_view_point"/>
+        <View
+            android:id="@+id/progress_view_point2"
+            android:layout_width="3dp"
+            android:layout_height="3dp"
+            android:background="@drawable/progress_view_point"/>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/current_content_layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:contentDescription="@string/content_description_diapo_image"/>
+        android:layout_height="match_parent"/>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="60dp"
         android:layout_alignParentBottom="true"
-        android:background="#262626">
+        android:gravity="center_vertical"
+        android:background="#96262626">
 
         <TextView
             android:id="@+id/text_cnn"
-            android:layout_width="match_parent"
+            android:layout_marginLeft="10dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/app_name"
+            android:text="@string/title"
             android:textColor="#FFFFFF"/>
     </LinearLayout>
 </RelativeLayout>

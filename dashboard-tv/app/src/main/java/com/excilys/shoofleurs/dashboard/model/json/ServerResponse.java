@@ -1,23 +1,22 @@
-package com.excilys.shoofleurs.dashboard.webapp.json;
+package com.excilys.shoofleurs.dashboard.model.json;
+
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonRootName;
 
 @JsonRootName("response")
-public class Response {
-
+public class ServerResponse {
 	@JsonProperty("objectAsJson")
 	private String mObjectAsJson;
 
 	@JsonProperty("infoCode")
 	private int mInfoCode;
 
-	public Response() {
+	public ServerResponse(){
 
 	}
 
-
-	public Response(String objectAsJson, int errorCode) {
+	public ServerResponse(String objectAsJson, int errorCode) {
 		mObjectAsJson = objectAsJson;
 		mInfoCode = errorCode;
 	}
@@ -36,5 +35,13 @@ public class Response {
 
 	public void setInfoCode(int infoCode) {
 		mInfoCode = infoCode;
+	}
+
+	@Override
+	public String toString() {
+		return "ServerResponse{" +
+				"mObjectAsJson='" + mObjectAsJson + '\'' +
+				", mInfoCode=" + mInfoCode +
+				'}';
 	}
 }

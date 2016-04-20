@@ -19,6 +19,7 @@ import android.view.MenuItem;
 import excilys.dashboardadministrator.R;
 import excilys.dashboardadministrator.fragments.ContentsFragment;
 import excilys.dashboardadministrator.fragments.ScreensFragment;
+import org.apache.http.entity.mime.MultipartEntityBuilder;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,

@@ -60,7 +60,7 @@ public class MainActivity extends AppCompatActivity implements ICallback {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mImageView = (ImageView) findViewById(R.id.diapo_images);
+        mImageView = (ImageView) findViewById(R.id.current_content_layout);
         mBitmapList = new ArrayList<>();
         mConfigList = new ArrayList<>();
 

@@ -18,7 +18,7 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <jpa.version>2.6.0</jpa.version>
+        <jpa.version>2.6.3-M1</jpa.version>
     </properties>
 
     <dependencies>

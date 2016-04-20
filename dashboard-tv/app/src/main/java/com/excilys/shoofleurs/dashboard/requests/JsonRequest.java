@@ -1,12 +1,16 @@
 package com.excilys.shoofleurs.dashboard.requests;
 
+import android.util.Log;
+
 import com.android.volley.AuthFailureError;
 import com.android.volley.NetworkResponse;
 import com.android.volley.ParseError;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.toolbox.HttpHeaderParser;
+import com.excilys.shoofleurs.dashboard.model.json.ServerResponse;
 import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -53,12 +57,14 @@ public class JsonRequest<T> extends Request<T> {
 
     @Override
     protected Response<T> parseNetworkResponse(NetworkResponse response) {
+        Log.i(getClass().getSimpleName(), "parseNetworkResponse: " + new String(response.data));
         try {
             String json = new String(
                     response.data,
                     HttpHeaderParser.parseCharset(response.headers));
+            ServerResponse serverResponse =  mObjectMapper.readValue(json, ServerResponse.class);
             return Response.success(
-                    mObjectMapper.readValue(json, mClazz),
+                    mObjectMapper.readValue(serverResponse.getObjectAsJson(), mClazz),
                     HttpHeaderParser.parseCacheHeaders(response));
         } catch (UnsupportedEncodingException e) {
             return Response.error(new ParseError(e));
@@ -67,6 +73,8 @@ public class JsonRequest<T> extends Request<T> {
         } catch (JsonMappingException e) {
             return Response.error(new ParseError(e));
         } catch (IOException e) {
+            return Response.error(new ParseError(e));
+        } catch (Exception e) {
             return Response.error(new ParseError(e));
         }
     }

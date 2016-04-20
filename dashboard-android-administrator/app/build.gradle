@@ -26,4 +26,8 @@ dependencies {
     compile 'com.android.support:design:23.1.1'
     compile 'com.android.support:support-v4:23.1.1'
     compile 'com.android.volley:volley:1.0.0'
+    compile group: 'org.apache.httpcomponents' , name: 'httpclient-android' , version: '4.3.5'
+    compile (group: 'org.apache.httpcomponents' , name: 'httpmime' , version: '4.3.5') {
+        exclude module: 'org.apache.httpcomponents:httpclient'
+    }
 }
