@@ -4,15 +4,13 @@ import android.animation.AnimatorSet;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import com.excilys.shoofleurs.dashboard.R;
-import com.excilys.shoofleurs.dashboard.factory.AnimatorFactory;
-import com.excilys.shoofleurs.dashboard.managers.DiaporamaManager;
-import com.excilys.shoofleurs.dashboard.model.entities.Diaporama;
+import com.excilys.shoofleurs.dashboard.controllers.DiaporamaController;
+import com.excilys.shoofleurs.dashboard.factories.AnimatorFactory;
+import com.excilys.shoofleurs.dashboard.managers.DiaporamaService;
 import com.excilys.shoofleurs.dashboard.requests.Get;
 import com.excilys.shoofleurs.dashboard.requests.ICallback;
 
@@ -51,23 +49,26 @@ public class DashboardActivity extends AppCompatActivity {
      */
     private int mCurrentBitmap = 0;
 
-    /**
-     * Le diaporama courant qui doit être affiché
-     */
-    private Diaporama mCurrentDiaporama;
 
     /**
      * Création d'un interval entre les affichages.
      */
     private Handler mHandler = new Handler();
 
+    private DiaporamaService mDiaporamaService;
+
+    private DiaporamaController mDiaporamaController;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         startProgressView();
-        DiaporamaManager.getInstance(this).checkUpdates();
+        mDiaporamaController = DiaporamaController.getInstance(this);
+        mDiaporamaService = DiaporamaService.getInstance(this);
+        mDiaporamaService.checkUpdates();
+
+
         mContentLayout = (RelativeLayout) findViewById(R.id.current_content_layout);
         mConfigList = new ArrayList<>();
     }
@@ -84,6 +85,7 @@ public class DashboardActivity extends AppCompatActivity {
         mProgressAnimatorSet2.start();
     }
 
+
     public void stopProgressView() {
         if (mProgressAnimatorSet1 != null) {
             mProgressAnimatorSet1.cancel();
@@ -93,21 +95,7 @@ public class DashboardActivity extends AppCompatActivity {
         }
     }
 
-
-    public Diaporama getCurrentDiaporama() {
-        return mCurrentDiaporama;
-    }
-
-
-    public void setCurrentDiaporama(Diaporama mCurrentDiaporama) {
-        this.mCurrentDiaporama = mCurrentDiaporama;
-        Log.i(DashboardActivity.class.getSimpleName(), "setCurrentDiaporama: "+mCurrentDiaporama);
-        startDiaporama();
-    }
-
-    public void startDiaporama() {
-        stopProgressView();
-
-
+    public DiaporamaController getDiaporamaController() {
+        return mDiaporamaController;
     }
 }
