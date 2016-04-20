@@ -25,10 +25,12 @@ public abstract class AbstractContent {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name = "content_id")
+	@JsonProperty("id")
 	@JsonView(Views.LightContent.class)
 	private int mId;
 
 	@Column(name = "title")
+	@JsonProperty("title")
 	@JsonView(Views.LightContent.class)
 	private String mTitle;
 
@@ -38,6 +40,7 @@ public abstract class AbstractContent {
 	private String mUrl;
 
 	@Column(name = "global_duration")
+	@JsonProperty("globalDuration")
 	@JsonView(Views.FullContent.class)
 	private int mGlobalDuration;
 
@@ -91,10 +94,12 @@ public abstract class AbstractContent {
 		mGlobalDuration = globalDuration;
 	}
 
+	@JsonIgnore
 	public Diaporama getDiaporama() {
 		return mDiaporama;
 	}
 
+	@JsonIgnore
 	public void setDiaporama(Diaporama diaporama) {
 		mDiaporama = diaporama;
 	}

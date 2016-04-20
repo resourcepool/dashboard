@@ -1,6 +1,7 @@
 package com.excilys.shoofleurs.dashboard.entities;
 
 import com.excilys.shoofleurs.dashboard.json.Views;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonView;
 
 import javax.persistence.Column;
@@ -10,6 +11,7 @@ import javax.persistence.Entity;
 public class PdfContent extends AbstractContent {
 
 	@Column(name = "page_duration")
+	@JsonProperty("durationPerPage")
 	@JsonView(Views.FullContent.class)
 	private int mDurationPerPage;
 
