@@ -6,6 +6,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.NamedQuery;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -17,7 +18,11 @@ public class CrudService<T> {
 	private EntityManager mEntityManager;
 
 
-	public T create(T entity) {
+	public T findById(Class classEntity, int id) {
+		return (T) mEntityManager.find(classEntity, id);
+	}
+
+	public T create(T entity) throws SQLException {
 		mEntityManager.persist(entity);
 		mEntityManager.flush();
 		mEntityManager.refresh(entity);

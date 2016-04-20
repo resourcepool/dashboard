@@ -1,7 +1,7 @@
 package com.excilys.shoofleurs.dashboard.entities;
 
 import com.excilys.shoofleurs.dashboard.json.Views;
-import org.codehaus.jackson.map.annotate.JsonView;
+import com.fasterxml.jackson.annotation.JsonView;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;

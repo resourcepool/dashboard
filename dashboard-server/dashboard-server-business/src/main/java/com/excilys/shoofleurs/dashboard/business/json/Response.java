@@ -1,12 +1,12 @@
 package com.excilys.shoofleurs.dashboard.business.json;
 
-import org.codehaus.jackson.annotate.JsonProperty;
-import org.codehaus.jackson.map.annotate.JsonRootName;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonRootName;
 
 @JsonRootName("response")
 public class Response {
 
-	@JsonProperty("object")
+	@JsonProperty("objectAsJson")
 	private String mObjectAsJson;
 
 	@JsonProperty("infoCode")

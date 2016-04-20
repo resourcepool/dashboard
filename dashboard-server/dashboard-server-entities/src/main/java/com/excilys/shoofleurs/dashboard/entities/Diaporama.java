@@ -3,17 +3,30 @@ package com.excilys.shoofleurs.dashboard.entities;
 
 
 import com.excilys.shoofleurs.dashboard.json.Views;
-import org.codehaus.jackson.annotate.JsonProperty;
-import org.codehaus.jackson.map.annotate.JsonView;
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonView;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import java.time.LocalDateTime;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
+import java.util.ArrayList;
+import java.util.List;
+
 
 @Entity(name = "diaporama")
+@NamedQueries({@NamedQuery(name = "diaporamas.findAll", query = "Select d FROM diaporama d")})
+@JsonAutoDetect(fieldVisibility= JsonAutoDetect.Visibility.ANY, getterVisibility=JsonAutoDetect.Visibility.NONE,
+		isGetterVisibility=JsonAutoDetect.Visibility.NONE, setterVisibility=JsonAutoDetect.Visibility.NONE)
 public class Diaporama {
 
 	@Id
@@ -31,18 +44,23 @@ public class Diaporama {
 	@Column(name = "start")
 	@JsonProperty("start")
 	@JsonView(Views.FullContent.class)
-	private LocalDateTime mStartDateTime;
+	private String mStartDateTime;
 
 	@Column(name = "end")
 	@JsonProperty("end")
 	@JsonView(Views.FullContent.class)
-	private LocalDateTime mEndDateTime;
+	private String mEndDateTime;
+
+	@OneToMany(mappedBy = "mDiaporama", cascade = CascadeType.ALL)
+	@JsonProperty("contents")
+	@JsonView(Views.TvContent.class)
+	private List<AbstractContent> mContents = new ArrayList<>();
 
 	public Diaporama() {
 
 	}
 
-	public Diaporama(String title, LocalDateTime startDateTime, LocalDateTime endDateTime) {
+	public Diaporama(String title, String startDateTime, String endDateTime) {
 		mTitle = title;
 		mStartDateTime = startDateTime;
 		mEndDateTime = endDateTime;
@@ -64,19 +82,27 @@ public class Diaporama {
 		mTitle = title;
 	}
 
-	public LocalDateTime getStartDateTime() {
+	public String getStartDateTime() {
 		return mStartDateTime;
 	}
 
-	public void setStartDateTime(LocalDateTime startDateTime) {
+	public void setStartDateTime(String startDateTime) {
 		mStartDateTime = startDateTime;
 	}
 
-	public LocalDateTime getEndDateTime() {
+	public String getEndDateTime() {
 		return mEndDateTime;
 	}
 
-	public void setEndDateTime(LocalDateTime endDateTime) {
+	public void setEndDateTime(String endDateTime) {
 		mEndDateTime = endDateTime;
+	}
+
+	public List<AbstractContent> getContents() {
+		return mContents;
+	}
+
+	public void setContents(List<AbstractContent> contents) {
+		mContents = contents;
 	}
 }
