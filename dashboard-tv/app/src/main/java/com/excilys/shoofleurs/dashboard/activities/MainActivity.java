@@ -1,17 +1,10 @@
 package com.excilys.shoofleurs.dashboard.activities;
 
 import android.graphics.Bitmap;
-import android.graphics.Point;
-import android.graphics.Rect;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
-import android.view.Window;
-import android.view.WindowManager;
-import android.view.animation.LinearInterpolator;
 import android.widget.ImageView;
-import android.widget.Scroller;
-import android.widget.TextView;
 
 import com.excilys.shoofleurs.dashboard.R;
 import com.excilys.shoofleurs.dashboard.requests.Download;
@@ -21,23 +14,11 @@ import com.excilys.shoofleurs.dashboard.requests.ICallback;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
 import java.util.List;
 
 
-/**
- * L'activité principale récupère la liste des contenus. Dans ce scénario, elle récupère
- * les contenus du diaporama d'ID 1 (qui contient deux images) via l'AsyncTask {@link Get}
- * Une fois récupérée, les contenus sont mis en cache puis affichés via un handler qui va
- * gérer le temps d'affichage entre eux.
- *
- * Cette activité implémente l'interface {@link ICallback} qui permet à une AsyncTask de notifier
- * à l'activité qu'elle a fini son travail et que l'activité peut traiter le résultat comme elle
- * le souhaite. Le code passé en paramètre permet d'identifier le type d'action à effectuer et
- * le type du résultat.
- */
-public class MainActivity extends AppCompatActivity implements ICallback {
+
+public class MainActivity extends AppCompatActivity {
     /**
      * Affichage des images.
      */
@@ -62,41 +43,6 @@ public class MainActivity extends AppCompatActivity implements ICallback {
      * Création d'un interval entre les affichages.
      */
     private Handler mHandler = new Handler();
-
-    /**
-     * Liste de Flash News à afficher
-     */
-    private List<String> mMessages = Arrays.asList("Un premier message un peu long - Un premier message un peu long - Un premier message un peu long", "un autre pas trop long", "et encore un aautre pas trop long");
-
-    /**
-     * Iterateur de liste de flash news
-     */
-    private Iterator<String> mMessagesIterator;
-
-    /**
-     * TextView de la News
-     */
-    private TextView mTextView;
-
-    /**
-     * Animation du scroll du texte
-     */
-    private Scroller mScroller;
-
-    /**
-     * Ordre du prochain message à afficher
-     */
-    private final Runnable mNextMessageRunnable = new Runnable() {
-        @Override
-        public void run() {
-            nextMessage();
-        }
-    };
-
-    /**
-     * Taille approximative de l'écran
-     */
-    private int mSizeScreen;
 
 
     @Override
@@ -157,51 +103,50 @@ public class MainActivity extends AppCompatActivity implements ICallback {
     }
 
 
-    @Override
-    public void asyncTaskFinish(Object result, int code) {
-        // Mise en cache du contenu de la liste (code identifiant requete)
-        if (code == 1) {
-            String[] results = (String[]) result;
-            try {
-                // Convertion au format Json Object pour accéder aux propriétés.
-                // Temporairement, création d'une liste pour stocker les configurations.
-                for (String jsonObjectAsString: results) {
-                    JSONObject jsonObject = new JSONObject(jsonObjectAsString);
-                    mConfigList.add(jsonObject.getJSONObject("config"));
-                    // Téléchargement des images.
-                    new Download(2, this, jsonObject.getString("chemin")).execute();
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-
-        // Une fois le téléchargement d'une image terminée ...
-        else if (code == 2) {
-            if (result != null) {
-                Bitmap img = (Bitmap) result;
-                // On l'ajoute à la liste du cache
-                mBitmapList.add(img);
-
-                // Si c'est la première image du diaporama, on l'affiche dessuite.
-                // Les autres images sont en cours de téléchargements. Dès qu'une image a fini de
-                // télécharger, elle est ajoutée automatiquement au cache. C'est ensuite le
-                // handler (voir ci-dessous) qui va gérer le changement dans l'affichage.
-                if (mImageView.getDrawable() == null) {
-                    mImageView.setImageBitmap(img);
-                    try {
-                        // On indique au handler l'index de la prochaine image qu'il devra afficher
-                        ++mCurrentBitmap;
-                        // et on lui indique dans combien de temps (eg la durée de l'image affichée
-                        // en ce moment en millisecondes.
-                        next(mConfigList.get(mCurrentBitmap - 1).getInt("duration") * 1000);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        }
-    }
+//    @Override
+//    public void asyncTaskFinish(Object result, int code) {
+//        // Mise en cache du contenu de la liste (code identifiant requete)
+//        if (code == 1) {
+//            String[] results = (String[]) result;
+//            try {
+//                // Convertion au format Json Object pour accéder aux propriétés.
+//                // Temporairement, création d'une liste pour stocker les configurations.
+//                for (String jsonObjectAsString: results) {
+//                    JSONObject jsonObject = new JSONObject(jsonObjectAsString);
+//                    mConfigList.add(jsonObject.getJSONObject("config"));
+//                    // Téléchargement des images.
+//                }
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }
+//        }
+//
+//        // Une fois le téléchargement d'une image terminée ...
+//        else if (code == 2) {
+//            if (result != null) {
+//                Bitmap img = (Bitmap) result;
+//                // On l'ajoute à la liste du cache
+//                mBitmapList.add(img);
+//
+//                // Si c'est la première image du diaporama, on l'affiche dessuite.
+//                // Les autres images sont en cours de téléchargements. Dès qu'une image a fini de
+//                // télécharger, elle est ajoutée automatiquement au cache. C'est ensuite le
+//                // handler (voir ci-dessous) qui va gérer le changement dans l'affichage.
+//                if (mImageView.getDrawable() == null) {
+//                    mImageView.setImageBitmap(img);
+//                    try {
+//                        // On indique au handler l'index de la prochaine image qu'il devra afficher
+//                        ++mCurrentBitmap;
+//                        // et on lui indique dans combien de temps (eg la durée de l'image affichée
+//                        // en ce moment en millisecondes.
+//                        next(mConfigList.get(mCurrentBitmap - 1).getInt("duration") * 1000);
+//                    } catch (Exception e) {
+//                        e.printStackTrace();
+//                    }
+//                }
+//            }
+//        }
+//    }
 
 
     /**

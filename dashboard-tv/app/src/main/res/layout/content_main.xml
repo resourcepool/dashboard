@@ -29,8 +29,8 @@
     </RelativeLayout>
     <RelativeLayout
         android:id="@+id/progress_view_layout"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
         android:layout_centerHorizontal="true"
         android:layout_below="@id/title_layout">
         <View

@@ -42,9 +42,39 @@ public class AnimatorFactory {
         return fadeAnimator;
     }
 
+    public static Animator createFadeInAnimator (final View view, int duration){
+        Animator fadeAnimator = ObjectAnimator.ofFloat(view, View.ALPHA, 0f, 1f);
+        fadeAnimator.setDuration(duration);
+        fadeAnimator.setInterpolator(new AccelerateInterpolator());
+
+        fadeAnimator.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationStart(Animator animation) {
+                super.onAnimationStart(animation);
+                view.setVisibility(View.VISIBLE);
+            }
+        });
+        return fadeAnimator;
+    }
+
+
     public static Animator createFadeOutAnimator (final View view){
         Animator fadeAnimator = ObjectAnimator.ofFloat(view, View.ALPHA, 1f, 0f);
         fadeAnimator.setDuration(200);
+        fadeAnimator.setInterpolator(new AccelerateInterpolator());
+
+        fadeAnimator.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                view.setVisibility(View.GONE);
+            }
+        });
+        return fadeAnimator;
+    }
+
+    public static Animator createFadeOutAnimator (final View view, int duration){
+        Animator fadeAnimator = ObjectAnimator.ofFloat(view, View.ALPHA, 1f, 0f);
+        fadeAnimator.setDuration(duration);
         fadeAnimator.setInterpolator(new AccelerateInterpolator());
 
         fadeAnimator.addListener(new AnimatorListenerAdapter() {

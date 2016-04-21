@@ -1,13 +1,16 @@
 package com.excilys.shoofleurs.dashboard.controllers;
 
+import android.os.Handler;
 import android.util.Log;
 import android.widget.RelativeLayout;
 
 import com.excilys.shoofleurs.dashboard.R;
 import com.excilys.shoofleurs.dashboard.activities.DashboardActivity;
-import com.excilys.shoofleurs.dashboard.displayables.Displayable;
+import com.excilys.shoofleurs.dashboard.displayables.AbstractDisplayable;
 import com.excilys.shoofleurs.dashboard.displayables.DisplayableFactory;
+import com.excilys.shoofleurs.dashboard.model.entities.AbstractContent;
 import com.excilys.shoofleurs.dashboard.model.entities.Diaporama;
+import com.excilys.shoofleurs.dashboard.model.entities.VideoContent;
 
 import java.util.Arrays;
 import java.util.PriorityQueue;
@@ -26,6 +29,7 @@ public class DiaporamaController {
      */
     private RelativeLayout mContentLayout;
 
+
     /**
      * The sorted diaporama queue
      */
@@ -35,6 +39,14 @@ public class DiaporamaController {
      * The current diaporama to be displayed
      */
     private Diaporama mCurrentDiaporama;
+
+    /**
+     * To create interval beetween content
+     */
+    private Handler mHandler = new Handler();
+
+
+    private int mCurrentContentIndex;
 
     public static DiaporamaController getInstance(DashboardActivity dashboardActivity) {
         if (S_INSTANCE == null) S_INSTANCE = new DiaporamaController(dashboardActivity);
@@ -51,6 +63,7 @@ public class DiaporamaController {
     public void addAllDiaporamas(Diaporama... diaporamas) {
         Log.i(getClass().getSimpleName(), "addAllDiaporamas: " + Arrays.asList(diaporamas));
         for (Diaporama d : diaporamas) {
+            d.getContents().add(new VideoContent("Video", "http://clips.vorwaerts-gmbh.de/VfE_html5.mp4"));
             mDiaporamaQueue.offer(d);
         }
 
@@ -74,19 +87,67 @@ public class DiaporamaController {
         startDiaporama();
     }
 
+
+    public void stopDiaporama() {
+
+    }
+
+    public void pauseDiaporama() {
+
+    }
+
     /**
      * Start the diaporama to display
      */
     public void startDiaporama() {
-        Log.i(getClass().getSimpleName(), "startDiaporama");
+        Log.i(getClass().getSimpleName(), "startDiaporama " + mCurrentDiaporama);
+        mCurrentContentIndex = 0;
 
         mDashboardActivity.stopProgressView();
         if (mCurrentDiaporama != null) {
             if (mCurrentDiaporama.getContents().size() > 0){
-                Displayable displayable = DisplayableFactory.create(mCurrentDiaporama.getContents().get(0));
-                displayable.displayContent(mDashboardActivity, mContentLayout);
+                AbstractContent firstContent = mCurrentDiaporama.getContents().get(mCurrentContentIndex);
+                displayContent(firstContent);
+            }
+            
+            else {
+                Log.i(DiaporamaController.class.getSimpleName(), "startDiaporama: The contents are empty!!");
             }
         }
     }
 
+    private void displayContent(AbstractContent content) {
+        Log.i(DiaporamaController.class.getSimpleName(), "displayContent: " + content);
+        AbstractDisplayable displayable = DisplayableFactory.create(content);
+        displayable.displayContent(mDashboardActivity, mContentLayout);
+        if (mCurrentDiaporama.getContents().size() != 1) {
+            nextContentIn(displayable.getDurationInSec());
+        }
+
+        else {
+            Log.i(DiaporamaController.class.getSimpleName(), "displayContent: The content is alone");
+        }
+    }
+
+
+    /**
+     * Display the next content in timeInSec seconds
+     * @param timeInSec
+     */
+    public void nextContentIn(int timeInSec) {
+        Log.i(DiaporamaController.class.getSimpleName(), "nextContentIn: "+timeInSec + "sec");
+
+        ++mCurrentContentIndex;
+        final AbstractContent preparedContent = mCurrentContentIndex < mCurrentDiaporama.getContents().size() ?
+                mCurrentDiaporama.getContents().get(mCurrentContentIndex) :
+                mCurrentDiaporama.getContents().get(mCurrentContentIndex = 0);
+
+        mHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                Log.i(DiaporamaController.class.getSimpleName(), "run nextContent: " + preparedContent);
+                displayContent(preparedContent);
+            }
+        }, timeInSec*1000);
+    }
 }

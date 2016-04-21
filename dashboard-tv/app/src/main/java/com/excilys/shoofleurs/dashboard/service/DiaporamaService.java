@@ -1,4 +1,4 @@
-package com.excilys.shoofleurs.dashboard.managers;
+package com.excilys.shoofleurs.dashboard.service;
 
 import android.util.Log;
 
@@ -11,9 +11,7 @@ import com.excilys.shoofleurs.dashboard.requests.JsonRequest;
 import com.excilys.shoofleurs.dashboard.singletons.VolleySingleton;
 import com.excilys.shoofleurs.dashboard.utils.Data;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 /**
  * Created by tommy on 19/04/16.
