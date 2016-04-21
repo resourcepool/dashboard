@@ -1,9 +1,6 @@
 package com.excilys.shoofleurs.dashboard.model.entities;
 
 
-import javax.persistence.Entity;
-
-@Entity(name = "video")
 public class VideoContent extends AbstractContent {
 
 

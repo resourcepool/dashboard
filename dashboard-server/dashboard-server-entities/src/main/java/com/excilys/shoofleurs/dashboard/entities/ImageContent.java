@@ -1,7 +1,8 @@
 package com.excilys.shoofleurs.dashboard.entities;
 
 import com.excilys.shoofleurs.dashboard.json.Views;
-import org.codehaus.jackson.map.annotate.JsonView;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonView;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -10,6 +11,7 @@ import javax.persistence.Entity;
 public class ImageContent extends AbstractContent {
 
 	@Column(name = "duration_in_diaporama")
+	@JsonProperty("durationInDiaporama")
 	@JsonView(Views.FullContent.class)
 	private int mDurationInDiaporama;
 

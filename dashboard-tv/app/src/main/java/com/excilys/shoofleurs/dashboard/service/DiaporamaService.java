@@ -1,34 +1,33 @@
-package com.excilys.shoofleurs.dashboard.managers;
+package com.excilys.shoofleurs.dashboard.service;
+
+import android.util.Log;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.excilys.shoofleurs.dashboard.activities.MainActivity;
+import com.excilys.shoofleurs.dashboard.activities.DashboardActivity;
 import com.excilys.shoofleurs.dashboard.model.entities.Diaporama;
 import com.excilys.shoofleurs.dashboard.requests.JsonRequest;
 import com.excilys.shoofleurs.dashboard.singletons.VolleySingleton;
 import com.excilys.shoofleurs.dashboard.utils.Data;
 
-import java.util.Collections;
-import java.util.List;
+import java.util.Arrays;
 
 /**
  * Created by tommy on 19/04/16.
  */
-public class DiaporamaManager {
-    private static DiaporamaManager S_INSTANCE;
+public class DiaporamaService {
+    private static DiaporamaService S_INSTANCE;
 
-    private MainActivity mMainActivity;
+    private DashboardActivity mDashboardActivity;
 
-    private List<Diaporama> mDiaporamas;
-
-    public static DiaporamaManager getInstance(MainActivity mainActivity){
-        if (S_INSTANCE == null) S_INSTANCE = new DiaporamaManager(mainActivity);
+    public static DiaporamaService getInstance(DashboardActivity mainActivity){
+        if (S_INSTANCE == null) S_INSTANCE = new DiaporamaService(mainActivity);
         return S_INSTANCE;
     }
 
-    private DiaporamaManager (MainActivity mainActivity) {
-        this.mMainActivity = mainActivity;
+    private DiaporamaService(DashboardActivity mainActivity) {
+        this.mDashboardActivity = mainActivity;
     }
 
     /**
@@ -36,24 +35,29 @@ public class DiaporamaManager {
      * sont disponibles. Si c'est le cas, ils sont ajoutés à la liste de diaporamas.
      */
     public void checkUpdates() {
+        @SuppressWarnings("unchecked")
         JsonRequest<Diaporama[]> request = new JsonRequest<>(Data.GET_DIAPORAMAS_URL, Diaporama[].class, null, new Response.Listener<Diaporama[]>() {
             @Override
             public void onResponse(Diaporama[] response) {
+                Log.i(DiaporamaService.class.getSimpleName(), "onResponse: "+ Arrays.asList(response));
                 if (response.length != 0) {
-                    Collections.addAll(mDiaporamas, response);
+                    mDashboardActivity.getDiaporamaController().addAllDiaporamas(response);
+                }
+                else {
+                    Log.i(getClass().getSimpleName(), "checkUpdate onResponse: empty");
                 }
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-
+                Log.e(DiaporamaService.class.getSimpleName(), "checkUpdate onErrorResponse: "+error);
             }
         });
-
         executeRequest(request);
     }
 
     private void executeRequest(Request request) {
-        VolleySingleton.getInstance(mMainActivity).addToRequestQueue(request);
+        VolleySingleton.getInstance(mDashboardActivity).addToRequestQueue(request);
     }
+
 }

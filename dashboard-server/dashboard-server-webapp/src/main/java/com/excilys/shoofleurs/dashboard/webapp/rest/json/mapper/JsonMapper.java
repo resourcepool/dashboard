@@ -1,7 +1,8 @@
-package com.excilys.shoofleurs.dashboard.business.json.mapper;
+package com.excilys.shoofleurs.dashboard.webapp.rest.json.mapper;
 
-import org.codehaus.jackson.map.ObjectMapper;
-import org.codehaus.jackson.map.SerializationConfig;
+
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
 
@@ -10,7 +11,7 @@ public class JsonMapper {
 
 	public static String objectAsJson(Object object, Class viewsClass) {
 		ObjectMapper objectMapper = new ObjectMapper();
-		objectMapper.configure(SerializationConfig.Feature.DEFAULT_VIEW_INCLUSION, false);
+		objectMapper.findAndRegisterModules();
 		String objectAsJson = null;
 		try {
 			objectAsJson = objectMapper.writerWithView(viewsClass).writeValueAsString(object);

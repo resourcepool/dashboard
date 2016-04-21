@@ -1,40 +1,39 @@
 package com.excilys.shoofleurs.dashboard.model.entities;
 
 
-import com.excilys.shoofleurs.dashboard.json.Views;
-import org.codehaus.jackson.map.annotate.JsonView;
+import com.excilys.shoofleurs.dashboard.model.json.Views;
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.fasterxml.jackson.annotation.JsonView;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Inheritance;
-import javax.persistence.InheritanceType;
-import javax.persistence.NamedQuery;
-
-@Entity(name = "abstract_content")
-@NamedQuery(name = "findAll", query = "SELECT a FROM abstract_content a")
-@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@JsonAutoDetect(fieldVisibility= JsonAutoDetect.Visibility.ANY, getterVisibility=JsonAutoDetect.Visibility.NONE,
+		isGetterVisibility=JsonAutoDetect.Visibility.NONE, setterVisibility= JsonAutoDetect.Visibility.NONE)
+@JsonTypeInfo(use=JsonTypeInfo.Id.NAME,
+		include=JsonTypeInfo.As.PROPERTY, property="@type")
+@JsonSubTypes({
+		@JsonSubTypes.Type(value = ImageContent.class, name = "ImageContent")
+})
 public abstract class AbstractContent {
-
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	@Column(name = "content_id")
+	@JsonProperty("id")
 	@JsonView(Views.LightContent.class)
 	private int mId;
 
-	@Column(name = "title")
+	@JsonProperty("title")
 	@JsonView(Views.LightContent.class)
 	private String mTitle;
 
-	@Column(name = "url")
+	@JsonProperty("url")
 	@JsonView(Views.LightContent.class)
 	private String mUrl;
 
+	@JsonProperty("globalDuration")
 	@JsonView(Views.FullContent.class)
-	@Column(name = "global_duration")
 	private int mGlobalDuration;
+
+	private Diaporama mDiaporama;
 
 	public AbstractContent() {
 
@@ -79,5 +78,15 @@ public abstract class AbstractContent {
 
 	public void setGlobalDuration(int globalDuration) {
 		mGlobalDuration = globalDuration;
+	}
+
+	@Override
+	public String toString() {
+		return "AbstractContent{" +
+				"mId=" + mId +
+				", mTitle='" + mTitle + '\'' +
+				", mUrl='" + mUrl + '\'' +
+				", mGlobalDuration=" + mGlobalDuration +
+				'}';
 	}
 }

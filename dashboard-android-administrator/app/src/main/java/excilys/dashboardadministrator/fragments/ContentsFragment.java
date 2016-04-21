@@ -151,12 +151,8 @@ public class ContentsFragment extends Fragment {
             if (requestCode == ChooseContentDialog.PICK_IMAGE_REQUEST) {
                 String realPath = Utils.getPath(getContext(), data.getData());
                 Log.i(getClass().getSimpleName(), "onActivityResult: PICK_IMAGE " + realPath);
-
-
-                /*
-
                 Log.i(getClass().getSimpleName(), "RealPath: "+realPath);
-                mAdapter.addDisplayable(new ImageDisplayable(realPath));*/
+                mAdapter.addDisplayable(new ImageDisplayable(realPath));
             }
 
             else if (requestCode == ChooseContentDialog.PICK_VIDEO_REQUEST) {
@@ -166,6 +162,7 @@ public class ContentsFragment extends Fragment {
             }
         }
     }
+
 
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {
