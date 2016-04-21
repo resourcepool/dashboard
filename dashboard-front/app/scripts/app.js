@@ -11,7 +11,9 @@
 
 var dashboardFrontApp = angular.module('dashboardFrontApp', [
  'ngRoute',
- 'dashboardControllers'
+ 'diaporamaControllers',
+ 'contentControllers',
+ 'lr.upload'
  ]);
 
 dashboardFrontApp.config(['$routeProvider',
@@ -22,12 +24,16 @@ dashboardFrontApp.config(['$routeProvider',
 			controller: 'HomeCtrl'
 		}).
 		when('/diaporama/create/', {
-			templateUrl: 'partials/diaporama/create.html',
+			templateUrl: 'partials/diaporama/form.html',
 			controller: 'DiaporamaCreateCtrl'
 		}).
 		when('/diaporama/edit/:diaporamaId', {
-			templateUrl: 'partials/diaporama/edit.html',
+			templateUrl: 'partials/diaporama/form.html',
 			controller: 'DiaporamaEditCtrl'
+		}).
+		when('/diaporama/content/create/:diaporamaId', {
+			templateUrl: 'partials/content/create.html',
+			controller: 'ContentCreateCtrl'
 		}).
 		otherwise({
 			redirectTo: '/home'
