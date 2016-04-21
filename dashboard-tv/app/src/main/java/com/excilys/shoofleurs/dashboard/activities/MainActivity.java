@@ -1,10 +1,17 @@
 package com.excilys.shoofleurs.dashboard.activities;
 
 import android.graphics.Bitmap;
+import android.graphics.Point;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Window;
+import android.view.WindowManager;
+import android.view.animation.LinearInterpolator;
 import android.widget.ImageView;
+import android.widget.Scroller;
+import android.widget.TextView;
 
 import com.excilys.shoofleurs.dashboard.R;
 import com.excilys.shoofleurs.dashboard.requests.Download;
@@ -14,6 +21,8 @@ import com.excilys.shoofleurs.dashboard.requests.ICallback;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 
 
@@ -54,19 +63,97 @@ public class MainActivity extends AppCompatActivity implements ICallback {
      */
     private Handler mHandler = new Handler();
 
+    /**
+     * Liste de Flash News à afficher
+     */
+    private List<String> mMessages = Arrays.asList("Un premier message un peu long - Un premier message un peu long - Un premier message un peu long", "un autre pas trop long", "et encore un aautre pas trop long");
+
+    /**
+     * Iterateur de liste de flash news
+     */
+    private Iterator<String> mMessagesIterator;
+
+    /**
+     * TextView de la News
+     */
+    private TextView mTextView;
+
+    /**
+     * Animation du scroll du texte
+     */
+    private Scroller mScroller;
+
+    /**
+     * Ordre du prochain message à afficher
+     */
+    private final Runnable mNextMessageRunnable = new Runnable() {
+        @Override
+        public void run() {
+            nextMessage();
+        }
+    };
+
+    /**
+     * Taille approximative de l'écran
+     */
+    private int mSizeScreen;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
         setContentView(R.layout.activity_main);
 
-        mImageView = (ImageView) findViewById(R.id.current_content_layout);
+        Point point = new Point();
+        getWindowManager().getDefaultDisplay().getSize(point);
+        mSizeScreen = point.x;
+
+//        mImageView = (ImageView) findViewById(R.id.current_content_layout);
         mBitmapList = new ArrayList<>();
         mConfigList = new ArrayList<>();
 
         // Récupération de la liste des contenus du diaporamas numéro 1 (temporairement, un
         // Json Array contenant des Strings. (cf serveur side)
-        new Get<String[]>(this, String[].class, 1).execute();
+//        new Get<String[]>(this, String[].class, 1).execute();
+
+
+        // Initialisation pour les flash news
+        mScroller = new Scroller(this, new LinearInterpolator());
+        mTextView = (TextView) findViewById(R.id.text_cnn);
+        mTextView.setScroller(mScroller);
+        nextMessage();
+    }
+
+    /**
+     * Appelle l'affichage du prochaine message
+     */
+    private void nextMessage() {
+        if (mMessagesIterator == null || !mMessagesIterator.hasNext()) {
+            mMessagesIterator = mMessages.iterator();
+        }
+        String message;
+
+        // S'il n'ya pas plus de messages
+        if (!mMessagesIterator.hasNext()) {
+            return;
+        }
+
+        // Sinon, affiche le message
+        message = mMessagesIterator.next();
+
+        Rect bounds = new Rect();
+        mTextView.getPaint().getTextBounds(message, 0, message.length(), bounds);
+        mTextView.setText(message);
+
+        int durationScroll = (bounds.right+ mSizeScreen)*1000 / 300;
+        mScroller.startScroll(-mSizeScreen, 0, bounds.right+ mSizeScreen, 0, durationScroll);
+
+        mHandler.postDelayed(mNextMessageRunnable, durationScroll);
     }
 
 
