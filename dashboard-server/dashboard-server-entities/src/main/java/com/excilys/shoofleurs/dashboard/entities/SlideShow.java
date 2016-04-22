@@ -20,13 +20,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-@Entity(name = "diaporama")
-@NamedQueries({@NamedQuery(name = "diaporamas.findAll", query = "Select d FROM diaporama d")})
-public class Diaporama {
+@Entity(name = "slideshow")
+@NamedQueries({@NamedQuery(name = "slideshow.findAll", query = "Select d FROM slideshow d")})
+public class SlideShow {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	@Column(name = "diaporama_id")
+	@Column(name = "slideshow_id")
 	@JsonProperty("id")
 	@JsonView(Views.LightContent.class)
 	private int mId;
@@ -46,21 +46,22 @@ public class Diaporama {
 	@JsonView(Views.FullContent.class)
 	private String mEndDateTime;
 
-	@OneToMany(mappedBy = "mDiaporama", cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "mSlideShow", cascade = CascadeType.ALL)
 	@JsonProperty("contents")
 	@JsonView(Views.TvContent.class)
 	@JsonManagedReference
 	private List<AbstractContent> mContents = new ArrayList<>();
 
-	public Diaporama() {
+	public SlideShow() {
 
 	}
 
-	public Diaporama(String title, String startDateTime, String endDateTime) {
+	public SlideShow(String title, String startDateTime, String endDateTime) {
 		mTitle = title;
 		mStartDateTime = startDateTime;
 		mEndDateTime = endDateTime;
 	}
+
 
 	public int getId() {
 		return mId;

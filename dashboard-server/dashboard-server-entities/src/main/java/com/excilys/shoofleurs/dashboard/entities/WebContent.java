@@ -10,10 +10,10 @@ import javax.persistence.Entity;
 @Entity(name = "web")
 public class WebContent extends AbstractContent {
 
-	@Column(name = "duration_in_diaporama")
-	@JsonProperty("durationInDiaporama")
+	@Column(name = "duration_in_slideshow")
+	@JsonProperty("durationInSlideshow")
 	@JsonView(Views.FullContent.class)
-	private int mDurationInDiaporama;
+	private int mDurationInSlideshow;
 
 	@Column(name = "auto_scroll")
 	@JsonProperty("autoScroll")
@@ -33,12 +33,12 @@ public class WebContent extends AbstractContent {
 		super(title, url);
 	}
 
-	public int getDurationInDiaporama() {
-		return mDurationInDiaporama;
+	public int getDurationInSlideshow() {
+		return mDurationInSlideshow;
 	}
 
-	public void setDurationInDiaporama(int durationInDiaporama) {
-		mDurationInDiaporama = durationInDiaporama;
+	public void setDurationInSlideshow(int durationInSlideshow) {
+		mDurationInSlideshow = durationInSlideshow;
 	}
 
 	public boolean isAutoScroll() {

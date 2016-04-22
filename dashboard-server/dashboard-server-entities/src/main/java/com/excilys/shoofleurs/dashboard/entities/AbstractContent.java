@@ -19,6 +19,11 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
 
+/**
+ * This class represents an abstract content with commons properties between content.
+ * A content can be an image, a video, a pdf, or a web page. A content is associated
+ * with a slideshow. It can only exist with a slideshow.
+ */
 @Entity(name = "abstract_content")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @JsonTypeInfo(use=JsonTypeInfo.Id.NAME, include=JsonTypeInfo.As.PROPERTY, property="@type")
@@ -48,21 +53,30 @@ public abstract class AbstractContent {
 	private int mGlobalDuration;
 
 	@ManyToOne
-	@JoinColumn(name = "diaporama_id")
-	@JsonProperty("diaporama")
+	@JoinColumn(name = "slideshow_id")
+	@JsonProperty("slideShow")
 	@JsonBackReference
-	private Diaporama mDiaporama;
+	private SlideShow mSlideShow;
 
+	/**
+	 * Default constructor for Jersey/JPA.
+	 */
 	public AbstractContent() { }
 
+	/**
+	 * Construct a content object with a title.
+	 * @param title SlideShow's title
+	 */
 	public AbstractContent(String title) {
 		mTitle = title;
 	}
+
 
 	public AbstractContent(String title, String url) {
 		this(title);
 		mUrl = url;
 	}
+
 
 	public int getId() {
 		return mId;
@@ -96,11 +110,11 @@ public abstract class AbstractContent {
 		mGlobalDuration = globalDuration;
 	}
 
-	public Diaporama getDiaporama() {
-		return mDiaporama;
+	public SlideShow getSlideShow() {
+		return mSlideShow;
 	}
 
-	public void setDiaporama(Diaporama diaporama) {
-		mDiaporama = diaporama;
+	public void setSlideShow(SlideShow slideShow) {
+		mSlideShow = slideShow;
 	}
 }

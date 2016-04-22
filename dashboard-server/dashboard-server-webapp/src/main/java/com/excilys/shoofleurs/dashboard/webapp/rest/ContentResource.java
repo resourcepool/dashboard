@@ -4,7 +4,7 @@ import com.excilys.shoofleurs.dashboard.business.service.ContentService;
 import com.excilys.shoofleurs.dashboard.entities.AbstractContent;
 import com.excilys.shoofleurs.dashboard.webapp.rest.json.Response;
 import com.excilys.shoofleurs.dashboard.webapp.rest.json.mapper.JsonMapper;
-import com.excilys.shoofleurs.dashboard.business.service.DiaporamaService;
+import com.excilys.shoofleurs.dashboard.business.service.SlideShowService;
 import com.excilys.shoofleurs.dashboard.json.Views;
 import com.excilys.shoofleurs.dashboard.webapp.rest.utils.SaveFile;
 import com.sun.jersey.core.header.FormDataContentDisposition;
@@ -29,7 +29,7 @@ public class ContentResource {
 	private ContentService mContentService;
 
 	@EJB
-	private DiaporamaService mDiaporamaService;
+	private SlideShowService mSlideShowService;
 
 
 	/**
@@ -65,8 +65,8 @@ public class ContentResource {
 
 			abstractContent.setUrl("http://vps229493.ovh.net:8080/dashboard/img/" + name);
 			abstractContent = mContentService.update(abstractContent);
-			abstractContent.getDiaporama().addContent(abstractContent);
-			mDiaporamaService.update(abstractContent.getDiaporama());
+			abstractContent.getSlideShow().addContent(abstractContent);
+			mSlideShowService.update(abstractContent.getSlideShow());
 
 			return new Response(JsonMapper.objectAsJson(abstractContent, Views.FullContent.class), 200);
 		}

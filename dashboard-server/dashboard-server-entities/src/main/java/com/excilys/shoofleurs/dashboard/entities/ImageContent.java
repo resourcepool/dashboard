@@ -10,10 +10,10 @@ import javax.persistence.Entity;
 @Entity(name = "image")
 public class ImageContent extends AbstractContent {
 
-	@Column(name = "duration_in_diaporama")
-	@JsonProperty("durationInDiaporama")
+	@Column(name = "duration_in_slideshow")
+	@JsonProperty("durationInSlideShow")
 	@JsonView(Views.FullContent.class)
-	private int mDurationInDiaporama;
+	private int mDurationInSlideShow;
 
 	public ImageContent() {
 		super();
@@ -27,11 +27,11 @@ public class ImageContent extends AbstractContent {
 		super(title, url);
 	}
 
-	public int getDurationInDiaporama() {
-		return mDurationInDiaporama;
+	public int getDurationInSlideShow() {
+		return mDurationInSlideShow;
 	}
 
-	public void setDurationInDiaporama(int durationInDiaporama) {
-		mDurationInDiaporama = durationInDiaporama;
+	public void setDurationInSlideShow(int durationInSlideShow) {
+		mDurationInSlideShow = durationInSlideShow;
 	}
 }
