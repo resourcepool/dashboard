@@ -7,18 +7,28 @@ import com.fasterxml.jackson.annotation.JsonView;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 
+/**
+ * WebContent is a website to show. It adds to extra property.
+ */
 @Entity(name = "web")
 public class WebContent extends AbstractContent {
 
+	/**
+	 * Duration display, by default 20.
+	 */
 	@Column(name = "duration_in_slideshow")
 	@JsonProperty("durationInSlideshow")
 	@JsonView(Views.FullContent.class)
-	private int mDurationInSlideshow;
+	private int mDurationInSlideshow = 20;
 
+	/**
+	 * If the website doesn't fit into the screen, enable auto scroll
+	 * to the the page. Default set to true.
+	 */
 	@Column(name = "auto_scroll")
 	@JsonProperty("autoScroll")
 	@JsonView(Views.FullContent.class)
-	private boolean mAutoScroll;
+	private boolean mAutoScroll = true;
 
 
 	public WebContent() {

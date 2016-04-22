@@ -7,13 +7,19 @@ import com.fasterxml.jackson.annotation.JsonView;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 
+/**
+ * Represents a PDF file with an extra property.
+ */
 @Entity(name = "pdf")
 public class PdfContent extends AbstractContent {
 
+	/**
+	 * Duration display of each page. By default, 10.
+	 */
 	@Column(name = "page_duration")
 	@JsonProperty("durationPerPage")
 	@JsonView(Views.FullContent.class)
-	private int mDurationPerPage;
+	private int mDurationPerPage = 10;
 
 	public PdfContent() {
 		super();

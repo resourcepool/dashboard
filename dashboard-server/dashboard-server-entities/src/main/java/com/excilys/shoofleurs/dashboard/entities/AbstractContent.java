@@ -47,6 +47,11 @@ public abstract class AbstractContent {
 	@JsonView(Views.LightContent.class)
 	private String mUrl;
 
+	/**
+	 * Global duration is the time of life of the content. If the slideshow is displaying all
+	 * day, a content can be display less time. Set to 0 by default, it means the content lives
+	 * the total duration of the slideshow.
+	 */
 	@Column(name = "global_duration")
 	@JsonProperty("globalDuration")
 	@JsonView(Views.FullContent.class)
@@ -65,13 +70,17 @@ public abstract class AbstractContent {
 
 	/**
 	 * Construct a content object with a title.
-	 * @param title SlideShow's title
+	 * @param title Content's title
 	 */
 	public AbstractContent(String title) {
 		mTitle = title;
 	}
 
-
+	/**
+	 * Construct a content object with a title and an access url.
+	 * @param title Content's title
+	 * @param url Access url used by the app for download the content
+	 */
 	public AbstractContent(String title, String url) {
 		this(title);
 		mUrl = url;

@@ -20,6 +20,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 
+/**
+ * A slideshow contains a list of content to display. It has a start date time and an end date time.
+ * By default, if date are not set, the startDateTime is now, and the end date time is the date very
+ * very far away ! Unless an other slideshow is set to start after, a slideshow with a default endDateTime
+ * never stop.
+ */
 @Entity(name = "slideshow")
 @NamedQueries({@NamedQuery(name = "slideshow.findAll", query = "Select d FROM slideshow d")})
 public class SlideShow {
