@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context=".activities.MainActivity"
+    tools:context=".activities.DashboardActivity"
     tools:showIn="@layout/activity_main">
 
 
@@ -29,8 +29,8 @@
     </RelativeLayout>
     <RelativeLayout
         android:id="@+id/progress_view_layout"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
         android:layout_centerHorizontal="true"
         android:layout_below="@id/title_layout">
         <View

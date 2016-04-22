@@ -4,6 +4,7 @@ package com.excilys.shoofleurs.dashboard.model.entities;
 import com.excilys.shoofleurs.dashboard.model.json.Views;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonView;
@@ -16,19 +17,26 @@ import com.fasterxml.jackson.annotation.JsonView;
 		@JsonSubTypes.Type(value = ImageContent.class, name = "ImageContent")
 })
 public abstract class AbstractContent {
+	@JsonProperty("id")
 	@JsonView(Views.LightContent.class)
 	private int mId;
 
+	@JsonProperty("title")
 	@JsonView(Views.LightContent.class)
 	private String mTitle;
 
+	@JsonProperty("url")
 	@JsonView(Views.LightContent.class)
 	private String mUrl;
 
+	@JsonProperty("globalDuration")
 	@JsonView(Views.FullContent.class)
 	private int mGlobalDuration;
 
+	private Diaporama mDiaporama;
+
 	public AbstractContent() {
+
 	}
 
 	public AbstractContent(String title) {

@@ -33,6 +33,7 @@ public class DiaporamaJsonRequestTest {
         assertNotNull(response);
         System.out.println(response);
 
+
         Diaporama[] diaporamas = objectMapper.readValue(response.getObjectAsJson(), Diaporama[].class);
 
         System.out.println(diaporamas);

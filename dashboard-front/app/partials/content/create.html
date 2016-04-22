@@ -1,0 +1,35 @@
+<div class="container">
+	<div class="row" novalidate>
+		<div class="col-xs-8 col-xs-offset-2 box">
+			<h1>Create content</h1>
+			<form name="form" ng-submit="submit(form.$valid)" novalidate>
+				<fieldset>
+				
+					<div class="form-group">
+						<label for="contentType">Content Type</label>
+						<select name="contentType" class="form-control" ng-model="content.type">
+							<option value="">Select a Type</option>
+							<option value="img">Image</option>
+							<option value="video">Video</option>
+						</select>
+					</div>
+					
+					<div class="form-group">
+						<label for="duration"></label> 
+						<input name="duration" id="duration" type="text" class="form-control" placeholder="duration" ng-model="content.duration">
+					</div>
+
+					<div class="form-group">
+						<label for="myFile"></label>
+						<input id="myFile" name="myFile" type="file" ng-model="content.file" />
+					</div>
+					
+				</fieldset>
+				<div class="actions pull-right">
+					<input type="submit" class="btn btn-primary" value="Create">
+					or <a href="dashboard.html" class="btn btn-default"  ng-click="reset()">Cancel</a>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>

@@ -1,0 +1,34 @@
+<div class="container">
+	<div class="row" novalidate>
+		<div class="col-xs-8 col-xs-offset-2 box">
+			<h1>{{ title }}</h1>
+			<form name="form" ng-submit="submit(form.$valid)" novalidate>
+				<fieldset>
+					<p id="status"></p>
+							
+					<div class="form-group">
+						<label for="name">Name</label> 
+						<input name="name" type="text" placeholder="Enter a name" class="form-control" minlength="2" maxlength="30" required ng-model="diaporama.name">
+						<p ng-show="form.name.$error.minlength" class="help-block">The value must have at least 2 characters</p>
+						<p ng-show="form.name.$error.maxlength" class="help-block">The value must have no more than characters</p>
+					</div>
+					<pre>diaporama.name = "{{diaporama.name}}"</pre>
+					  
+					<div class="form-group">
+						<label for="diaporamaStartTime">Start Time</label>
+						<input name="startTime" type="text" class="form-control" placeholder="diaporama start time" ng-model="diaporama.startTime">
+					</div>
+
+					<div class="form-group">
+						<label for="diaporamaEndTime">End Time</label>
+						<input name="endTime" type="text" class="form-control" ng-model="diaporama.endTime" placeholder="diaporama end time">
+					</div>
+				</fieldset>
+				<div class="actions pull-right">
+					<input type="submit" class="btn btn-primary" value="Create">
+					or <a href="dashboard.html" class="btn btn-default"  ng-click="reset()">Cancel</a>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>

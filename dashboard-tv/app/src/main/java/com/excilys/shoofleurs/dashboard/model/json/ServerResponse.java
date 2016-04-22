@@ -1,6 +1,5 @@
 package com.excilys.shoofleurs.dashboard.model.json;
 
-
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonRootName;
 
@@ -12,9 +11,7 @@ public class ServerResponse {
 	@JsonProperty("infoCode")
 	private int mInfoCode;
 
-	public ServerResponse(){
-
-	}
+	public ServerResponse() {}
 
 	public ServerResponse(String objectAsJson, int errorCode) {
 		mObjectAsJson = objectAsJson;
