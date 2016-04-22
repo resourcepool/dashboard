@@ -1,9 +1,11 @@
 package com.excilys.shoofleurs.dashboard.webapp.rest.json;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonRootName;
 
-@JsonRootName("response")
+/**
+ * Response is used like a wrapper. It contains the json object or the error and a info code
+ * to send to the client.
+ */
 public class Response {
 
 	@JsonProperty("objectAsJson")

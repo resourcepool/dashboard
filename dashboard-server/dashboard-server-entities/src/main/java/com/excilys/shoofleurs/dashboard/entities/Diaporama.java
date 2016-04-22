@@ -1,8 +1,9 @@
 package com.excilys.shoofleurs.dashboard.entities;
 
 
-
 import com.excilys.shoofleurs.dashboard.json.Views;
+
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonView;
 
@@ -48,6 +49,7 @@ public class Diaporama {
 	@OneToMany(mappedBy = "mDiaporama", cascade = CascadeType.ALL)
 	@JsonProperty("contents")
 	@JsonView(Views.TvContent.class)
+	@JsonManagedReference
 	private List<AbstractContent> mContents = new ArrayList<>();
 
 	public Diaporama() {
@@ -98,5 +100,9 @@ public class Diaporama {
 
 	public void setContents(List<AbstractContent> contents) {
 		mContents = contents;
+	}
+
+	public void addContent(AbstractContent content) {
+		mContents.add(content);
 	}
 }

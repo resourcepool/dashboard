@@ -16,6 +16,8 @@
         <junit.version>4.12</junit.version>
         <mavenplugin.version>2.5.1</mavenplugin.version>
         <java.version>1.8</java.version>
+        <logback>1.1.6</logback>
+        <slf4j>1.7.21</slf4j>
     </properties>
 
     <dependencies>
@@ -41,9 +43,36 @@
             <version>7.0</version>
             <scope>provided</scope>
         </dependency>
+
+        <!-- Logging -->
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>${logback}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>${slf4j}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-simple</artifactId>
+            <version>${slf4j}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.thetransactioncompany</groupId>
+            <artifactId>cors-filter</artifactId>
+            <version>2.5</version>
+        </dependency>
+
     </dependencies>
 
     <build>
+        <finalName>dashboard</finalName>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

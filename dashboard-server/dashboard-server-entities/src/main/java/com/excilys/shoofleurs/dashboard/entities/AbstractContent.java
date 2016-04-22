@@ -2,7 +2,7 @@ package com.excilys.shoofleurs.dashboard.entities;
 
 
 import com.excilys.shoofleurs.dashboard.json.Views;
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
@@ -17,16 +17,12 @@ import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.NamedQuery;
+
 
 @Entity(name = "abstract_content")
-@NamedQuery(name = "findAll", query = "SELECT a FROM abstract_content a")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@JsonTypeInfo(use=JsonTypeInfo.Id.NAME,
-		include=JsonTypeInfo.As.PROPERTY, property="@type")
-@JsonSubTypes({
-		@JsonSubTypes.Type(value = ImageContent.class, name = "ImageContent")
-})
+@JsonTypeInfo(use=JsonTypeInfo.Id.NAME, include=JsonTypeInfo.As.PROPERTY, property="@type")
+@JsonSubTypes({@JsonSubTypes.Type(value = ImageContent.class, name = "ImageContent")})
 public abstract class AbstractContent {
 
 	@Id
@@ -53,12 +49,11 @@ public abstract class AbstractContent {
 
 	@ManyToOne
 	@JoinColumn(name = "diaporama_id")
-	@JsonIgnore
+	@JsonProperty("diaporama")
+	@JsonBackReference
 	private Diaporama mDiaporama;
 
-	public AbstractContent() {
-
-	}
+	public AbstractContent() { }
 
 	public AbstractContent(String title) {
 		mTitle = title;
@@ -101,12 +96,10 @@ public abstract class AbstractContent {
 		mGlobalDuration = globalDuration;
 	}
 
-	@JsonIgnore
 	public Diaporama getDiaporama() {
 		return mDiaporama;
 	}
 
-	@JsonIgnore
 	public void setDiaporama(Diaporama diaporama) {
 		mDiaporama = diaporama;
 	}
