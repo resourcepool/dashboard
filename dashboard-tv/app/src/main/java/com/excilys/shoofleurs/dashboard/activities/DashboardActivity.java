@@ -55,8 +55,8 @@ public class DashboardActivity extends AppCompatActivity {
         View point1 = findViewById(R.id.progress_view_point1);
         View point2 = findViewById(R.id.progress_view_point2);
         RelativeLayout progressViewLayout = (RelativeLayout) findViewById(R.id.progress_view_layout);
-        mProgressAnimatorSet1 = AnimatorFactory.createProgressPointAnimatorSet(point1, progressViewLayout.getLayoutParams().width);
-        mProgressAnimatorSet2 = AnimatorFactory.createProgressPointAnimatorSet(point2, progressViewLayout.getLayoutParams().width);
+        mProgressAnimatorSet1 = AnimatorFactory.createSquarePointAnimatorSet(point1, progressViewLayout.getLayoutParams().width);
+        mProgressAnimatorSet2 = AnimatorFactory.createSquarePointAnimatorSet(point2, progressViewLayout.getLayoutParams().width);
 
         mProgressAnimatorSet1.start();
         mProgressAnimatorSet2.setStartDelay(1000);

@@ -57,7 +57,6 @@ public class DiaporamaController {
         this.mDashboardActivity = dashboardActivity;
         mContentLayout = (RelativeLayout) mDashboardActivity.findViewById(R.id.current_content_layout);
         mDiaporamaQueue = new ArrayDeque<>();
-//        mDiaporamaQueue = new PriorityQueue<>(10, new DiaporamaComparator());
     }
 
 
@@ -137,7 +136,6 @@ public class DiaporamaController {
         });
         displayable.displayContent(mDashboardActivity, mContentLayout);
     }
-
 
     /**
      * Display the next content of the diaporama or
