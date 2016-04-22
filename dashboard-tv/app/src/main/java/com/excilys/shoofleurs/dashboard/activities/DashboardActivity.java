@@ -10,27 +10,10 @@ import android.widget.RelativeLayout;
 import com.excilys.shoofleurs.dashboard.R;
 import com.excilys.shoofleurs.dashboard.controllers.DiaporamaController;
 import com.excilys.shoofleurs.dashboard.factories.AnimatorFactory;
-import com.excilys.shoofleurs.dashboard.managers.DiaporamaService;
-import com.excilys.shoofleurs.dashboard.requests.Get;
-import com.excilys.shoofleurs.dashboard.requests.ICallback;
-
-import org.json.JSONObject;
-
-import java.util.ArrayList;
-import java.util.List;
+import com.excilys.shoofleurs.dashboard.service.DiaporamaService;
+import com.excilys.shoofleurs.dashboard.utils.Utils;
 
 
-/**
- * L'activité principale récupère la liste des contenus. Dans ce scénario, elle récupère
- * les contenus du diaporama d'ID 1 (qui contient deux images) via l'AsyncTask {@link Get}
- * Une fois récupérée, les contenus sont mis en cache puis affichés via un handler qui va
- * gérer le temps d'affichage entre eux.
- *
- * Cette activité implémente l'interface {@link ICallback} qui permet à une AsyncTask de notifier
- * à l'activité qu'elle a fini son travail et que l'activité peut traiter le résultat comme elle
- * le souhaite. Le code passé en paramètre permet d'identifier le type d'action à effectuer et
- * le type du résultat.
- */
 public class DashboardActivity extends AppCompatActivity {
     /**
      * Affichage des images.
@@ -39,10 +22,6 @@ public class DashboardActivity extends AppCompatActivity {
 
     private AnimatorSet mProgressAnimatorSet1, mProgressAnimatorSet2;
 
-    /**
-     * Liste des configurations.
-     */
-    private List<JSONObject> mConfigList;
 
     /**
      * Index de l'image affichée en ce moment.
@@ -69,9 +48,7 @@ public class DashboardActivity extends AppCompatActivity {
         mDiaporamaService = DiaporamaService.getInstance(this);
         mDiaporamaService.checkUpdates();
 
-
         mContentLayout = (RelativeLayout) findViewById(R.id.current_content_layout);
-        mConfigList = new ArrayList<>();
     }
 
     public void startProgressView() {
