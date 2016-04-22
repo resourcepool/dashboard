@@ -5,9 +5,9 @@ import com.excilys.shoofleurs.dashboard.webapp.rest.json.Response;
 import com.excilys.shoofleurs.dashboard.webapp.rest.json.mapper.JsonMapper;
 import com.excilys.shoofleurs.dashboard.business.service.DiaporamaService;
 import com.excilys.shoofleurs.dashboard.json.Views;
-import org.glassfish.jersey.media.multipart.ContentDisposition;
-import org.glassfish.jersey.media.multipart.FormDataBodyPart;
-import org.glassfish.jersey.media.multipart.FormDataMultiPart;
+import com.sun.jersey.core.header.ContentDisposition;
+import com.sun.jersey.multipart.FormDataBodyPart;
+import com.sun.jersey.multipart.FormDataMultiPart;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
@@ -16,6 +16,8 @@ import javax.ws.rs.core.MediaType;
 import java.io.*;
 import java.net.URI;
 import java.net.URLEncoder;
+import java.util.Arrays;
+import java.util.List;
 
 @Stateless
 @Path("contents")
@@ -68,8 +70,7 @@ public class ContentResource {
 	@Path("upload")
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
 	public javax.ws.rs.core.Response setImageProfielPicture(FormDataMultiPart form) {
-
-		FormDataBodyPart filePart = form.getField("file");
+		FormDataBodyPart filePart = form.getField("file1");
 
 		ContentDisposition headerOfFilePart =  filePart.getContentDisposition();
 
@@ -107,6 +108,26 @@ public class ContentResource {
 
 			e.printStackTrace();
 		}
+
+	}
+
+	public static final String ROOT_IMAGES = "images/";
+	public static final String ROOT_IMAGES_PROFILE = ROOT_IMAGES+"profiles/";
+
+	static {
+		List<String> files = Arrays.asList(ROOT_IMAGES, ROOT_IMAGES_PROFILE);
+		files.stream().map(File::new).forEach((f)->{
+			if (!f.exists()) {
+				if (!f.mkdirs()) {
+					throw new RuntimeException();
+				}
+			} else if (!f.isDirectory()) {
+				throw new RuntimeException();
+			}
+		});
+		new File(ROOT_IMAGES).mkdir();
+
+		System.out.println(new File(ROOT_IMAGES));
 
 	}
 }
