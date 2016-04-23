@@ -34,15 +34,31 @@
         android:layout_centerHorizontal="true"
         android:layout_below="@id/title_layout">
         <View
-            android:id="@+id/progress_view_point1"
+            android:id="@+id/progress_view_top_left_point"
             android:layout_width="3dp"
             android:layout_height="3dp"
             android:background="@drawable/progress_view_point"/>
         <View
-            android:id="@+id/progress_view_point2"
+            android:id="@+id/progress_view_bottom_left_point"
             android:layout_width="3dp"
             android:layout_height="3dp"
+            android:layout_alignParentBottom="true"
             android:background="@drawable/progress_view_point"/>
+        <View
+            android:id="@+id/progress_view_bottom_right_point"
+            android:layout_width="3dp"
+            android:layout_height="3dp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:background="@drawable/progress_view_point"/>
+
+        <View
+            android:id="@+id/progress_view_top_right_point"
+            android:layout_width="3dp"
+            android:layout_height="3dp"
+            android:layout_alignParentRight="true"
+            android:background="@drawable/progress_view_point"/>
+
     </RelativeLayout>
 
     <RelativeLayout

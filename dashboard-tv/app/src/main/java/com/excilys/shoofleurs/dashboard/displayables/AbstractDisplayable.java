@@ -7,15 +7,10 @@ import android.view.ViewGroup;
 import java.lang.reflect.InvocationTargetException;
 
 /**
- * Created by buonomo on 29/03/16.
- */
-
-/**
- * Cette interface permet d'afficher n'importe quel type de média (image, vidéo, pdf, etc.)
- * à l'interieur d'un layout.
+ * This interface allows to display every type of content (pictures, videos, pdf, websit etc.)
+ * inside a layout.
  */
 public abstract class AbstractDisplayable implements Displayable{
-    public static final int INDETERMINED_TIME = -1;
     protected String mUrl;
     protected int mDurationInSec;
     protected OnCompletionListener mCompletionListener;
@@ -50,7 +45,7 @@ public abstract class AbstractDisplayable implements Displayable{
     }
 
     /**
-     * This method check if a View of type T already exist inside the layout,
+     * This method check if a view of type T already exist inside the layout,
      * return it in that case, or create it in other case.
      * @param layout
      * @param context

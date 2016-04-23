@@ -1,4 +1,4 @@
-package com.excilys.shoofleurs.dashboard.utils;
+package com.excilys.shoofleurs.dashboard.managers;
 
 import android.content.Context;
 

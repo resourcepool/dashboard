@@ -10,7 +10,7 @@ public class DisplayableFactory {
     public static AbstractDisplayable create(AbstractContent pAbstractContent) {
         if (pAbstractContent instanceof ImageContent) {
             ImageContent imageContent = (ImageContent) pAbstractContent;
-            return new ImageDisplayable(imageContent.getUrl(), imageContent.getDurationInDiaporama());
+            return new ImageDisplayable(imageContent.getUrl(), imageContent.getDurationInSlideShow());
         }
 
         else if (pAbstractContent instanceof VideoContent) {
@@ -21,12 +21,10 @@ public class DisplayableFactory {
         throw new IllegalArgumentException("This AbstractContent ("+pAbstractContent.toString()+") has not DisplayableFactory");
     }
 
-
-
     public static AbstractDisplayable create(AbstractContent pAbstractContent, AbstractDisplayable.OnCompletionListener listener) {
         if (pAbstractContent instanceof ImageContent) {
             ImageContent imageContent = (ImageContent) pAbstractContent;
-            return new ImageDisplayable(imageContent.getUrl(), imageContent.getDurationInDiaporama(), listener);
+            return new ImageDisplayable(imageContent.getUrl(), imageContent.getDurationInSlideShow(), listener);
         }
 
         else if (pAbstractContent instanceof VideoContent) {
