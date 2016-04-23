@@ -3,9 +3,14 @@ package com.excilys.shoofleurs.dashboard.activities;
 import android.graphics.Bitmap;
 import android.graphics.Point;
 import android.graphics.Rect;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.animation.LinearInterpolator;
@@ -13,13 +18,18 @@ import android.widget.ImageView;
 import android.widget.Scroller;
 import android.widget.TextView;
 
+import android.widget.Toast;
+import com.android.volley.*;
 import com.excilys.shoofleurs.dashboard.R;
 import com.excilys.shoofleurs.dashboard.requests.Download;
 import com.excilys.shoofleurs.dashboard.requests.Get;
 import com.excilys.shoofleurs.dashboard.requests.ICallback;
 
+import com.excilys.shoofleurs.dashboard.requests.MultiPartRequest;
+import com.excilys.shoofleurs.dashboard.singletons.VolleySingleton;
 import org.json.JSONObject;
 
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
@@ -38,7 +48,10 @@ import java.util.List;
  * le type du résultat.
  */
 public class MainActivity extends AppCompatActivity implements ICallback {
-    /**
+
+	private static final String TAG = "MainActivity";
+
+	/**
      * Affichage des images.
      */
     private ImageView mImageView;
@@ -109,6 +122,8 @@ public class MainActivity extends AppCompatActivity implements ICallback {
 
         setContentView(R.layout.activity_main);
 
+	    ((TextView) findViewById(R.id.title_text)).setText("MainActivity");
+
         Point point = new Point();
         getWindowManager().getDefaultDisplay().getSize(point);
         mSizeScreen = point.x;
@@ -127,6 +142,35 @@ public class MainActivity extends AppCompatActivity implements ICallback {
         mTextView = (TextView) findViewById(R.id.text_cnn);
         mTextView.setScroller(mScroller);
         nextMessage();
+
+
+	    MultiPartRequest.Builder builder = new MultiPartRequest.Builder();
+	    builder.url("http://192.168.1.20:8080/webapp/api/contents/upload")
+			    .responseListener(new Response.Listener<NetworkResponse>() {
+				    @Override
+				    public void onResponse(NetworkResponse response) {
+					    Log.d(TAG, "#onResponse() called with " + "response = [" + String.valueOf(response) + "]");
+				    }
+			    })
+			    .errorListener(new Response.ErrorListener() {
+				    @Override
+				    public void onErrorResponse(VolleyError error) {
+					    Log.d(TAG, "#onErrorResponse() called with " + "error = [" + String.valueOf(error) + "]");
+					    if (error instanceof TimeoutError) {
+						    TimeoutError timeoutError = (TimeoutError) error;
+						    Log.d(TAG, "timeoutError. : "+String.valueOf(timeoutError.getNetworkTimeMs()));
+						    Log.d(TAG, "timeoutError. : "+String.valueOf(timeoutError.networkResponse));
+					    }
+				    }
+			    });
+
+	    Drawable drawable = ContextCompat.getDrawable(this, R.drawable.ic_launcher);
+	    Bitmap bitmap = ((BitmapDrawable) drawable).getBitmap();
+	    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+	    bitmap.compress(Bitmap.CompressFormat.PNG, 0, byteArrayOutputStream);
+	    builder.addPart("file1", byteArrayOutputStream.toByteArray(), "icon.png");
+
+	    VolleySingleton.getInstance(this).addToRequestQueue(builder.build());
     }
 
     /**

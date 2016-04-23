@@ -70,7 +70,10 @@ public class ContentResource {
 	@Path("upload")
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
 	public javax.ws.rs.core.Response setImageProfielPicture(FormDataMultiPart form) {
-		FormDataBodyPart filePart = form.getField("file1");
+
+		System.out.println(form);
+		System.out.println(form.getFields());
+		FormDataBodyPart filePart = form.getField("file");
 
 		ContentDisposition headerOfFilePart =  filePart.getContentDisposition();
 
