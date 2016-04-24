@@ -2,10 +2,12 @@ package com.excilys.shoofleurs.dashboard.service;
 
 import android.util.Log;
 
+import com.android.volley.NoConnectionError;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
+import com.excilys.shoofleurs.dashboard.R;
 import com.excilys.shoofleurs.dashboard.activities.DashboardActivity;
 import com.excilys.shoofleurs.dashboard.model.entities.SlideShow;
 import com.excilys.shoofleurs.dashboard.rest.JsonRequest;
@@ -35,6 +37,7 @@ public class SlideShowService {
      * This method checks if new slideshows are available to the server
      */
     public void checkUpdates() {
+        mDashboardActivity.setDebugMessage(R.string.debug_check_updates);
         @SuppressWarnings("unchecked")
         JsonRequest<SlideShow[]> request = new JsonRequest<>(Data.GET_SLIDESHOWS_URL, SlideShow[].class, null, new Response.Listener<SlideShow[]>() {
             @Override
@@ -54,6 +57,10 @@ public class SlideShowService {
                 if (error instanceof TimeoutError) {
                     Log.i(SlideShowService.class.getSimpleName(), "TimoutError: trying to resend the request");
                     checkUpdates();
+                }
+
+                else if (error instanceof NoConnectionError) {
+                    mDashboardActivity.setDebugMessage(R.string.debug_no_connection_error);
                 }
             }
         });

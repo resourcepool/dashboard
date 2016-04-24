@@ -96,7 +96,7 @@ public class SlideShowController {
         Log.i(getClass().getSimpleName(), "startSlideShow " + mCurrentSlideShow);
         mCurrentContentIndex = 0;
 
-        mDashboardActivity.stopWaitingAnimation();
+        //mDashboardActivity.stopWaitingAnimation();
         if (mCurrentSlideShow != null) {
             if (mCurrentSlideShow.getContents().size() > 0){
                 AbstractContent firstContent = mCurrentSlideShow.getContents().get(mCurrentContentIndex);
@@ -117,8 +117,9 @@ public class SlideShowController {
      */
     private void displayContent(AbstractContent content) {
         Log.d(SlideShowController.class.getSimpleName(), "displayContent: " + content);
-
         final AbstractContent nextContent = getNextContent();
+
+        mDashboardActivity.setDebugMessage(R.string.debug_download_content);
 
         /* Create the content to display and go to the next when it's completed */
         Displayable displayable = DisplayableFactory.create(content, new AbstractDisplayable.OnCompletionListener() {

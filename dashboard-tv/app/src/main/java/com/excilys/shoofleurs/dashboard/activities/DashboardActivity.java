@@ -5,10 +5,13 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.excilys.shoofleurs.dashboard.R;
+import com.excilys.shoofleurs.dashboard.controllers.MessageController;
 import com.excilys.shoofleurs.dashboard.controllers.SlideShowController;
 import com.excilys.shoofleurs.dashboard.factories.AnimatorFactory;
+import com.excilys.shoofleurs.dashboard.service.MessageService;
 import com.excilys.shoofleurs.dashboard.service.SlideShowService;
 import com.excilys.shoofleurs.dashboard.utils.AndroidUtils;
 
@@ -28,27 +31,50 @@ public class DashboardActivity extends AppCompatActivity {
      */
     private View mTopLeftPoint, mBottomLeftPoint, mBottomRightPoint, mTopRightPoint;
 
+    private TextView mDebugTextView;
+
     /**
      * The service for the slideshows
      */
     private SlideShowService mSlideShowService;
 
     /**
-     * The controller of slideshows for displaying them
+     * The controller of slideshows to displaying them
      */
     private SlideShowController mSlideShowController;
+
+    /**
+     * The service for the cnn messages to displaying them
+     */
+    private MessageService mMessageService;
+
+
+    /**
+     * The controller of cnn messages
+     */
+    private MessageController mMessageController;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         AndroidUtils.hideStatusBar(this);
         setContentView(R.layout.activity_main);
+        mDebugTextView = (TextView) findViewById(R.id.debug_message);
+
         startWaitingAnimation();
         mSlideShowController = SlideShowController.getInstance(this);
         mSlideShowService = SlideShowService.getInstance(this);
-        mSlideShowService.checkUpdates();
+
+        mMessageController = MessageController.getInstance(this);
+        mMessageService = MessageService.getInstance(this);
+
+        checkUpdates();
     }
 
+    private void checkUpdates() {
+        mSlideShowService.checkUpdates();
+        mMessageService.checkUpdates();
+    }
 
     /**
      * Start the waiting animation
@@ -77,7 +103,15 @@ public class DashboardActivity extends AppCompatActivity {
         AndroidUtils.setVisibility(View.GONE, mBottomLeftPoint, mBottomRightPoint, mTopLeftPoint, mTopRightPoint);
     }
 
+    public void setDebugMessage(int messageId) {
+        mDebugTextView.setText(getResources().getString(messageId));
+    }
+
     public SlideShowController getSlideShowController() {
         return mSlideShowController;
+    }
+
+    public MessageController getMessageController() {
+        return mMessageController;
     }
 }

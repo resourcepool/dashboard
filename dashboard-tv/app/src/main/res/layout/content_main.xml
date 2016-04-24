@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:text="http://schemas.android.com/apk/res-auto"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -17,14 +18,15 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="50dp"
         android:gravity="center">
-        <com.excilys.shoofleurs.dashboard.utils.TextViewNormalFont
+        <com.excilys.shoofleurs.dashboard.utils.TypeFaceTextView
             android:id="@+id/title_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            text:typeface="Roboto-Thin.ttf"
             android:gravity="center"
             android:padding="20dp"
             android:text="@string/title"
-            android:textSize="70sp"
+            android:textSize="75sp"
             android:textColor="@android:color/white"/>
     </RelativeLayout>
     <RelativeLayout
@@ -58,8 +60,19 @@
             android:layout_height="3dp"
             android:layout_alignParentRight="true"
             android:background="@drawable/progress_view_point"/>
-
     </RelativeLayout>
+
+    <com.excilys.shoofleurs.dashboard.utils.TypeFaceTextView
+        android:id="@+id/debug_message"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/progress_view_layout"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="25dp"
+        android:textColor="@android:color/white"
+        text:typeface="Roboto-Light.ttf"
+        android:textSize="14sp"
+        android:text="@string/debug_check_updates"/>
 
     <RelativeLayout
         android:id="@+id/current_content_layout"
@@ -68,17 +81,48 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="60dp"
+        android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:gravity="center_vertical"
-        android:background="#96262626">
+        android:orientation="vertical"
+        android:gravity="top"
+        android:background="#a0000000">
 
-        <TextView
-            android:id="@+id/text_cnn"
+        <com.excilys.shoofleurs.dashboard.utils.TypeFaceTextView
+            android:id="@+id/title_cnn"
             android:layout_marginLeft="10dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            text:typeface="RobotoCondensed-Regular.ttf"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
             android:text="@string/title"
+            android:textSize="17sp"
+            android:singleLine="true"
+            android:ellipsize="marquee"
+            android:marqueeRepeatLimit ="marquee_forever"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:scrollHorizontally="true"
             android:textColor="#FFFFFF"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="10dp">
+                <com.excilys.shoofleurs.dashboard.utils.TypeFaceTextView
+                    android:id="@+id/text_cnn"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    text:typeface="Roboto-LightItalic.ttf"
+                    android:text="@string/title"
+                    android:textSize="20sp"
+                    android:singleLine="true"
+                    android:ellipsize="marquee"
+                    android:marqueeRepeatLimit="marquee_forever"
+                    android:focusable="false"
+                    android:scrollHorizontally="true"
+                    android:textColor="#FFFFFF"/>
+            </LinearLayout>
     </LinearLayout>
 </RelativeLayout>
