@@ -7,18 +7,19 @@
 <link rel="stylesheet" href="css/app.css">
 <script src="bower_components/angular/angular.js"></script>
 <script src="bower_components/angular-route/angular-route.js"></script>
-<script src="scripts/controllers/diaporamaControllers.js"></script>
+<script src="scripts/controllers/slideshowControllers.js"></script>
 <script src="scripts/controllers/contentControllers.js"></script>
 <script src="scripts/app.js"></script>
 <script src="bower_components/jquery/dist/jquery.min.js"></script>
+<script src="bower_components/moment/moment.js"></script>
 </head>
 <body>
 	<header class="navbar navbar-inverse navbar-fixed-top">
 		<div class="container">
-			<a class="navbar-brand" href="dashboard">Dashboard</a>
+			<a class="navbar-brand" href="#/home">Dashboard</a>
 		</div>
 	</header>
 
-	<section ng-view></section>
+	<section id="main" ng-view></section>
 </body>
 </html>

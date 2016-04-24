@@ -3,16 +3,15 @@
 var contentControllers = angular.module('contentControllers', []);
 
 
-contentControllers.controller('ContentCreateCtrl', ['$scope', '$http', 'upload', function ($scope, $http, $upload) {
+contentControllers.controller('ContentCreateCtrl', ['$scope', '$http', function ($scope, $http) {
 	
 	$scope.content = {};
-	
 	
 	var req = {
 			 method: 'POST',
 			 url: 'http://example.com',
 			 headers: {
-			   'Content-Type': undefined /*{"@type":"ImageContent", "durationInDiaporama":100,"globalDuration":200,"title":"SuperTitre3",
+			   'content': undefined /*{"@type":"ImageContent", "durationInDiaporama":100,"globalDuration":200,"title":"SuperTitre3",
 				   "url":"none(uploader par le serveur)","id":0,
 				   "diaporama":{"title":"title","startDateTime":"18-05-1000","endDateTime":"18-05-2000","id":1}}*/
 			 },
