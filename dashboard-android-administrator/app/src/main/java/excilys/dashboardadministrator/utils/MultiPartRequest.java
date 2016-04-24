@@ -1,4 +1,4 @@
-package com.excilys.shoofleurs.dashboard.requests;
+package excilys.dashboardadministrator.utils;
 
 import android.util.Log;
 import com.android.volley.*;
@@ -229,3 +229,4 @@ public class MultiPartRequest extends Request<NetworkResponse> {
 	}
 
 }
+
