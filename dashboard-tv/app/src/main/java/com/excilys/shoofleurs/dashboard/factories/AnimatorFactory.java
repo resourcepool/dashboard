@@ -394,4 +394,10 @@ public class AnimatorFactory {
         return animatorSet;
     }
 
+    public static Animator createScrollWebViewAnimator(View view, String scrollProperty, int duration) {
+        Animator scrollAnimator = ObjectAnimator.ofInt(view, scrollProperty, 0, view.getHeight());
+        scrollAnimator.setDuration(duration);
+        return scrollAnimator;
+    }
+
 }

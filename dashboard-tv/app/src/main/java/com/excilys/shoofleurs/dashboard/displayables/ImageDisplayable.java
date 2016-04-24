@@ -11,18 +11,17 @@ import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
 import com.excilys.shoofleurs.dashboard.rest.VolleySingleton;
 
+
+
 public class ImageDisplayable extends AbstractDisplayable {
-    private Handler mHandler;
     private boolean waitForNoImmediate;
 
     public ImageDisplayable(String url, int duration) {
         super(url, duration);
-        mHandler = new Handler();
     }
 
     public ImageDisplayable(String url, int duration, OnCompletionListener listener) {
         super(url, duration, listener);
-        mHandler = new Handler();
     }
 
 
@@ -62,18 +61,6 @@ public class ImageDisplayable extends AbstractDisplayable {
         });
     }
 
-    /**
-     * Handle the onCompletion method when the duration delay is reached.
-     */
-    private void handleCompletion() {
-        mHandler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                if (mCompletionListener != null) {
-                    mCompletionListener.onCompletion();
-                }
-            }
-        }, mDurationInSec*1000);
-    }
+
 }
 

@@ -11,6 +11,7 @@ import com.excilys.shoofleurs.dashboard.displayables.DisplayableFactory;
 import com.excilys.shoofleurs.dashboard.model.entities.AbstractContent;
 import com.excilys.shoofleurs.dashboard.model.entities.SlideShow;
 import com.excilys.shoofleurs.dashboard.managers.ContentCacheManager;
+import com.excilys.shoofleurs.dashboard.model.entities.WebContent;
 
 import java.util.ArrayDeque;
 import java.util.Arrays;
@@ -53,11 +54,9 @@ public class SlideShowController {
         mSlideShowQueue = new ArrayDeque<>();
     }
 
-
     public void addSlideShows(SlideShow... slideShows) {
         Log.i(getClass().getSimpleName(), "addSlideShows: " + Arrays.asList(slideShows));
         for (SlideShow d : slideShows) {
-            //d.getContents().add(new VideoContent("Video", "http://clips.vorwaerts-gmbh.de/VfE_html5.mp4"));
             mSlideShowQueue.offer(d);
         }
 
@@ -69,7 +68,6 @@ public class SlideShowController {
             replaceSlideShow(mSlideShowQueue.poll());
         }
     }
-
 
     /**
      * Replace or create the current slideshow

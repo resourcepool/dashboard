@@ -1,6 +1,7 @@
 package com.excilys.shoofleurs.dashboard.displayables;
 
 import android.content.Context;
+import android.os.Handler;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -14,25 +15,33 @@ public abstract class AbstractDisplayable implements Displayable{
     protected String mUrl;
     protected int mDurationInSec;
     protected OnCompletionListener mCompletionListener;
+    private Handler mHandler;
+
 
     public AbstractDisplayable(String url) {
         this.mUrl = url;
+        mHandler = new Handler();
     }
 
     public AbstractDisplayable(String url, int duration) {
         this.mUrl = url;
         this.mDurationInSec = duration;
+        mHandler = new Handler();
+
     }
 
     public AbstractDisplayable(String url, OnCompletionListener listener) {
         this.mUrl = url;
         this.mCompletionListener = listener;
+        mHandler = new Handler();
+
     }
 
     public AbstractDisplayable(String url, int duration, OnCompletionListener listener) {
         this.mUrl = url;
         this.mDurationInSec = duration;
         this.mCompletionListener = listener;
+        mHandler = new Handler();
     }
 
 
@@ -101,6 +110,20 @@ public abstract class AbstractDisplayable implements Displayable{
         ViewGroup.LayoutParams params =  new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         view.setLayoutParams(params);
         layout.addView(view);
+    }
+
+    /**
+     * Handle the onCompletion method when the duration delay is reached.
+     */
+    protected void handleCompletion() {
+        mHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (mCompletionListener != null) {
+                    mCompletionListener.onCompletion();
+                }
+            }
+        }, mDurationInSec*1000);
     }
 
     public interface OnCompletionListener {
