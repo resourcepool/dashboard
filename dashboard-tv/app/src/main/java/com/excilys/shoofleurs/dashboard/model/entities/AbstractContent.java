@@ -17,7 +17,12 @@ import com.fasterxml.jackson.annotation.JsonView;
 @JsonAutoDetect(fieldVisibility= JsonAutoDetect.Visibility.ANY, getterVisibility=JsonAutoDetect.Visibility.NONE,
 		isGetterVisibility=JsonAutoDetect.Visibility.NONE, setterVisibility= JsonAutoDetect.Visibility.NONE)
 @JsonTypeInfo(use=JsonTypeInfo.Id.NAME, include=JsonTypeInfo.As.PROPERTY, property="@type")
-@JsonSubTypes({@JsonSubTypes.Type(value = ImageContent.class, name = "ImageContent")})
+@JsonSubTypes({
+		@JsonSubTypes.Type(value = ImageContent.class, name = "ImageContent"),
+		@JsonSubTypes.Type(value = WebContent.class, name = "WebContent"),
+		@JsonSubTypes.Type(value = PdfContent.class, name = "PdfContent"),
+		@JsonSubTypes.Type(value = VideoContent.class, name = "VideoContent"),
+})
 public abstract class AbstractContent {
 	@JsonProperty("id")
 	@JsonView(Views.LightContent.class)

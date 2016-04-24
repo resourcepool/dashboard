@@ -27,7 +27,12 @@ import javax.persistence.ManyToOne;
 @Entity(name = "abstract_content")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @JsonTypeInfo(use=JsonTypeInfo.Id.NAME, include=JsonTypeInfo.As.PROPERTY, property="@type")
-@JsonSubTypes({@JsonSubTypes.Type(value = ImageContent.class, name = "ImageContent")})
+@JsonSubTypes({
+		@JsonSubTypes.Type(value = ImageContent.class, name = "ImageContent"),
+		@JsonSubTypes.Type(value = WebContent.class, name = "WebContent"),
+		@JsonSubTypes.Type(value = PdfContent.class, name = "PdfContent"),
+		@JsonSubTypes.Type(value = VideoContent.class, name = "VideoContent"),
+})
 public abstract class AbstractContent {
 
 	@Id

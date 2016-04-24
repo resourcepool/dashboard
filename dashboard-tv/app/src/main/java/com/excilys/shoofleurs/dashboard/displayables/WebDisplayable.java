@@ -11,10 +11,6 @@ public class WebDisplayable extends AbstractDisplayable{
     private Handler mHandler;
     private boolean onScrollCompleted;
     private Runnable mScrollRunnable;
-    public WebDisplayable(String url, OnCompletionListener listener) {
-        super(url, listener);
-        mHandler = new Handler();
-    }
 
     public WebDisplayable(String url, int duration, OnCompletionListener listener) {
         super(url, duration, listener);
