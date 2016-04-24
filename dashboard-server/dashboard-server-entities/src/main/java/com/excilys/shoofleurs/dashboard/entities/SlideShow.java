@@ -1,8 +1,9 @@
 package com.excilys.shoofleurs.dashboard.entities;
 
 
-
 import com.excilys.shoofleurs.dashboard.json.Views;
+
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonView;
 
@@ -19,13 +20,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-@Entity(name = "diaporama")
-@NamedQueries({@NamedQuery(name = "diaporamas.findAll", query = "Select d FROM diaporama d")})
-public class Diaporama {
+/**
+ * A slideshow contains a list of content to display. It has a start date time and an end date time.
+ * By default, if date are not set, the startDateTime is now, and the end date time is the date very
+ * very far away ! Unless an other slideshow is set to start after, a slideshow with a default endDateTime
+ * never stop.
+ */
+@Entity(name = "slideshow")
+@NamedQueries({@NamedQuery(name = "slideshow.findAll", query = "Select d FROM slideshow d")})
+public class SlideShow {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	@Column(name = "diaporama_id")
+	@Column(name = "slideshow_id")
 	@JsonProperty("id")
 	@JsonView(Views.LightContent.class)
 	private int mId;
@@ -45,20 +52,22 @@ public class Diaporama {
 	@JsonView(Views.FullContent.class)
 	private String mEndDateTime;
 
-	@OneToMany(mappedBy = "mDiaporama", cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "mSlideShow", cascade = CascadeType.ALL)
 	@JsonProperty("contents")
 	@JsonView(Views.TvContent.class)
+	@JsonManagedReference
 	private List<AbstractContent> mContents = new ArrayList<>();
 
-	public Diaporama() {
+	public SlideShow() {
 
 	}
 
-	public Diaporama(String title, String startDateTime, String endDateTime) {
+	public SlideShow(String title, String startDateTime, String endDateTime) {
 		mTitle = title;
 		mStartDateTime = startDateTime;
 		mEndDateTime = endDateTime;
 	}
+
 
 	public int getId() {
 		return mId;
@@ -98,5 +107,9 @@ public class Diaporama {
 
 	public void setContents(List<AbstractContent> contents) {
 		mContents = contents;
+	}
+
+	public void addContent(AbstractContent content) {
+		mContents.add(content);
 	}
 }

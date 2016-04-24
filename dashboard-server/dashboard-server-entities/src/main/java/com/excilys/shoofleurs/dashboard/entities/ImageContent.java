@@ -7,13 +7,20 @@ import com.fasterxml.jackson.annotation.JsonView;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 
+/**
+ * Image content extends AbstractContent. This class adds a property, the duration display.
+ */
 @Entity(name = "image")
 public class ImageContent extends AbstractContent {
 
-	@Column(name = "duration_in_diaporama")
-	@JsonProperty("durationInDiaporama")
+	/**
+	 * This field is the duration display. Must be > 0, if not precise,
+	 * the default value is 5.
+	 */
+	@Column(name = "duration_in_slideshow")
+	@JsonProperty("durationInSlideShow")
 	@JsonView(Views.FullContent.class)
-	private int mDurationInDiaporama;
+	private int mDurationInSlideShow = 5;
 
 	public ImageContent() {
 		super();
@@ -27,11 +34,11 @@ public class ImageContent extends AbstractContent {
 		super(title, url);
 	}
 
-	public int getDurationInDiaporama() {
-		return mDurationInDiaporama;
+	public int getDurationInSlideShow() {
+		return mDurationInSlideShow;
 	}
 
-	public void setDurationInDiaporama(int durationInDiaporama) {
-		mDurationInDiaporama = durationInDiaporama;
+	public void setDurationInSlideShow(int durationInSlideShow) {
+		mDurationInSlideShow = durationInSlideShow;
 	}
 }

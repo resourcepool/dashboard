@@ -1,4 +1,4 @@
-package com.excilys.shoofleurs.dashboard.requests;
+package com.excilys.shoofleurs.dashboard.rest;
 
 import android.util.Log;
 
@@ -10,7 +10,6 @@ import com.android.volley.Response;
 import com.android.volley.toolbox.HttpHeaderParser;
 import com.excilys.shoofleurs.dashboard.model.json.ServerResponse;
 import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -19,8 +18,8 @@ import java.io.UnsupportedEncodingException;
 import java.util.Map;
 
 /**
- * Cette classe permet d'éffectuer une requête et parser automatiquement la réponse Json
- * en un type spécifier en générique.
+ * This classe allows to perform a request and parse automatically the Json response
+ * to a type specified in generic.
  * @param <T>
  */
 public class JsonRequest<T> extends Request<T> {

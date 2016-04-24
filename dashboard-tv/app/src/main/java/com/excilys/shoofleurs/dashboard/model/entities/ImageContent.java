@@ -4,11 +4,18 @@ import com.excilys.shoofleurs.dashboard.model.json.Views;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonView;
 
+/**
+ * Image content extends AbstractContent. This class adds a property, the duration display.
+ */
 public class ImageContent extends AbstractContent {
 
+	/**
+	 * This field is the duration display. Must be > 0, if not precise,
+	 * the default value is 5.
+	 */
+	@JsonProperty("durationInSlideShow")
 	@JsonView(Views.FullContent.class)
-	@JsonProperty("durationInDiaporama")
-	private int mDurationInDiaporama;
+	private int mDurationInSlideShow = 5;
 
 	public ImageContent() {
 		super();
@@ -22,11 +29,13 @@ public class ImageContent extends AbstractContent {
 		super(title, url);
 	}
 
-	public int getDurationInDiaporama() {
-		return mDurationInDiaporama;
+	public int getDurationInSlideShow() {
+		return mDurationInSlideShow;
 	}
 
-	public void setDurationInDiaporama(int durationInDiaporama) {
-		mDurationInDiaporama = durationInDiaporama;
+	public void setDurationInSlideShow(int durationInSlideShow) {
+		mDurationInSlideShow = durationInSlideShow;
 	}
+
+
 }

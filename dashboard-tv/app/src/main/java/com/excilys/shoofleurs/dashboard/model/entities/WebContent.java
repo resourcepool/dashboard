@@ -1,14 +1,28 @@
 package com.excilys.shoofleurs.dashboard.model.entities;
 
 import com.excilys.shoofleurs.dashboard.model.json.Views;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonView;
 
+/**
+ * WebContent is a website to show. It adds to extra property.
+ */
 public class WebContent extends AbstractContent {
-	@JsonView(Views.FullContent.class)
-	private int mDurationInDiaporama;
 
+	/**
+	 * Duration display, by default 20.
+	 */
+	@JsonProperty("durationInSlideshow")
 	@JsonView(Views.FullContent.class)
-	private boolean mAutoScroll;
+	private int mDurationInSlideshow = 20;
+
+	/**
+	 * If the website doesn't fit into the screen, enable auto scroll
+	 * to the the page. Default set to true.
+	 */
+	@JsonProperty("autoScroll")
+	@JsonView(Views.FullContent.class)
+	private boolean mAutoScroll = true;
 
 
 	public WebContent() {
@@ -23,12 +37,12 @@ public class WebContent extends AbstractContent {
 		super(title, url);
 	}
 
-	public int getDurationInDiaporama() {
-		return mDurationInDiaporama;
+	public int getDurationInSlideshow() {
+		return mDurationInSlideshow;
 	}
 
-	public void setDurationInDiaporama(int durationInDiaporama) {
-		mDurationInDiaporama = durationInDiaporama;
+	public void setDurationInSlideshow(int durationInSlideshow) {
+		mDurationInSlideshow = durationInSlideshow;
 	}
 
 	public boolean isAutoScroll() {
@@ -39,3 +53,4 @@ public class WebContent extends AbstractContent {
 		mAutoScroll = autoScroll;
 	}
 }
+

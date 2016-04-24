@@ -24,6 +24,10 @@ android {
         exclude 'META-INF/NOTICE'
         exclude 'META-INF/notice.txt'
     }
+
+    testOptions {
+        unitTests.returnDefaultValues = true
+    }
 }
 
 dependencies {
@@ -33,19 +37,21 @@ dependencies {
 //    compile 'com.excilys.shoofleurs.dashboard:dashboard-server-entities:1.0-SNAPSHOT'
 //    compile project('../dashboard-server/dashboard-server-business')
 
+    /* For video caching*/
+    compile 'com.danikula:videocache:2.3.4'
 
     // Android Support
-    compile 'com.android.support:appcompat-v7:23.2.0'
-    compile 'com.android.support:design:23.2.0'
+    compile 'com.android.support:appcompat-v7:23.3.0'
+    compile 'com.android.support:design:23.3.0'
 
     // Pour REST
     compile 'org.springframework.android:spring-android-rest-template:1.0.1.RELEASE'
     compile 'com.android.volley:volley:1.0.0'
 
     // JSON formatter
-    compile 'com.fasterxml.jackson.core:jackson-databind:2.3.2'
     compile 'com.fasterxml.jackson.core:jackson-core:2.7.3'
     compile 'com.fasterxml.jackson.core:jackson-annotations:2.7.3'
+    compile 'com.fasterxml.jackson.core:jackson-databind:2.7.3'
 
     // Dépendences de Tests
     testCompile 'junit:junit:4.12'

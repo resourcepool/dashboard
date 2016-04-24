@@ -4,13 +4,11 @@ import com.excilys.shoofleurs.dashboard.business.crud.CrudService;
 import com.excilys.shoofleurs.dashboard.entities.AbstractContent;
 
 import javax.ejb.Stateless;
-import java.util.List;
 
+/**
+ * Access CRUD operations for AbstractContent type.
+ */
 @Stateless
-public class AbstractContentDao extends CrudService<AbstractContent> {
-
-	public List<AbstractContent> findAll() {
-		return findWithNamedQuery("findAll", null, 0, 0);
-	}
+public class ContentDao extends CrudService<AbstractContent> {
 
 }

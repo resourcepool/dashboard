@@ -2,7 +2,7 @@ package com.excilys.shoofleurs.dashboard.entities;
 
 
 import com.excilys.shoofleurs.dashboard.json.Views;
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
@@ -17,15 +17,21 @@ import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.NamedQuery;
 
+
+/**
+ * This class represents an abstract content with commons properties between content.
+ * A content can be an image, a video, a pdf, or a web page. A content is associated
+ * with a slideshow. It can only exist with a slideshow.
+ */
 @Entity(name = "abstract_content")
-@NamedQuery(name = "findAll", query = "SELECT a FROM abstract_content a")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@JsonTypeInfo(use=JsonTypeInfo.Id.NAME,
-		include=JsonTypeInfo.As.PROPERTY, property="@type")
+@JsonTypeInfo(use=JsonTypeInfo.Id.NAME, include=JsonTypeInfo.As.PROPERTY, property="@type")
 @JsonSubTypes({
-		@JsonSubTypes.Type(value = ImageContent.class, name = "ImageContent")
+		@JsonSubTypes.Type(value = ImageContent.class, name = "ImageContent"),
+		@JsonSubTypes.Type(value = WebContent.class, name = "WebContent"),
+		@JsonSubTypes.Type(value = PdfContent.class, name = "PdfContent"),
+		@JsonSubTypes.Type(value = VideoContent.class, name = "VideoContent"),
 })
 public abstract class AbstractContent {
 
@@ -46,28 +52,45 @@ public abstract class AbstractContent {
 	@JsonView(Views.LightContent.class)
 	private String mUrl;
 
+	/**
+	 * Global duration is the time of life of the content. If the slideshow is displaying all
+	 * day, a content can be display less time. Set to 0 by default, it means the content lives
+	 * the total duration of the slideshow.
+	 */
 	@Column(name = "global_duration")
 	@JsonProperty("globalDuration")
 	@JsonView(Views.FullContent.class)
 	private int mGlobalDuration;
 
 	@ManyToOne
-	@JoinColumn(name = "diaporama_id")
-	@JsonIgnore
-	private Diaporama mDiaporama;
+	@JoinColumn(name = "slideshow_id")
+	@JsonProperty("slideShow")
+	@JsonBackReference
+	private SlideShow mSlideShow;
 
-	public AbstractContent() {
+	/**
+	 * Default constructor for Jersey/JPA.
+	 */
+	public AbstractContent() { }
 
-	}
-
+	/**
+	 * Construct a content object with a title.
+	 * @param title Content's title
+	 */
 	public AbstractContent(String title) {
 		mTitle = title;
 	}
 
+	/**
+	 * Construct a content object with a title and an access url.
+	 * @param title Content's title
+	 * @param url Access url used by the app for download the content
+	 */
 	public AbstractContent(String title, String url) {
 		this(title);
 		mUrl = url;
 	}
+
 
 	public int getId() {
 		return mId;
@@ -101,13 +124,11 @@ public abstract class AbstractContent {
 		mGlobalDuration = globalDuration;
 	}
 
-	@JsonIgnore
-	public Diaporama getDiaporama() {
-		return mDiaporama;
+	public SlideShow getSlideShow() {
+		return mSlideShow;
 	}
 
-	@JsonIgnore
-	public void setDiaporama(Diaporama diaporama) {
-		mDiaporama = diaporama;
+	public void setSlideShow(SlideShow slideShow) {
+		mSlideShow = slideShow;
 	}
 }

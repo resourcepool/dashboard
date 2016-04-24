@@ -3,25 +3,25 @@ package com.excilys.shoofleurs.dashboard.displayables;
 import com.excilys.shoofleurs.dashboard.model.entities.AbstractContent;
 import com.excilys.shoofleurs.dashboard.model.entities.ImageContent;
 import com.excilys.shoofleurs.dashboard.model.entities.VideoContent;
+import com.excilys.shoofleurs.dashboard.model.entities.WebContent;
 
-/**
- * Created by excilys on 20/04/16.
- */
 public class DisplayableFactory {
-
-    public static AbstractDisplayable create(AbstractContent pAbstractContent) {
+    public static AbstractDisplayable create(AbstractContent pAbstractContent, AbstractDisplayable.OnCompletionListener listener) {
         if (pAbstractContent instanceof ImageContent) {
             ImageContent imageContent = (ImageContent) pAbstractContent;
-            return new ImageDisplayable(imageContent.getUrl(), imageContent.getDurationInDiaporama());
+            return new ImageDisplayable(imageContent.getUrl(), imageContent.getDurationInSlideShow(), listener);
         }
 
         else if (pAbstractContent instanceof VideoContent) {
             VideoContent videoContent = (VideoContent) pAbstractContent;
-            /**TODO trouver un moyen de définir le temps d'un video*/
-            return new VideoDisplayable(videoContent.getUrl(), 100000);
-//            return new VideoDisplayable(videoContent.getUrl(), AbstractDisplayable.INDETERMINED_TIME);
+            return new VideoDisplayable(videoContent.getUrl(), listener);
         }
 
-        throw new IllegalArgumentException("This AbstractContent ("+pAbstractContent.toString()+") ha snot DisplayableFactory");
+        else if (pAbstractContent instanceof WebContent) {
+            WebContent webContent = (WebContent) pAbstractContent;
+                return new WebDisplayable(webContent.getUrl(), webContent.isAutoScroll() ? 0 : webContent.getDurationInSlideshow(), listener);
+        }
+
+        throw new IllegalArgumentException("This AbstractContent ("+pAbstractContent.toString()+") has not DisplayableFactory");
     }
 }

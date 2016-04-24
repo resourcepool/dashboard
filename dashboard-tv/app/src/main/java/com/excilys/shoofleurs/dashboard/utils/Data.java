@@ -5,5 +5,6 @@ package com.excilys.shoofleurs.dashboard.utils;
  */
 public final class Data {
     public static final String SERVER_URL = "http://51.254.34.138:8080/dashboard/api/";
-    public static final String GET_DIAPORAMAS_URL = SERVER_URL + "diaporamas?json=true";
+    public static final String GET_SLIDESHOWS_URL = SERVER_URL + "slideshows?json=tv";
+    public static final String GET_MESSAGES_URL = SERVER_URL + "messages";
 }

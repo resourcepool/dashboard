@@ -1,29 +1,51 @@
 package com.excilys.shoofleurs.dashboard.displayables;
 
 import android.content.Context;
-import android.net.Uri;
+import android.media.MediaPlayer;
 import android.view.ViewGroup;
 import android.widget.MediaController;
 import android.widget.VideoView;
 
-/**
- * Created by excilys on 21/04/16.
- */
+import com.danikula.videocache.HttpProxyCacheServer;
+import com.excilys.shoofleurs.dashboard.managers.VideoCacheProxyManager;
+
 public class VideoDisplayable extends AbstractDisplayable{
-    public VideoDisplayable(String url, int duration) {
-        super(url, duration);
+    private VideoView mVideoView;
+    public VideoDisplayable(String url) {
+        super(url);
     }
 
+    public VideoDisplayable(String url, OnCompletionListener listener) {
+        super(url, listener);
+    }
+
+    private MediaPlayer.OnCompletionListener onCompletionListener = new MediaPlayer.OnCompletionListener() {
+        @Override
+        public void onCompletion(MediaPlayer mediaPlayer) {
+            if (mCompletionListener != null) {
+                mCompletionListener.onCompletion();
+            }
+
+            if (mVideoView != null) {
+                mVideoView.stopPlayback();
+            }
+        }
+    };
+
     @Override
-    public int displayContent(Context context, ViewGroup layout) {
-        VideoView videoView = addOrReplaceViewByType(layout, context, VideoView.class);
+    public void displayContent(Context context, ViewGroup layout) {
+        /* Proxy Url for caching */
+        HttpProxyCacheServer proxy = VideoCacheProxyManager.getProxy(context);
+        String proxyUrl = proxy.getProxyUrl(mUrl);
+
+        mVideoView = addOrReplaceViewByType(layout, context, VideoView.class);
         //Use a media controller so that you can scroll the video contents
         //and also to pause, start the video.
         MediaController mediaController = new MediaController(context);
-        mediaController.setAnchorView(videoView);
-        videoView.setMediaController(mediaController);
-        videoView.setVideoURI(Uri.parse(mUrl));
-        videoView.start();
-        return 100000;
+        mediaController.setAnchorView(mVideoView);
+        mVideoView.setMediaController(mediaController);
+        mVideoView.setVideoPath(proxyUrl);
+        mVideoView.setOnCompletionListener(onCompletionListener);
+        mVideoView.start();
     }
 }
