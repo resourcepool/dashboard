@@ -21,12 +21,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 import com.android.volley.*;
 import com.excilys.shoofleurs.dashboard.R;
-import com.excilys.shoofleurs.dashboard.requests.Download;
-import com.excilys.shoofleurs.dashboard.requests.Get;
-import com.excilys.shoofleurs.dashboard.requests.ICallback;
+import com.excilys.shoofleurs.dashboard.model.entities.Diaporama;
+import com.excilys.shoofleurs.dashboard.requests.*;
 
-import com.excilys.shoofleurs.dashboard.requests.MultiPartRequest;
 import com.excilys.shoofleurs.dashboard.singletons.VolleySingleton;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
@@ -145,7 +145,7 @@ public class MainActivity extends AppCompatActivity implements ICallback {
 
 
 	    MultiPartRequest.Builder builder = new MultiPartRequest.Builder();
-	    builder.url("http://192.168.1.20:8080/webapp/api/contents/upload")
+	    builder.url("http://192.168.1.20:8080/webapp/api/contents")
 			    .responseListener(new Response.Listener<NetworkResponse>() {
 				    @Override
 				    public void onResponse(NetworkResponse response) {
@@ -168,7 +168,16 @@ public class MainActivity extends AppCompatActivity implements ICallback {
 	    Bitmap bitmap = ((BitmapDrawable) drawable).getBitmap();
 	    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
 	    bitmap.compress(Bitmap.CompressFormat.PNG, 0, byteArrayOutputStream);
-	    builder.addPart("file1", byteArrayOutputStream.toByteArray(), "icon.png");
+	    builder.addPart("file", byteArrayOutputStream.toByteArray(), "icon.png");
+	    Diaporama diaporama = new Diaporama();
+	    diaporama.setId(98);
+	    diaporama.setEndDateTime("02/02/2006");
+	    ObjectMapper objectMapper = new ObjectMapper();
+	    try {
+		    builder.addPart("text", objectMapper.writeValueAsString(diaporama));
+	    } catch (JsonProcessingException pE) {
+		    throw new RuntimeException();
+	    }
 
 	    VolleySingleton.getInstance(this).addToRequestQueue(builder.build());
     }

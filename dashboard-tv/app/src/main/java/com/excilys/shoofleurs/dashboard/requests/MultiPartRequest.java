@@ -179,6 +179,21 @@ public class MultiPartRequest extends Request<NetworkResponse> {
 			}
 		}
 
+		public Builder addPart(String key, String value) {
+			try {
+				dos.writeBytes(TWO_HYPHENS + boundary + LINE_END);
+				dos.writeBytes("Content-Disposition: form-data; name=\"" + key + "\"" + LINE_END);
+				dos.writeBytes("Content-Type: text/plain; charset=UTF-8" + LINE_END);
+				dos.writeBytes(LINE_END);
+				dos.writeBytes(value);
+				dos.writeBytes(LINE_END);
+			} catch (IOException pE) {
+				Log.e("Exception", "", pE);
+				throw new RuntimeException("Erreur lors de la création d'un MultipartRequest");
+			}
+			return this;
+		}
+
 		/**
 		 * AJoute un Listener de la réponse
 		 * @param pResponseListener

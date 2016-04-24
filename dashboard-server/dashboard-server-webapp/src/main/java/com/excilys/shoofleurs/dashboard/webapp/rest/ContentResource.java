@@ -67,7 +67,6 @@ public class ContentResource {
 	}
 
 	@POST
-	@Path("upload")
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
 	public javax.ws.rs.core.Response setImageProfielPicture(FormDataMultiPart form) {
 		FormDataBodyPart filePart = form.getField("file");
@@ -76,17 +75,15 @@ public class ContentResource {
 
 		InputStream fileInputStream = filePart.getValueAs(InputStream.class);
 
+		// Récupération d'un champ texte
+		String text = form.getField("text").getValue();
+
 		String nameFile = headerOfFilePart.getFileName().substring(headerOfFilePart.getFileName().lastIndexOf("."));
 		String filePath = "images/" + nameFile;
 
-		// save the file to the server
+		// Sauvegarde d'un fichier
 		saveFile(fileInputStream, filePath);
 
-		String output = "File saved to server location : " + filePath;
-//		CDAO.getEntityManager().refresh(account);
-		//noinspection deprecation
-//		account.setProfilPicture(URLEncoder.encode(nameFile));
-//		CDAO.getAccountDAO().update(account);
 		return javax.ws.rs.core.Response.created(URI.create("")).build();
 	}
 
