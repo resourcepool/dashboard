@@ -7,7 +7,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context=".activities.DashboardActivity"
+    tools:context=".ui.activities.DashboardActivity"
     tools:showIn="@layout/activity_main">
 
     <RelativeLayout
@@ -17,7 +17,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="50dp"
         android:gravity="center">
-        <com.excilys.shoofleurs.dashboard.utils.TypeFaceTextView
+        <com.excilys.shoofleurs.dashboard.ui.utils.TypeFaceTextView
             android:id="@+id/title_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -61,7 +61,7 @@
             android:background="@drawable/progress_view_point"/>
     </RelativeLayout>
 
-    <com.excilys.shoofleurs.dashboard.utils.TypeFaceTextView
+    <com.excilys.shoofleurs.dashboard.ui.utils.TypeFaceTextView
         android:id="@+id/debug_message"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -73,10 +73,13 @@
         android:textSize="14sp"
         android:text="@string/debug_check_updates"/>
 
-    <RelativeLayout
-        android:id="@+id/current_content_layout"
+    <android.support.v4.view.ViewPager
+        android:id="@+id/view_pager"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent">
+
+
+    </android.support.v4.view.ViewPager>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -86,7 +89,7 @@
         android:gravity="top"
         android:background="#a0000000">
 
-        <com.excilys.shoofleurs.dashboard.utils.TypeFaceTextView
+        <com.excilys.shoofleurs.dashboard.ui.utils.TypeFaceTextView
             android:id="@+id/title_cnn"
             android:layout_marginLeft="10dp"
             android:layout_width="wrap_content"
@@ -109,7 +112,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_margin="10dp">
-                <com.excilys.shoofleurs.dashboard.utils.TypeFaceTextView
+                <com.excilys.shoofleurs.dashboard.ui.utils.TypeFaceTextView
                     android:id="@+id/text_cnn"
                     android:layout_width="match_parent"
                     android:layout_height="50dp"

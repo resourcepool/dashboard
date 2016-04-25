@@ -49,6 +49,9 @@ public abstract class AbstractContent {
 	@JsonBackReference
 	private SlideShow mSlideShow;
 
+	@JsonProperty("positionInSlideShow")
+	private int mPositionInSlideShow;
+
 	/**
 	 * Default constructor for Jersey/JPA.
 	 */
@@ -71,7 +74,6 @@ public abstract class AbstractContent {
 		this(title);
 		mUrl = url;
 	}
-
 
 	public int getId() {
 		return mId;
@@ -111,6 +113,14 @@ public abstract class AbstractContent {
 
 	public void setSlideShow(SlideShow slideShow) {
 		mSlideShow = slideShow;
+	}
+
+	public int getPositionInSlideShow() {
+		return mPositionInSlideShow;
+	}
+
+	public void setPositionInSlideShow(int mPositionInSlideShow) {
+		this.mPositionInSlideShow = mPositionInSlideShow;
 	}
 
 	@Override

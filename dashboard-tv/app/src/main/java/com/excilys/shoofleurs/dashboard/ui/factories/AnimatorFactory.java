@@ -1,4 +1,4 @@
-package com.excilys.shoofleurs.dashboard.factories;
+package com.excilys.shoofleurs.dashboard.ui.factories;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;

@@ -1,8 +1,11 @@
 package com.excilys.shooflers.dashboard;
 
+import com.excilys.shoofleurs.dashboard.model.entities.AbstractContent;
 import com.excilys.shoofleurs.dashboard.model.entities.SlideShow;
 import com.excilys.shoofleurs.dashboard.model.entities.ImageContent;
+import com.excilys.shoofleurs.dashboard.model.entities.WebContent;
 import com.excilys.shoofleurs.dashboard.model.json.ServerResponse;
+import com.excilys.shoofleurs.dashboard.model.json.Views;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.junit.Test;
@@ -47,5 +50,71 @@ public class SlideShowJsonRequestTest {
         SlideShow[] slideShows = objectMapper.readValue(response.getObjectAsJson(), SlideShow[].class);
 
         System.out.println(slideShows[0].getContents().get(0).getClass().getSimpleName());
+    }
+
+    @Test
+    public void parseWebContentTest() throws Exception {
+        String diapoAsJson = "{\n" +
+                "  \"contents\": [\n" +
+                "    {\n" +
+                "      \"@type\": \"ImageContent\",\n" +
+                "      \"durationInSlideShow\": 5,\n" +
+                "      \"title\": \"Titre\",\n" +
+                "      \"globalDuration\": 3000,\n" +
+                "      \"url\": \"http: //vps229493.ovh.net: 8080/dashboard/img/7.jpg\",\n" +
+                "      \"id\": 7\n" +
+                "    },\n" +
+                "    {\n" +
+                "      \"@type\": \"ImageContent\",\n" +
+                "      \"durationInSlideShow\": 5,\n" +
+                "      \"title\": \"Titre\",\n" +
+                "      \"globalDuration\": 3000,\n" +
+                "      \"url\": \"http: //vps229493.ovh.net: 8080/dashboard/img/8.jpg\",\n" +
+                "      \"id\": 8\n" +
+                "    },\n" +
+                "    {\n" +
+                "      \"@type\": \"ImageContent\",\n" +
+                "      \"durationInSlideShow\": 5,\n" +
+                "      \"title\": \"Titre\",\n" +
+                "      \"globalDuration\": 3000,\n" +
+                "      \"url\": \"http: //vps229493.ovh.net: 8080/dashboard/img/9.jpg\",\n" +
+                "      \"id\": 9\n" +
+                "    },\n" +
+                "    {\n" +
+                "      \"@type\": \"ImageContent\",\n" +
+                "      \"durationInSlideShow\": 5,\n" +
+                "      \"title\": \"Titre\",\n" +
+                "      \"globalDuration\": 3000,\n" +
+                "      \"url\": \"http: //vps229493.ovh.net: 8080/dashboard/img/10.jpg\",\n" +
+                "      \"id\": 10\n" +
+                "    },\n" +
+                "    {\n" +
+                "      \"@type\": \"ImageContent\",\n" +
+                "      \"durationInSlideShow\": 5,\n" +
+                "      \"title\": \"Titre\",\n" +
+                "      \"globalDuration\": 3000,\n" +
+                "      \"url\": \"http: //vps229493.ovh.net: 8080/dashboard/img/11.jpg\",\n" +
+                "      \"id\": 11\n" +
+                "    }\n" +
+                "  ],\n" +
+                "  \"title\": \"LaFolieDouce\",\n" +
+                "  \"startDateTime\": \"21-04-201600: 00: 00\",\n" +
+                "  \"endDateTime\": \"21-04-201800: 00: 00\",\n" +
+                "  \"id\": 1\n" +
+                "}";
+
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        SlideShow slideShow = objectMapper.readValue(diapoAsJson, SlideShow.class);
+
+//        System.out.println(slideShow);
+        AbstractContent webContent = new WebContent("WebContent1", "https://www.mapsquare.io/");
+        webContent.setSlideShow(slideShow);
+
+        objectMapper.findAndRegisterModules();
+        String objectAsJson = null;
+        objectAsJson = objectMapper.writerWithView(Views.FullContent.class).writeValueAsString(webContent);
+
+        System.out.println(objectAsJson);
     }
 }

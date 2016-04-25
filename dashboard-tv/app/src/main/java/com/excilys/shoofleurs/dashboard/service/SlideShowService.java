@@ -8,7 +8,7 @@ import com.android.volley.Response;
 import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.excilys.shoofleurs.dashboard.R;
-import com.excilys.shoofleurs.dashboard.activities.DashboardActivity;
+import com.excilys.shoofleurs.dashboard.ui.activities.DashboardActivity;
 import com.excilys.shoofleurs.dashboard.model.entities.SlideShow;
 import com.excilys.shoofleurs.dashboard.rest.JsonRequest;
 import com.excilys.shoofleurs.dashboard.rest.VolleySingleton;
@@ -24,6 +24,8 @@ public class SlideShowService {
 
     private DashboardActivity mDashboardActivity;
 
+    private boolean mUpdating;
+
     public static SlideShowService getInstance(DashboardActivity mainActivity){
         if (S_INSTANCE == null) S_INSTANCE = new SlideShowService(mainActivity);
         return S_INSTANCE;
@@ -37,6 +39,7 @@ public class SlideShowService {
      * This method checks if new slideshows are available to the server
      */
     public void checkUpdates() {
+        mUpdating = true;
         mDashboardActivity.setDebugMessage(R.string.debug_check_updates);
         @SuppressWarnings("unchecked")
         JsonRequest<SlideShow[]> request = new JsonRequest<>(Data.GET_SLIDESHOWS_URL, SlideShow[].class, null, new Response.Listener<SlideShow[]>() {
@@ -49,6 +52,7 @@ public class SlideShowService {
                 else {
                     Log.i(getClass().getSimpleName(), "checkUpdate onResponse: empty");
                 }
+                mUpdating = false;
             }
         }, new Response.ErrorListener() {
             @Override
@@ -62,8 +66,10 @@ public class SlideShowService {
                 else if (error instanceof NoConnectionError) {
                     mDashboardActivity.setDebugMessage(R.string.debug_no_connection_error);
                 }
+                mUpdating = false;
             }
         });
+
         executeRequest(request);
     }
 

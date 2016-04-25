@@ -1,4 +1,4 @@
-package com.excilys.shoofleurs.dashboard.comparators;
+package com.excilys.shoofleurs.dashboard.model.comparators;
 
 import com.excilys.shoofleurs.dashboard.model.entities.SlideShow;
 
@@ -11,6 +11,6 @@ public class SlideShowComparator implements Comparator<SlideShow> {
     @Override
     public int compare(SlideShow lhs, SlideShow rhs) {
         /**TODO compare the two slideshows start dates and return the newest**/
-        return 0;
+        return Integer.compare(lhs.getId(), rhs.getId());
     }
 }

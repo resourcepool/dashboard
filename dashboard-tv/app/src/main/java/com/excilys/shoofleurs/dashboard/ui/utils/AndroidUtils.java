@@ -1,13 +1,11 @@
-package com.excilys.shoofleurs.dashboard.utils;
+package com.excilys.shoofleurs.dashboard.ui.utils;
 
 import android.animation.Animator;
-import android.app.ActionBar;
-import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 
-import com.excilys.shoofleurs.dashboard.activities.DashboardActivity;
+import com.excilys.shoofleurs.dashboard.ui.activities.DashboardActivity;
 
 public class AndroidUtils {
     public static void hideStatusBar(DashboardActivity activity) {

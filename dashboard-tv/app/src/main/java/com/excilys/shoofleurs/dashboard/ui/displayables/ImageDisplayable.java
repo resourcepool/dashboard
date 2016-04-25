@@ -1,14 +1,12 @@
-package com.excilys.shoofleurs.dashboard.displayables;
+package com.excilys.shoofleurs.dashboard.ui.displayables;
 
 import android.content.Context;
-import android.os.Handler;
 import android.util.Log;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
-import com.android.volley.toolbox.NetworkImageView;
 import com.excilys.shoofleurs.dashboard.rest.VolleySingleton;
 
 
@@ -16,17 +14,13 @@ import com.excilys.shoofleurs.dashboard.rest.VolleySingleton;
 public class ImageDisplayable extends AbstractDisplayable {
     private boolean waitForNoImmediate;
 
-    public ImageDisplayable(String url, int duration) {
-        super(url, duration);
-    }
-
     public ImageDisplayable(String url, int duration, OnCompletionListener listener) {
         super(url, duration, listener);
     }
 
 
     @Override
-    public void displayContent(final Context context, ViewGroup layout) {
+    public void display(final Context context, ViewGroup layout) {
         final ImageView imageView = addOrReplaceViewByType(layout, context, ImageView.class);
         imageView.setImageBitmap(null);
         VolleySingleton.getInstance(context).getImageLoader().get(mUrl, new ImageLoader.ImageListener() {
@@ -40,7 +34,6 @@ public class ImageDisplayable extends AbstractDisplayable {
                     }
                     else{
                         imageView.setImageBitmap(response.getBitmap());
-                        handleCompletion();
                     }
                 }
 
@@ -48,7 +41,6 @@ public class ImageDisplayable extends AbstractDisplayable {
                 else {
                     if (waitForNoImmediate) {
                         imageView.setImageBitmap(response.getBitmap());
-                        handleCompletion();
                         waitForNoImmediate = false;
                     }
                 }
@@ -61,6 +53,9 @@ public class ImageDisplayable extends AbstractDisplayable {
         });
     }
 
-
+    @Override
+    public void start() {
+        handleDelayedCompletion();
+    }
 }
 

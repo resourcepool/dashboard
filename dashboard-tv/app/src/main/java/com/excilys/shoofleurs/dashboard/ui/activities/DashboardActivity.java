@@ -1,26 +1,26 @@
-package com.excilys.shoofleurs.dashboard.activities;
+package com.excilys.shoofleurs.dashboard.ui.activities;
 
 import android.animation.AnimatorSet;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
+import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.excilys.shoofleurs.dashboard.R;
-import com.excilys.shoofleurs.dashboard.controllers.MessageController;
-import com.excilys.shoofleurs.dashboard.controllers.SlideShowController;
-import com.excilys.shoofleurs.dashboard.factories.AnimatorFactory;
+import com.excilys.shoofleurs.dashboard.ui.controllers.MessageController;
+import com.excilys.shoofleurs.dashboard.ui.controllers.SlideShowController;
+import com.excilys.shoofleurs.dashboard.ui.factories.AnimatorFactory;
 import com.excilys.shoofleurs.dashboard.service.MessageService;
 import com.excilys.shoofleurs.dashboard.service.SlideShowService;
-import com.excilys.shoofleurs.dashboard.utils.AndroidUtils;
+import com.excilys.shoofleurs.dashboard.ui.utils.AndroidUtils;
 
 /**
  * This Activity represents the main view of the application.
  * It asks the server for slideshows updates via the SlideShowService and
  * display them.
  */
-public class DashboardActivity extends AppCompatActivity {
+public class DashboardActivity extends FragmentActivity {
     private AnimatorSet mProgressAnimatorSet1,
             mProgressAnimatorSet2,
             mProgressAnimatorSet3,
@@ -47,7 +47,6 @@ public class DashboardActivity extends AppCompatActivity {
      * The service for the cnn messages to displaying them
      */
     private MessageService mMessageService;
-
 
     /**
      * The controller of cnn messages
@@ -113,5 +112,11 @@ public class DashboardActivity extends AppCompatActivity {
 
     public MessageController getMessageController() {
         return mMessageController;
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        //checkUpdates();
     }
 }

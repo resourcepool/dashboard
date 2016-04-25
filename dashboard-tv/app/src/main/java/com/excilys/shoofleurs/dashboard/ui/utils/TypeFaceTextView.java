@@ -1,4 +1,4 @@
-package com.excilys.shoofleurs.dashboard.utils;
+package com.excilys.shoofleurs.dashboard.ui.utils;
 
 import android.content.Context;
 import android.content.res.TypedArray;

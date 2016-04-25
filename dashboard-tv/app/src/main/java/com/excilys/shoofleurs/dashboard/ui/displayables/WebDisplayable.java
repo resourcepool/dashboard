@@ -1,4 +1,4 @@
-package com.excilys.shoofleurs.dashboard.displayables;
+package com.excilys.shoofleurs.dashboard.ui.displayables;
 
 import android.content.Context;
 import android.os.Handler;
@@ -7,7 +7,8 @@ import android.view.ViewGroup;
 import android.webkit.WebView;
 
 
-public class WebDisplayable extends AbstractDisplayable{
+public class WebDisplayable extends AbstractDisplayable {
+    private WebView mWebView;
     private Handler mHandler;
     private boolean onScrollCompleted;
     private Runnable mScrollRunnable;
@@ -18,21 +19,25 @@ public class WebDisplayable extends AbstractDisplayable{
     }
 
     @Override
-    public void displayContent(Context context, ViewGroup layout) {
-        final WebView webView = addOrReplaceViewByType(layout, context, WebView.class);
-        webView.getSettings().setJavaScriptEnabled(true);
-        webView.loadUrl(mUrl);
-        Log.i(WebDisplayable.class.getSimpleName(), "displayContent: " + mDurationInSec);
-        if (mDurationInSec == 0) {
-            setAutoscroll(webView);
-        }
+    public void display(Context context, ViewGroup layout) {
+        mWebView = addOrReplaceViewByType(layout, context, WebView.class);
+        mWebView.getSettings().setJavaScriptEnabled(true);
+        mWebView.loadUrl(mUrl);
+    }
 
+    @Override
+    public void start() {
+        if (mDurationInSec == 0) {
+            handleAutoscroll(mWebView);
+        }
         else {
-            handleCompletion();
+            handleDelayedCompletion();
         }
     }
 
-    private void setAutoscroll(final WebView webView) {
+
+    private void handleAutoscroll(final WebView webView) {
+        Log.i(WebDisplayable.class.getSimpleName(), "handleAutoscroll: ");
         mScrollRunnable = new Runnable() {
             @Override
             public void run() {
@@ -40,8 +45,9 @@ public class WebDisplayable extends AbstractDisplayable{
                 int contentHeight = (int) (webView.getContentHeight()*webView.getScale());
                 if (contentHeight - webView.getScrollY() <= webView.getHeight()) {
                     if (mCompletionListener != null && !onScrollCompleted) {
-                        mCompletionListener.onCompletion();
+                        mCompletionListener.onDisplayableCompletion();
                         onScrollCompleted = true;
+                        Log.i(WebDisplayable.class.getSimpleName(), "handleAutoscroll: onCompleted");
                     }
                 }
                 /* Restart the current thread after 20 ms*/
@@ -51,12 +57,13 @@ public class WebDisplayable extends AbstractDisplayable{
             }
         };
 
-        /* Wait 5 seconds before start autoscrolling*/
-        mHandler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                mScrollRunnable.run();
-            }
-        }, 5000);
+            /* Wait 5 seconds before start autoscrolling*/
+            mHandler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    Log.i(WebDisplayable.class.getSimpleName(), "handleAutoScroll: start autoScroll");
+                    mScrollRunnable.run();
+                }
+            }, 5000);
     }
 }

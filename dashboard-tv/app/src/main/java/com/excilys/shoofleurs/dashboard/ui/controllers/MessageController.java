@@ -1,4 +1,4 @@
-package com.excilys.shoofleurs.dashboard.controllers;
+package com.excilys.shoofleurs.dashboard.ui.controllers;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
@@ -8,10 +8,10 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.excilys.shoofleurs.dashboard.R;
-import com.excilys.shoofleurs.dashboard.activities.DashboardActivity;
-import com.excilys.shoofleurs.dashboard.factories.AnimatorFactory;
+import com.excilys.shoofleurs.dashboard.ui.activities.DashboardActivity;
+import com.excilys.shoofleurs.dashboard.ui.factories.AnimatorFactory;
 import com.excilys.shoofleurs.dashboard.model.entities.Message;
-import com.excilys.shoofleurs.dashboard.utils.AndroidUtils;
+import com.excilys.shoofleurs.dashboard.ui.utils.AndroidUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;

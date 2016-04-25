@@ -1,11 +1,8 @@
-package com.excilys.shoofleurs.dashboard.displayables;
+package com.excilys.shoofleurs.dashboard.ui.displayables;
 
 import android.content.Context;
 import android.view.ViewGroup;
 
-/**
- * Created by excilys on 22/04/16.
- */
 public interface Displayable {
     /**
      * Cette fonction permet à un objet AbstractDisplayable de s'afficher à l'interieur
@@ -13,5 +10,7 @@ public interface Displayable {
      * @param context
      * @param layout
      */
-    void displayContent(Context context, ViewGroup layout);
+    void display(Context context, ViewGroup layout);
+    void start();
+    void stop();
 }

@@ -1,4 +1,4 @@
-package com.excilys.shoofleurs.dashboard.displayables;
+package com.excilys.shoofleurs.dashboard.ui.displayables;
 
 import android.content.Context;
 import android.media.MediaPlayer;
@@ -7,23 +7,20 @@ import android.widget.MediaController;
 import android.widget.VideoView;
 
 import com.danikula.videocache.HttpProxyCacheServer;
-import com.excilys.shoofleurs.dashboard.managers.VideoCacheProxyManager;
+import com.excilys.shoofleurs.dashboard.ui.managers.VideoCacheProxyManager;
 
-public class VideoDisplayable extends AbstractDisplayable{
+public class VideoDisplayable extends AbstractDisplayable {
     private VideoView mVideoView;
-    public VideoDisplayable(String url) {
-        super(url);
-    }
 
     public VideoDisplayable(String url, OnCompletionListener listener) {
         super(url, listener);
     }
 
-    private MediaPlayer.OnCompletionListener onCompletionListener = new MediaPlayer.OnCompletionListener() {
+    private MediaPlayer.OnCompletionListener onMediaCompletionListener = new MediaPlayer.OnCompletionListener() {
         @Override
         public void onCompletion(MediaPlayer mediaPlayer) {
             if (mCompletionListener != null) {
-                mCompletionListener.onCompletion();
+                mCompletionListener.onDisplayableCompletion();
             }
 
             if (mVideoView != null) {
@@ -33,7 +30,7 @@ public class VideoDisplayable extends AbstractDisplayable{
     };
 
     @Override
-    public void displayContent(Context context, ViewGroup layout) {
+    public void display(Context context, ViewGroup layout) {
         /* Proxy Url for caching */
         HttpProxyCacheServer proxy = VideoCacheProxyManager.getProxy(context);
         String proxyUrl = proxy.getProxyUrl(mUrl);
@@ -45,7 +42,11 @@ public class VideoDisplayable extends AbstractDisplayable{
         mediaController.setAnchorView(mVideoView);
         mVideoView.setMediaController(mediaController);
         mVideoView.setVideoPath(proxyUrl);
-        mVideoView.setOnCompletionListener(onCompletionListener);
+        mVideoView.setOnCompletionListener(onMediaCompletionListener);
+    }
+
+    @Override
+    public void start() {
         mVideoView.start();
     }
 }
