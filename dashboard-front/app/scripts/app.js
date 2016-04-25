@@ -33,6 +33,9 @@ dashboardFrontApp.config(['$routeProvider',
 		when('/slideshow/:slideshowId/content/add/', {
 			templateUrl: 'partials/content/form.html',
 			controller: 'ContentCreateCtrl'
+		}).when('/slideshow/content/edit/:contentId', {
+			templateUrl: 'partials/content/form.html',
+			controller: 'ContentEditCtrl'
 		}).
 		otherwise({
 			redirectTo: '/home'

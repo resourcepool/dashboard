@@ -6,6 +6,7 @@ var contentControllers = angular.module('contentControllers', []);
 contentControllers.controller('ContentCreateCtrl', ['$scope', '$http', function ($scope, $http) {
 	
 	$scope.content = {};
+	$scope.title = "Add content";
 	
 	var req = {
 			 method: 'POST',
@@ -46,9 +47,12 @@ contentControllers.controller('ContentCreateCtrl', ['$scope', '$http', function 
 }]);
 contentControllers.controller('ContentEditCtrl', ['$scope', '$http', '$routeParams', function ($scope, $http, $routeParams) {
 	
-	var id = $routeParams.get('diaporamaId');
+	var id = $routeParams.slideshowId;
 	
-	$scope.diaporama = {};
+	$scope.content = {};
+	$scope.title = "Edit Content";
+	
+	/*
 	$http({
 		method: 'GET',
 		url: 'url_get_diapo',
@@ -69,5 +73,6 @@ contentControllers.controller('ContentEditCtrl', ['$scope', '$http', '$routePara
 			data: $scope.diaporama
 		});
 	}
+	*/
 }]);
 

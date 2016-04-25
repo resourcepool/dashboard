@@ -57,7 +57,7 @@ slideshowControllers.controller('SlideshowAddCtrl', ['$scope', '$http', function
 }]);
 slideshowControllers.controller('SlideshowEditCtrl', ['$scope', '$http', '$routeParams', function ($scope, $http, $routeParams) {
 	
-	var id = $routeParams.slideshowId;
+	var id = $routeParams.contentId;
 	
 	$scope.slideshow = {};
 	$scope.title = "Edit a slideshow :";
