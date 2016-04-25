@@ -68,6 +68,10 @@ public abstract class AbstractContent {
 	@JsonBackReference
 	private SlideShow mSlideShow;
 
+	@Column(name = "position")
+	@JsonProperty("positionInSlideShow")
+	private int mPositionInSlideShow;
+
 	/**
 	 * Default constructor for Jersey/JPA.
 	 */
@@ -130,6 +134,14 @@ public abstract class AbstractContent {
 
 	public void setSlideShow(SlideShow slideShow) {
 		mSlideShow = slideShow;
+	}
+
+	public int getPositionInSlideShow() {
+		return mPositionInSlideShow;
+	}
+
+	public void setPositionInSlideShow(int positionInSlideShow) {
+		mPositionInSlideShow = positionInSlideShow;
 	}
 
 	@Override
