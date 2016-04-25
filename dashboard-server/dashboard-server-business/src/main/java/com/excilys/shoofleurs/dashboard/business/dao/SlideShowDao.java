@@ -33,4 +33,19 @@ public class SlideShowDao extends CrudService<SlideShow> {
 	public List<SlideShow> findAll(int start, int offset) throws SQLException {
 		return findWithNamedQuery("slideshow.findAll", null, start, offset);
 	}
+
+	/**
+	 * Delete a slideshow if it exists.
+	 * @param id ID to delete
+	 * @return Result of the operation
+	 * @throws SQLException Test if something went wrong with the database
+	 */
+	public boolean delete(int id) throws SQLException {
+		SlideShow slideShow = findById(id);
+		if (slideShow == null) {
+			return false;
+		}
+		delete(slideShow);
+		return true;
+	}
 }

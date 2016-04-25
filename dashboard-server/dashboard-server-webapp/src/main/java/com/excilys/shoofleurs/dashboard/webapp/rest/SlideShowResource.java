@@ -11,8 +11,10 @@ import com.excilys.shoofleurs.dashboard.json.Views;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -59,7 +61,7 @@ public class SlideShowResource {
 	@GET
 	@Path("{id}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response getSlideshowById(@PathParam("id") int id, @QueryParam("json") String type) {
+	public Response getSlideShowById(@PathParam("id") int id, @QueryParam("json") String type) {
 		SlideShow slideShow = mSlideShowService.getById(id);
 		if (slideShow == null) {
 			return new Response("Not found", 404);
@@ -70,16 +72,47 @@ public class SlideShowResource {
 	/**
 	 * Create a new slideshow.
 	 * @param slideShow SlideShow to create.
-	 * @return Diapora created with updated id or an error message
+	 * @return Slideshow created with updated id or an error message
 	 */
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response newSlideshow(SlideShow slideShow) {
+	public Response newSlideShow(SlideShow slideShow) {
 		slideShow = mSlideShowService.createSlideShow(slideShow);
 		if (slideShow == null) {
 			return new Response("Object creation failed", 500);
 		}
-		return new Response(JsonMapper.objectAsJson(slideShow, Views.LightContent.class), 200);
+		return new Response(JsonMapper.objectAsJson(slideShow, Views.FullContent.class), 200);
+	}
+
+	/**
+	 * Update a slideshow.
+	 * @param slideShow Slideshow to updated
+	 * @return Updated slideshow
+	 */
+	@PUT
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response updateSlideShow(SlideShow slideShow) {
+		slideShow = mSlideShowService.update(slideShow);
+		if (slideShow == null) {
+			return new Response("Updated failed", 500);
+		}
+		return new Response(JsonMapper.objectAsJson(slideShow, Views.FullContent.class), 200);
+	}
+
+	/**
+	 * Delete an existing slideshow
+	 * @param slideShowId Slideshow id to delete
+	 * @return Result of the operation wrapped in a Response JSON
+	 */
+	@DELETE
+	@Path("{id}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response deleteSlideShow(@PathParam("id") int slideShowId) {
+		if (mSlideShowService.delete(slideShowId)) {
+			return new Response("Slideshow with id " + slideShowId + " has been removed", 200);
+		}
+		return new Response("Slideshow with id " + slideShowId + " can't be delet. Check the id", 500);
 	}
 }

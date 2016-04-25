@@ -80,6 +80,22 @@ public class SlideShowService {
 	}
 
 	/**
+	 * Delete a slideshow by id.
+	 * @param id Slideshow id to delete
+	 * @return Result of the operation
+	 */
+	public boolean delete(int id) {
+		boolean result;
+		try {
+			result = mSlideShowDao.delete(id);
+		} catch (SQLException e) {
+			result = false;
+			LOGGER.info("Delete slideshow with id : " + id + " failed, caused by : " + e.getCause());
+		}
+		return result;
+	}
+
+	/**
 	 * Update slideShow.
 	 * @param slideShow SlideShow to updated
 	 * @return SlideShow updated or null if someting went wrong.
