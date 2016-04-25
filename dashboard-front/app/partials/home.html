@@ -32,7 +32,7 @@
                 <h2><a href="#/slideshow/edit/{{ slideshow.id }}">{{ slideshow.title }} ( {{ slideshow.startDateTime }} - {{ slideshow.endDateTime }} )</a></h2>
                 <ul class="list-inline" ng-if="slideshow.contents.length > 0">
                 	<li ng-repeat="content in slideshow.contents">
-                		<a href="#/slideshow/{{ slideshow.id }}/content/edit/{{ content.id }}"><span aria-hidden="true" style="" class="glyphicon glyphicon-pencil modify-pencil"></span><img style="width:100px; height:100px" alt="" src="{{ content.url }}"></a>
+                		<a href="#/slideshow/content/edit/{{ content.id }}"><!-- <span aria-hidden="true" style="" class="glyphicon glyphicon-pencil modify-pencil">--></span><img style="width:100px; height:100px" alt="img" src="{{ content.url }}"></a>
                 	</li>
                 </ul>
                 <p ng-if="slideshow.contents.length == 0">No contents</p>
