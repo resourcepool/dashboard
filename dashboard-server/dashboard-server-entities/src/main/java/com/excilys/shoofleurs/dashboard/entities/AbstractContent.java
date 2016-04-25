@@ -29,9 +29,10 @@ import javax.persistence.ManyToOne;
 @JsonTypeInfo(use=JsonTypeInfo.Id.NAME, include=JsonTypeInfo.As.PROPERTY, property="@type")
 @JsonSubTypes({
 		@JsonSubTypes.Type(value = ImageContent.class, name = "ImageContent"),
-		@JsonSubTypes.Type(value = VideoContent.class, name = "VideoContent"),
 		@JsonSubTypes.Type(value = WebContent.class, name = "WebContent"),
-		@JsonSubTypes.Type(value = PdfContent.class, name = "PdfContent")})
+		@JsonSubTypes.Type(value = PdfContent.class, name = "PdfContent"),
+		@JsonSubTypes.Type(value = VideoContent.class, name = "VideoContent"),
+})
 public abstract class AbstractContent {
 
 	@Id

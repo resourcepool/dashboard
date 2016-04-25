@@ -27,3 +27,10 @@ input[type='checkbox'] {
     border-radius: 5px;
     white-space: nowrap;
 }
+
+.modify-pencil {
+	position:relative;
+	left:20px;
+	top:-30px;
+	display: inline;
+}

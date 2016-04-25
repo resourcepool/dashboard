@@ -11,9 +11,8 @@
 
 var dashboardFrontApp = angular.module('dashboardFrontApp', [
  'ngRoute',
- 'diaporamaControllers',
+ 'slideshowControllers',
  'contentControllers',
- 'lr.upload'
  ]);
 
 dashboardFrontApp.config(['$routeProvider',
@@ -23,16 +22,16 @@ dashboardFrontApp.config(['$routeProvider',
 			templateUrl: 'partials/home.html',
 			controller: 'HomeCtrl'
 		}).
-		when('/diaporama/create/', {
-			templateUrl: 'partials/diaporama/form.html',
-			controller: 'DiaporamaCreateCtrl'
+		when('/slideshow/add', {
+			templateUrl: 'partials/slideshow/form.html',
+			controller: 'SlideshowAddCtrl'
 		}).
-		when('/diaporama/edit/:diaporamaId', {
-			templateUrl: 'partials/diaporama/form.html',
-			controller: 'DiaporamaEditCtrl'
+		when('/slideshow/edit/:slideshowId', {
+			templateUrl: 'partials/slideshow/form.html',
+			controller: 'SlideshowEditCtrl'
 		}).
-		when('/diaporama/content/create/:diaporamaId', {
-			templateUrl: 'partials/content/create.html',
+		when('/slideshow/:slideshowId/content/add/', {
+			templateUrl: 'partials/content/form.html',
 			controller: 'ContentCreateCtrl'
 		}).
 		otherwise({

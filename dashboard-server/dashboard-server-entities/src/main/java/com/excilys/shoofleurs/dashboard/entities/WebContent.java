@@ -43,15 +43,15 @@ public class WebContent extends AbstractContent {
 		super(title, url);
 	}
 
-	public int getDurationInSlideshow() {
+	public int getDurationInSlideShow() {
 		return mDurationInSlideShow;
 	}
 
-	public void setDurationInSlideshow(int durationInSlideshow) {
+	public void setDurationInSlideShow(int durationInSlideshow) {
 		mDurationInSlideShow = durationInSlideshow;
 	}
 
-	public boolean isAutoScroll() {
+	public boolean getIsAutoScroll() {
 		return mIsAutoScroll;
 	}
 

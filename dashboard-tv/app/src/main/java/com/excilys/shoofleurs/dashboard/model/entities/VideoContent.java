@@ -1,8 +1,10 @@
 package com.excilys.shoofleurs.dashboard.model.entities;
 
 
+/**
+ * Video content. No extra property.
+ */
 public class VideoContent extends AbstractContent {
-
 
 	public VideoContent() {
 		super();
