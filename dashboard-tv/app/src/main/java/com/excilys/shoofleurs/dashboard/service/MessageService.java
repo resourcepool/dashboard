@@ -5,7 +5,7 @@ import android.util.Log;
 import com.android.volley.Response;
 import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
-import com.excilys.shoofleurs.dashboard.activities.DashboardActivity;
+import com.excilys.shoofleurs.dashboard.ui.activities.DashboardActivity;
 import com.excilys.shoofleurs.dashboard.model.entities.Message;
 import com.excilys.shoofleurs.dashboard.rest.JsonRequest;
 import com.excilys.shoofleurs.dashboard.utils.Data;

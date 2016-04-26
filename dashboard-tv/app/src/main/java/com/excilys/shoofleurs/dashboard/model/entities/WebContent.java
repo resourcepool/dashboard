@@ -8,7 +8,6 @@ import com.fasterxml.jackson.annotation.JsonView;
  * WebContent is a website to show. It adds to extra property.
  */
 public class WebContent extends AbstractContent {
-
 	/**
 	 * Duration display, by default 20.
 	 */
@@ -23,7 +22,6 @@ public class WebContent extends AbstractContent {
 	@JsonProperty("isAutoScroll")
 	@JsonView(Views.FullContent.class)
 	private boolean mIsAutoScroll = true;
-
 
 	public WebContent() {
 		super();

@@ -7,4 +7,5 @@
     <string name="debug_timout_error">Timeout error, trying to reconnect…</string>
     <string name="debug_no_connection_error">No internet connection…</string>
     <string name="debug_download_content">Downloading content…</string>
+    <string name="debug_no_slideshows_to_display">No slideshows to display…</string>
 </resources>
