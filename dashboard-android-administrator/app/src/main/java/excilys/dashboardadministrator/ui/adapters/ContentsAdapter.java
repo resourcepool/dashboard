@@ -1,21 +1,18 @@
-package excilys.dashboardadministrator.adapters;
+package excilys.dashboardadministrator.ui.adapters;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 
 import java.util.List;
 
 import excilys.dashboardadministrator.R;
-import excilys.dashboardadministrator.displayables.Displayable;
+import excilys.dashboardadministrator.ui.displayables.Displayable;
 
-/**
- * Created by buonomo on 29/03/16.
- */
 public class ContentsAdapter extends RecyclerView.Adapter<ContentsAdapter.ViewHolder> {
         private List<Displayable> mDataset;
         private Context mContext;
@@ -25,10 +22,10 @@ public class ContentsAdapter extends RecyclerView.Adapter<ContentsAdapter.ViewHo
         // you provide access to all the views for a data item in a view holder
         public static class ViewHolder extends RecyclerView.ViewHolder {
             // each data item is just a string in this case
-            LinearLayout mLinearLayout;
+            LinearLayout mContentLayout;
             public ViewHolder(View rootView) {
                 super(rootView);
-                mLinearLayout = (LinearLayout) rootView.findViewById(R.id.item_content_container);
+                mContentLayout = (LinearLayout) rootView.findViewById(R.id.item_content_container);
             }
         }
 
@@ -54,10 +51,7 @@ public class ContentsAdapter extends RecyclerView.Adapter<ContentsAdapter.ViewHo
         // Replace the contents of a view (invoked by the layout manager)
         @Override
         public void onBindViewHolder(ViewHolder holder, int position) {
-            // - get element from your dataset at this position
-            // - replace the contents of the view with that element
-            //holder.mTextView.setText(mDataset[position]);
-            mDataset.get(position).displayContent(mContext, holder.mLinearLayout);
+            mDataset.get(position).display(mContext, holder.mContentLayout);
         }
 
         // Return the size of your dataset (invoked by the layout manager)

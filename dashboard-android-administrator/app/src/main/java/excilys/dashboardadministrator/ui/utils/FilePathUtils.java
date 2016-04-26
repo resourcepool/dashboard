@@ -1,4 +1,4 @@
-package excilys.dashboardadministrator.utils;
+package excilys.dashboardadministrator.ui.utils;
 
 import android.content.ContentUris;
 import android.content.Context;
@@ -13,7 +13,7 @@ import android.util.Log;
 /**
  * Created by excilys on 15/04/16.
  */
-public class Utils {
+public class FilePathUtils {
     /**
      * Get a file path from a Uri. This will get the the path for Storage Access
      * Framework Documents, as well as the _data field for the MediaStore and

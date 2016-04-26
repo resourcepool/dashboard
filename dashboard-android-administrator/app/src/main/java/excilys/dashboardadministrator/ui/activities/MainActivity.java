@@ -1,4 +1,4 @@
-package excilys.dashboardadministrator.activities;
+package excilys.dashboardadministrator.ui.activities;
 
 import android.content.Intent;
 import android.net.Uri;
@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -17,14 +16,15 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import excilys.dashboardadministrator.R;
-import excilys.dashboardadministrator.fragments.ContentsFragment;
-import excilys.dashboardadministrator.fragments.ScreensFragment;
-import org.apache.http.entity.mime.MultipartEntityBuilder;
+import excilys.dashboardadministrator.ui.fragments.ContentsFragment;
+import excilys.dashboardadministrator.ui.fragments.ScreensFragment;
+import excilys.dashboardadministrator.ui.fragments.SlideShowsFragment;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
         ScreensFragment.OnScreensFragmentInteractionListener,
-        ContentsFragment.OnContentsFragmentInteractionListener {
+        ContentsFragment.OnContentsFragmentInteractionListener,
+        SlideShowsFragment.OnSlideShowsFragmentInteractionListener{
 
     private FragmentManager mFragmentManager;
     private Toolbar mToolbar;
@@ -88,6 +88,15 @@ public class MainActivity extends AppCompatActivity
         mCurrentFragment = fragment;
     }
 
+    public void baskStackAndReplaceFragment(Fragment fragment, boolean animated) {
+        FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
+        if (animated) {
+            fragmentTransaction.setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left);
+        }
+        fragmentTransaction.addToBackStack(mCurrentFragment.getClass().getSimpleName()).replace(R.id.fragment_container, fragment).commit();
+        mCurrentFragment = fragment;
+    }
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -135,12 +144,9 @@ public class MainActivity extends AppCompatActivity
 
         if (id == R.id.nav_camera) {
             replaceFragment(new ScreensFragment());
-        } else if (id == R.id.nav_gallery) {
-
-        } else if (id == R.id.nav_slideshow) {
-            replaceFragment(new ContentsFragment());
+        } else if (id == R.id.nav_slideshows) {
+            replaceFragment(new SlideShowsFragment());
         } else if (id == R.id.nav_manage) {
-
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -155,6 +161,11 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onContentsFragmentInteraction(Uri uri) {
+
+    }
+
+    @Override
+    public void onSlideShowsFragmentInteraction(Uri uri) {
 
     }
 }

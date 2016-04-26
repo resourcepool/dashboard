@@ -1,4 +1,4 @@
-package excilys.dashboardadministrator.fragments;
+package excilys.dashboardadministrator.ui.fragments;
 
 import android.content.Context;
 import android.net.Uri;

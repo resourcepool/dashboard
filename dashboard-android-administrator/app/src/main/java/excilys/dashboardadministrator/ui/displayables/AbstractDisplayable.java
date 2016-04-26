@@ -1,13 +1,9 @@
-package com.excilys.shoofleurs.dashboard.ui.displayables;
+package excilys.dashboardadministrator.ui.displayables;
 
 import android.content.Context;
 import android.os.Handler;
 import android.view.View;
 import android.view.ViewGroup;
-
-import com.excilys.shoofleurs.dashboard.ui.displayables.Displayable;
-
-import com.excilys.shoofleurs.dashboard.ui.displayables.Displayable;
 
 import java.lang.reflect.InvocationTargetException;
 
@@ -17,69 +13,18 @@ import java.lang.reflect.InvocationTargetException;
  */
 public abstract class AbstractDisplayable implements Displayable {
     /**
-     * Url of the content to display.
+     * Url of the content.
      */
     protected String mUrl;
 
-    /**
-     * The duration of the content display.
-     */
 
-    /**
-     * The duration of the content display.
-     */
-    protected int mDurationInSec;
-
-    /**
-     * The listener to handle the completion
-     * of the content.
-     */
-
-    /**
-     * The listener to handle the completion
-     * of the content.
-     */
-    protected OnCompletionListener mCompletionListener;
-
-    /**
-     * To handle completion with a delay.
-     */
-
-    /**
-     * To handle completion with a delay.
-     */
-    private Handler mHandler;
-
-    /**
-     * To prevent the completion listener
-     */
-    protected boolean mStopDisplay;
-
-
-    public AbstractDisplayable(String url, OnCompletionListener listener) {
+    public AbstractDisplayable(String url) {
         this.mUrl = url;
-        this.mCompletionListener = listener;
-        mHandler = new Handler();
 
-    }
-
-    public AbstractDisplayable(String url, int duration, OnCompletionListener listener) {
-        this.mUrl = url;
-        this.mDurationInSec = duration;
-        this.mCompletionListener = listener;
-        mHandler = new Handler();
-    }
-
-    @Override
-    public void stop() {
-        mStopDisplay = true;
     }
 
     @Override
     public abstract void display(Context context, ViewGroup layout);
-
-    @Override
-    public abstract void start();
 
     /**
      * This method check if a view of type T already exist inside the layout,
@@ -140,34 +85,5 @@ public abstract class AbstractDisplayable implements Displayable {
         ViewGroup.LayoutParams params =  new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         view.setLayoutParams(params);
         layout.addView(view);
-    }
-
-    /**
-     * Handle the onDisplayableCompletion method when the duration delay is reached.
-     */
-    protected void handleDelayedCompletion() {
-        mHandler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                handleCompletion();
-            }
-        }, mDurationInSec*1000);
-    }
-
-    /**
-     * Handle the onDisplayableCompletion method of the listener.
-     */
-    protected void handleCompletion() {
-        if (mCompletionListener != null && !mStopDisplay) {
-            mCompletionListener.onDisplayableCompletion();
-        }
-    }
-
-    public void setOnCompletionListener(OnCompletionListener completionListener) {
-        this.mCompletionListener = completionListener;
-    }
-
-    public interface OnCompletionListener {
-        void onDisplayableCompletion();
     }
 }

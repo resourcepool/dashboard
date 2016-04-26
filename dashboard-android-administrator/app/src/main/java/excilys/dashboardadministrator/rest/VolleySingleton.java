@@ -1,11 +1,13 @@
-package excilys.dashboardadministrator.singletons;
+package excilys.dashboardadministrator.rest;
 
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.support.v4.util.LruCache;
+import android.util.Log;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
+import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.Volley;
 
@@ -24,7 +26,8 @@ public class VolleySingleton {
 
         mImageLoader = new ImageLoader(mRequestQueue,
                 new ImageLoader.ImageCache() {
-                    int cacheSize = 10 * 1024 * 1024;
+                    /* Cache size */
+                    int cacheSize = 1000 * 1024 * 1024; // 1GB
                     private final LruCache<String, Bitmap>
                             cache = new LruCache<String, Bitmap>(cacheSize);
 
@@ -46,6 +49,21 @@ public class VolleySingleton {
         }
         return mInstance;
     }
+
+    public void putImageInCache(final String url) {
+        mImageLoader.get(url, new ImageLoader.ImageListener() {
+            @Override
+            public void onResponse(ImageLoader.ImageContainer response, boolean isImmediate) {
+                Log.d(VolleySingleton.class.getSimpleName(), "VolleySingleton: image cached ("+url+")");
+            }
+
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e(VolleySingleton.class.getSimpleName(), "VolleySingleton: error caching image ("+url+")");
+            }
+        });
+    }
+
 
     public RequestQueue getRequestQueue() {
         if (mRequestQueue == null) {

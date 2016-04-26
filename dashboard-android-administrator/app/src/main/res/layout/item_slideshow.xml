@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="150dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <RelativeLayout
+        android:id="@+id/item_slideshow_container"
+        android:layout_centerVertical="true"
+        android:layout_margin="10dp"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:background="@drawable/content_background">
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@drawable/ic_content_image"
+            android:alpha="0.1"/>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="10dp"
+        android:layout_toEndOf="@id/item_slideshow_container">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:orientation="vertical">
+            <excilys.dashboardadministrator.ui.utils.TypeFaceTextView
+                android:id="@+id/item_slideshow_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:typeface="RobotoCondensed-Regular.ttf"
+                android:text="SlideShowTitle"
+                android:textSize="25sp"/>
+            <excilys.dashboardadministrator.ui.utils.TypeFaceTextView
+                android:id="@+id/item_slideshow_infos"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/item_slideshow_title"
+                android:textSize="15sp"
+                app:typeface="Roboto-Light.ttf"
+                android:text="SlideShow Infos"/>
+        </LinearLayout>
+
+    </RelativeLayout>
+</RelativeLayout>
