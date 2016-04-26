@@ -7,6 +7,8 @@ import android.view.ViewGroup;
 
 import com.excilys.shoofleurs.dashboard.ui.displayables.Displayable;
 
+import com.excilys.shoofleurs.dashboard.ui.displayables.Displayable;
+
 import java.lang.reflect.InvocationTargetException;
 
 /**
@@ -22,7 +24,16 @@ public abstract class AbstractDisplayable implements Displayable {
     /**
      * The duration of the content display.
      */
+
+    /**
+     * The duration of the content display.
+     */
     protected int mDurationInSec;
+
+    /**
+     * The listener to handle the completion
+     * of the content.
+     */
 
     /**
      * The listener to handle the completion
@@ -33,8 +44,16 @@ public abstract class AbstractDisplayable implements Displayable {
     /**
      * To handle completion with a delay.
      */
+
+    /**
+     * To handle completion with a delay.
+     */
     private Handler mHandler;
 
+    /**
+     * To prevent the completion listener
+     */
+    protected boolean mStopDisplay;
     /**
      * To prevent the completion listener
      */
@@ -59,6 +78,12 @@ public abstract class AbstractDisplayable implements Displayable {
     public void stop() {
         mStopDisplay = true;
     }
+
+    @Override
+    public abstract void display(Context context, ViewGroup layout);
+
+    @Override
+    public abstract void start();
 
     @Override
     public abstract void display(Context context, ViewGroup layout);
@@ -115,6 +140,7 @@ public abstract class AbstractDisplayable implements Displayable {
     }
 
 
+
     /**
      * Add the view to the layout with the layout params for matching layout size
      * @param view
@@ -136,6 +162,19 @@ public abstract class AbstractDisplayable implements Displayable {
                 handleCompletion();
             }
         }, mDurationInSec*1000);
+    }
+
+    /**
+     * Handle the onDisplayableCompletion method of the listener.
+     */
+    protected void handleCompletion() {
+        if (mCompletionListener != null && !mStopDisplay) {
+            mCompletionListener.onDisplayableCompletion();
+        }
+    }
+
+    public void setOnCompletionListener(OnCompletionListener completionListener) {
+        this.mCompletionListener = completionListener;
     }
 
     /**
