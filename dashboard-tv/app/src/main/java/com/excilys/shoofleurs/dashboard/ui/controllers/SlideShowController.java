@@ -11,6 +11,7 @@ import com.excilys.shoofleurs.dashboard.ui.displayables.AbstractDisplayable;
 import com.excilys.shoofleurs.dashboard.ui.displayables.Displayable;
 import com.excilys.shoofleurs.dashboard.ui.displayables.DisplayableFactory;
 import com.excilys.shoofleurs.dashboard.model.entities.SlideShow;
+import com.excilys.shoofleurs.dashboard.ui.utils.ViewPagerCustomDuration;
 import com.excilys.shoofleurs.dashboard.ui.utils.ZoomOutPageTransformer;
 
 import java.util.ArrayList;
@@ -26,7 +27,7 @@ public class SlideShowController {
 
     private DashboardActivity mDashboardActivity;
 
-    private ViewPager mViewPager;
+    private ViewPagerCustomDuration mViewPager;
 
     private SlideShowPagerAdapter mAdapter;
 
@@ -39,11 +40,6 @@ public class SlideShowController {
      * The current slideshow to be displayed
      */
     private SlideShow mCurrentSlideShow;
-
-    /**
-     * The current displayable.
-     */
-    private Displayable mCurrentDisplayable;
 
     /**
      * The index of the current content displayed.
@@ -61,9 +57,10 @@ public class SlideShowController {
 
         mAdapter = new SlideShowPagerAdapter(mDashboardActivity.getSupportFragmentManager(), this, new ArrayList<AbstractDisplayable>());
 
-        mViewPager = (ViewPager) mDashboardActivity.findViewById(R.id.view_pager);
+        mViewPager = (ViewPagerCustomDuration) mDashboardActivity.findViewById(R.id.view_pager);
         mViewPager.addOnPageChangeListener(mAdapter);
         mViewPager.setAdapter(mAdapter);
+        mViewPager.setScrollDuration(1000);
         mViewPager.setPageTransformer(true, new ZoomOutPageTransformer());
     }
 
@@ -102,11 +99,8 @@ public class SlideShowController {
         startSlideShow();
     }
 
-
     public void stopSlideShow() {
-        if (mCurrentDisplayable != null) {
-            mCurrentDisplayable.stop();
-        }
+
     }
 
     public void pauseSlideShow() {
@@ -133,11 +127,35 @@ public class SlideShowController {
     }
 
     public void nextPage() {
+        /* Stop the current displayable to prevent bugs */
+        Displayable displayable = mAdapter.getCurrentDisplayable();
+        if (displayable != null) {
+            displayable.stop();
+        }
+
         int currentItem = mViewPager.getCurrentItem();
         int nextPage = currentItem < (mAdapter.getCount() - 1) ?
                 currentItem + 1 : 0;
         if (mViewPager != null) {
             mViewPager.setCurrentItem(nextPage, true);
         }
+    }
+
+    public void previousPage() {
+        /* Stop the current displayable to prevent bugs */
+        Displayable displayable = mAdapter.getCurrentDisplayable();
+        if (displayable != null) {
+            displayable.stop();
+        }
+
+        int currentItem = mViewPager.getCurrentItem();
+        int previousPage = currentItem > 0 ? currentItem - 1 : mAdapter.getCount() - 1;
+        if (mViewPager != null) {
+            mViewPager.setCurrentItem(previousPage, true);
+        }
+    }
+
+    public DashboardActivity getDashboardActivity() {
+        return mDashboardActivity;
     }
 }

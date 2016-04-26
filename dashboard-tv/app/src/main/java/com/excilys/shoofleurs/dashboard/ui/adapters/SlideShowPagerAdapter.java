@@ -8,6 +8,7 @@ import android.util.Log;
 
 import com.excilys.shoofleurs.dashboard.ui.controllers.SlideShowController;
 import com.excilys.shoofleurs.dashboard.ui.displayables.AbstractDisplayable;
+import com.excilys.shoofleurs.dashboard.ui.displayables.Displayable;
 import com.excilys.shoofleurs.dashboard.ui.fragments.DisplayableFragment;
 
 import java.util.List;
@@ -15,6 +16,7 @@ import java.util.List;
 public class SlideShowPagerAdapter extends FragmentStatePagerAdapter implements ViewPager.OnPageChangeListener, AbstractDisplayable.OnCompletionListener {
     private List<AbstractDisplayable> mDisplayables;
     private SlideShowController mController;
+    private int mCurrentPage;
 
     public SlideShowPagerAdapter(FragmentManager fragmentManager, SlideShowController controller, List<AbstractDisplayable> displayables) {
         super(fragmentManager);
@@ -47,7 +49,9 @@ public class SlideShowPagerAdapter extends FragmentStatePagerAdapter implements 
 
     @Override
     public void onPageSelected(int position) {
+        Log.i(SlideShowPagerAdapter.class.getSimpleName(), "onPageSelected: "+position);
         mDisplayables.get(position).start();
+        mCurrentPage = position;
     }
 
     @Override
@@ -57,8 +61,19 @@ public class SlideShowPagerAdapter extends FragmentStatePagerAdapter implements 
 
     @Override
     public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+        if (positionOffset == 0) {
+            mController.getDashboardActivity().showMenu();
+        }
+
+        else {
+            mController.getDashboardActivity().hideMenu();
+        }
     }
     @Override
     public void onPageScrollStateChanged(int state) {
+    }
+
+    public Displayable getCurrentDisplayable() {
+        return mDisplayables.get(mCurrentPage);
     }
 }

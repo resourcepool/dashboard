@@ -47,6 +47,7 @@ public class VideoDisplayable extends AbstractDisplayable {
 
     @Override
     public void start() {
+        mStopDisplay = false;
         mVideoView.start();
     }
 }

@@ -5,6 +5,8 @@ import android.os.Handler;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.excilys.shoofleurs.dashboard.ui.displayables.Displayable;
+
 import java.lang.reflect.InvocationTargetException;
 
 /**
@@ -36,7 +38,7 @@ public abstract class AbstractDisplayable implements Displayable {
     /**
      * To prevent the completion listener
      */
-    private boolean mStopDisplay;
+    protected boolean mStopDisplay;
 
 
     public AbstractDisplayable(String url, OnCompletionListener listener) {

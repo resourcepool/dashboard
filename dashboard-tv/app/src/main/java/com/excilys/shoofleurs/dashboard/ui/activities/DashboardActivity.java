@@ -3,6 +3,7 @@ package com.excilys.shoofleurs.dashboard.ui.activities;
 import android.animation.AnimatorSet;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -21,6 +22,8 @@ import com.excilys.shoofleurs.dashboard.ui.utils.AndroidUtils;
  * display them.
  */
 public class DashboardActivity extends FragmentActivity {
+    private RelativeLayout mMenuLayout;
+
     private AnimatorSet mProgressAnimatorSet1,
             mProgressAnimatorSet2,
             mProgressAnimatorSet3,
@@ -59,6 +62,7 @@ public class DashboardActivity extends FragmentActivity {
         AndroidUtils.hideStatusBar(this);
         setContentView(R.layout.activity_main);
         mDebugTextView = (TextView) findViewById(R.id.debug_message);
+        mMenuLayout = (RelativeLayout) findViewById(R.id.menu_layout);
 
         startWaitingAnimation();
         mSlideShowController = SlideShowController.getInstance(this);
@@ -102,6 +106,18 @@ public class DashboardActivity extends FragmentActivity {
         AndroidUtils.setVisibility(View.GONE, mBottomLeftPoint, mBottomRightPoint, mTopLeftPoint, mTopRightPoint);
     }
 
+    public void hideMenu() {
+        if (mMenuLayout.getVisibility() == View.INVISIBLE) return;
+        Log.v(DashboardActivity.class.getSimpleName(), "hideMenu");
+        mMenuLayout.setVisibility(View.INVISIBLE);
+    }
+
+    public void showMenu() {
+        if (mMenuLayout.getVisibility() == View.VISIBLE) return;
+        Log.v(DashboardActivity.class.getSimpleName(), "showMenu");
+        mMenuLayout.setVisibility(View.VISIBLE);
+    }
+
     public void setDebugMessage(int messageId) {
         mDebugTextView.setText(getResources().getString(messageId));
     }
@@ -117,6 +133,5 @@ public class DashboardActivity extends FragmentActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        //checkUpdates();
     }
 }

@@ -55,6 +55,7 @@ public class ImageDisplayable extends AbstractDisplayable {
 
     @Override
     public void start() {
+        mStopDisplay = false;
         handleDelayedCompletion();
     }
 }

@@ -27,6 +27,8 @@ public class WebDisplayable extends AbstractDisplayable {
 
     @Override
     public void start() {
+        mStopDisplay = false;
+        onScrollCompleted = false;
         if (mDurationInSec == 0) {
             handleAutoscroll(mWebView);
         }
