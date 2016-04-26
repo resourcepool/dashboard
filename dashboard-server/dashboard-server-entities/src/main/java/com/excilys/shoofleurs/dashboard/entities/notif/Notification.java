@@ -1,7 +1,6 @@
 package com.excilys.shoofleurs.dashboard.entities.notif;
 
 
-import com.excilys.shoofleurs.dashboard.entities.notif.enums.Operation;
 import com.excilys.shoofleurs.dashboard.entities.notif.enums.ObjectType;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -10,8 +9,14 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 
 @Entity(name = "notifications")
+@NamedQueries({
+		@NamedQuery(name = "findBySlideShowId", query = "SELECT n FROM notifications n WHERE n.mObjectId = :id"),
+		@NamedQuery(name = "findAll.notifications", query = "SELECT n FROM notifications n")
+})
 public class Notification {
 
 	@Id
@@ -19,10 +24,6 @@ public class Notification {
 	@Column(name = "notification_id")
 	@JsonProperty("id")
 	private int mId;
-
-	@Column(name = "operation")
-	@JsonProperty("operation")
-	private Operation mOperation;
 
 	@Column(name = "object_type")
 	@JsonProperty("objectType")
@@ -32,11 +33,13 @@ public class Notification {
 	@JsonProperty("objectId")
 	private int mObjectId;
 
-	@Column(name = "associateObjectId")
-	@JsonProperty("associateObjectId")
-	private int mAssociateObjectId;
 
 	public Notification() { }
+
+	public Notification(ObjectType objectType, int objectId) {
+		mObjectType = objectType;
+		mObjectId = objectId;
+	}
 
 	public int getId() {
 		return mId;
@@ -44,14 +47,6 @@ public class Notification {
 
 	public void setId(int id) {
 		mId = id;
-	}
-
-	public Operation getOperation() {
-		return mOperation;
-	}
-
-	public void setOperation(Operation operation) {
-		mOperation = operation;
 	}
 
 	public ObjectType getObjectType() {
@@ -68,13 +63,5 @@ public class Notification {
 
 	public void setObjectId(int objectId) {
 		mObjectId = objectId;
-	}
-
-	public int getAssociateObjectId() {
-		return mAssociateObjectId;
-	}
-
-	public void setAssociateObjectId(int associateObjectId) {
-		mAssociateObjectId = associateObjectId;
 	}
 }

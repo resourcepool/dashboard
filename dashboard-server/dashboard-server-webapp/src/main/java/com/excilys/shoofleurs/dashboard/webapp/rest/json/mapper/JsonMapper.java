@@ -1,6 +1,7 @@
 package com.excilys.shoofleurs.dashboard.webapp.rest.json.mapper;
 
 import com.excilys.shoofleurs.dashboard.entities.AbstractContent;
+import com.excilys.shoofleurs.dashboard.entities.flash.Flash;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,7 +26,11 @@ public class JsonMapper {
 		objectMapper.findAndRegisterModules();
 		String objectAsJson = null;
 		try {
-			objectAsJson = objectMapper.writerWithView(viewsClass).writeValueAsString(object);
+			if (viewsClass == null) {
+				objectAsJson = objectMapper.writeValueAsString(object);
+			} else {
+				objectAsJson = objectMapper.writerWithView(viewsClass).writeValueAsString(object);
+			}
 		} catch (IOException e) {
 			LOGGER.error("Error during parsing to json. Caused by : " + e.getMessage());
 		}
@@ -42,6 +47,23 @@ public class JsonMapper {
 		AbstractContent object = null;
 		try {
 			object = objectMapper.readValue(objectAsJson, AbstractContent.class);
+		} catch (IOException e) {
+			LOGGER.error("Error during parsing to object. Caused by : " + e.getMessage());
+		}
+		return object;
+	}
+
+
+	/**
+	 * Get an abstract content from json string.
+	 * @param objectAsJson Abstract content.
+	 * @return Abstract content from JSON.
+	 */
+	public static Flash jsonAsFlash(String objectAsJson) {
+		ObjectMapper objectMapper = new ObjectMapper();
+		Flash object = null;
+		try {
+			object = objectMapper.readValue(objectAsJson, Flash.class);
 		} catch (IOException e) {
 			LOGGER.error("Error during parsing to object. Caused by : " + e.getMessage());
 		}

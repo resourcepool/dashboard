@@ -2,7 +2,10 @@ package com.excilys.shoofleurs.dashboard.webapp.rest;
 
 import static com.excilys.shoofleurs.dashboard.webapp.rest.utils.ParamValidator.*;
 
+import com.excilys.shoofleurs.dashboard.business.service.NotificationService;
 import com.excilys.shoofleurs.dashboard.entities.SlideShow;
+import com.excilys.shoofleurs.dashboard.entities.notif.Notification;
+import com.excilys.shoofleurs.dashboard.entities.notif.enums.ObjectType;
 import com.excilys.shoofleurs.dashboard.webapp.rest.json.Response;
 import com.excilys.shoofleurs.dashboard.webapp.rest.json.mapper.JsonMapper;
 import com.excilys.shoofleurs.dashboard.business.service.SlideShowService;
@@ -28,6 +31,9 @@ public class SlideShowResource {
 
 	@EJB
 	private SlideShowService mSlideShowService;
+
+	@EJB
+	private NotificationService mNotificationService;
 
 	/**
 	 * Get All slideshows paginated.
@@ -62,7 +68,7 @@ public class SlideShowResource {
 	@Path("{id}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getSlideShowById(@PathParam("id") int id, @QueryParam("json") String type) {
-		SlideShow slideShow = mSlideShowService.getById(id);
+		SlideShow slideShow = mSlideShowService.findById(id);
 		if (slideShow == null) {
 			return new Response("Not found", 404);
 		}
@@ -78,10 +84,11 @@ public class SlideShowResource {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response newSlideShow(SlideShow slideShow) {
-		slideShow = mSlideShowService.createSlideShow(slideShow);
+		slideShow = mSlideShowService.create(slideShow);
 		if (slideShow == null) {
 			return new Response("Object creation failed", 500);
 		}
+		mNotificationService.create(new Notification(ObjectType.DIAPORAMA, slideShow.getId()));
 		return new Response(JsonMapper.objectAsJson(slideShow, Views.FullContent.class), 200);
 	}
 
@@ -98,6 +105,10 @@ public class SlideShowResource {
 		if (slideShow == null) {
 			return new Response("Updated failed", 500);
 		}
+
+		if (mNotificationService.findBySlideShowId(slideShow.getId()) == null) {
+			mNotificationService.create(new Notification(ObjectType.DIAPORAMA, slideShow.getId()));
+		}
 		return new Response(JsonMapper.objectAsJson(slideShow, Views.FullContent.class), 200);
 	}
 
@@ -112,6 +123,9 @@ public class SlideShowResource {
 	public Response deleteSlideShow(@PathParam("id") int slideShowId) {
 		if (mSlideShowService.delete(slideShowId)) {
 			return new Response("Slideshow with id " + slideShowId + " has been removed", 200);
+		}
+		if (mNotificationService.findBySlideShowId(slideShowId) == null) {
+			mNotificationService.create(new Notification(ObjectType.DIAPORAMA, slideShowId));
 		}
 		return new Response("Slideshow with id " + slideShowId + " can't be delet. Check the id", 500);
 	}

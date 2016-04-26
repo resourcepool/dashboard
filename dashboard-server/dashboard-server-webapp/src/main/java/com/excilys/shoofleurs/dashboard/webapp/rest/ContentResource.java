@@ -1,7 +1,10 @@
 package com.excilys.shoofleurs.dashboard.webapp.rest;
 
 import com.excilys.shoofleurs.dashboard.business.service.ContentService;
+import com.excilys.shoofleurs.dashboard.business.service.NotificationService;
 import com.excilys.shoofleurs.dashboard.entities.AbstractContent;
+import com.excilys.shoofleurs.dashboard.entities.notif.Notification;
+import com.excilys.shoofleurs.dashboard.entities.notif.enums.ObjectType;
 import com.excilys.shoofleurs.dashboard.webapp.rest.json.Response;
 import com.excilys.shoofleurs.dashboard.webapp.rest.json.mapper.JsonMapper;
 import com.excilys.shoofleurs.dashboard.json.Views;
@@ -30,6 +33,9 @@ public class ContentResource {
 
 	@EJB
 	private ContentService mContentService;
+
+	@EJB
+	private NotificationService mNotificationService;
 
 
 	@GET
@@ -60,26 +66,30 @@ public class ContentResource {
 							   @FormDataParam("file") FormDataContentDisposition fileDetail,
 							   @HeaderParam("content") String contentAsJson) {
 		if (contentAsJson != null && uploadedInputStream != null) {
-			AbstractContent abstractContent = JsonMapper.jsonAsAbstractContent(contentAsJson);
-			if (abstractContent == null) {
+			AbstractContent content = JsonMapper.jsonAsAbstractContent(contentAsJson);
+			if (content == null) {
 				return new Response("JSON malformed", 500);
 			}
 
-			abstractContent = mContentService.create(abstractContent);
-			if (abstractContent == null) {
+			content = mContentService.create(content);
+			if (content == null) {
 				return new Response("Error during persistence. See logs for more info", 500);
 			}
 
-			String name = SaveFile.saveFile(uploadedInputStream, fileDetail, abstractContent.getId());
+			String name = SaveFile.saveFile(uploadedInputStream, fileDetail, content.getId());
 			if (name == null) {
 				return new Response("Error during the upload", 500);
 			}
 
-			abstractContent.setUrl("http://vps229493.ovh.net:8080/dashboard/img/" + name);
-			abstractContent = mContentService.update(abstractContent);
-			abstractContent.getSlideShow().addContent(abstractContent);
+			content.setUrl("http://vps229493.ovh.net:8080/dashboard/img/" + name);
+			content = mContentService.update(content);
+			content.getSlideShow().addContent(content);
 
-			return new Response(JsonMapper.objectAsJson(abstractContent, Views.FullContent.class), 200);
+			if (mNotificationService.findBySlideShowId(content.getSlideShow().getId()) == null) {
+				mNotificationService.create(new Notification(ObjectType.DIAPORAMA, content.getSlideShow().getId()));
+			}
+
+			return new Response(JsonMapper.objectAsJson(content, Views.FullContent.class), 200);
 		}
 		return new Response("File or json missing. Request malformed.", 500);
 	}
@@ -98,6 +108,9 @@ public class ContentResource {
 			return new Response("Error during persistence. See logs for more info", 500);
 		}
 		content.getSlideShow().addContent(content);
+		if (mNotificationService.findBySlideShowId(content.getSlideShow().getId()) == null) {
+			mNotificationService.create(new Notification(ObjectType.DIAPORAMA, content.getSlideShow().getId()));
+		}
 		return new Response(JsonMapper.objectAsJson(content, Views.FullContent.class), 200);
 	}
 
@@ -117,6 +130,9 @@ public class ContentResource {
 		}
 		content.getSlideShow().getContents().remove(content);
 		content.getSlideShow().addContent(content);
+		if (mNotificationService.findBySlideShowId(content.getSlideShow().getId()) == null) {
+			mNotificationService.create(new Notification(ObjectType.DIAPORAMA, content.getSlideShow().getId()));
+		}
 		return new Response(JsonMapper.objectAsJson(content, Views.FullContent.class), 200);
 	}
 
@@ -132,6 +148,9 @@ public class ContentResource {
 	public Response deleteContent(@PathParam("id") int id) {
 		if (mContentService.delete(id)) {
 			return new Response("Content with id " + id + " has been removed", 200);
+		}
+		if (mNotificationService.findBySlideShowId(id) == null) {
+			mNotificationService.create(new Notification(ObjectType.DIAPORAMA, id));
 		}
 		return new Response("Content with id " + id + " can't be delet. Check the id", 500);
 	}
