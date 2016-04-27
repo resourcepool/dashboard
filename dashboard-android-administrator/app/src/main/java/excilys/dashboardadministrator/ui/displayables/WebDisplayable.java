@@ -5,6 +5,7 @@ import android.os.Handler;
 import android.util.Log;
 import android.view.ViewGroup;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
 
 
 public class WebDisplayable extends AbstractDisplayable {
@@ -16,8 +17,11 @@ public class WebDisplayable extends AbstractDisplayable {
 
     @Override
     public void display(Context context, ViewGroup layout) {
-        //mWebView = addOrReplaceViewByType(layout, context, WebView.class);
+//        mWebView = addOrReplaceViewByType(layout, context, WebView.class);
 //        mWebView.getSettings().setJavaScriptEnabled(true);
-        //mWebView.loadUrl(mUrl);
+//        mWebView.setWebViewClient(new WebViewClient());
+//        mWebView.getSettings().setLoadWithOverviewMode(true);
+//        mWebView.getSettings().setUseWideViewPort(true);
+//        mWebView.loadUrl(mUrl);
     }
 }

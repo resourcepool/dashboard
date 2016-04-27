@@ -20,25 +20,24 @@ public class VolleySingleton {
     private ImageLoader mImageLoader;
     private static Context mCtx;
 
+    /* Cache size */
+    private final int mCacheSize = 1000 * 1024 * 1024; // 1GB
+    private final LruCache<String, Bitmap> mCache = new LruCache<String, Bitmap>(mCacheSize);
+
     private VolleySingleton(Context context) {
         mCtx = context;
         mRequestQueue = getRequestQueue();
 
         mImageLoader = new ImageLoader(mRequestQueue,
                 new ImageLoader.ImageCache() {
-                    /* Cache size */
-                    int cacheSize = 1000 * 1024 * 1024; // 1GB
-                    private final LruCache<String, Bitmap>
-                            cache = new LruCache<String, Bitmap>(cacheSize);
-
                     @Override
                     public Bitmap getBitmap(String url) {
-                        return cache.get(url);
+                        return mCache.get(url);
                     }
 
                     @Override
                     public void putBitmap(String url, Bitmap bitmap) {
-                        cache.put(url, bitmap);
+                        mCache.put(url, bitmap);
                     }
                 });
     }
@@ -64,6 +63,13 @@ public class VolleySingleton {
         });
     }
 
+    public void putBitmapInCache(final String url, Bitmap bitmap) {
+        mCache.put(url, bitmap);
+    }
+
+    public Bitmap getBitmapInCache(String url) {
+        return mCache.get(url);
+    }
 
     public RequestQueue getRequestQueue() {
         if (mRequestQueue == null) {

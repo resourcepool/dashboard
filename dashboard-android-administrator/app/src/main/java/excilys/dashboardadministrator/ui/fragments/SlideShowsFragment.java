@@ -81,10 +81,6 @@ public class SlideShowsFragment extends Fragment {
     private void setUpRecyclerView(View rootView) {
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.slidewhows_recycler_view);
 
-        // use this setting to improve performance if you know that changes
-        // in content do not change the layout size of the RecyclerView
-        mRecyclerView.setHasFixedSize(true);
-
         // use a linear layout manager
         mLayoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(mLayoutManager);

@@ -92,13 +92,8 @@ public class ContentsFragment extends Fragment {
     private void setUpRecyclerView(View rootView) {
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.contents_recycler_view);
 
-        // use this setting to improve performance if you know that changes
-        // in content do not change the layout size of the RecyclerView
-        mRecyclerView.setHasFixedSize(true);
-
-        // use a linear layout manager
-//        mLayoutManager = new GridLayoutManager(getContext(), 3);
-        mLayoutManager = new LinearLayoutManager(getContext());
+        // use a Grid layout manager
+        mLayoutManager = new GridLayoutManager(getContext(), 2);
         mRecyclerView.setLayoutManager(mLayoutManager);
 
         if (mSlideShow != null) {
