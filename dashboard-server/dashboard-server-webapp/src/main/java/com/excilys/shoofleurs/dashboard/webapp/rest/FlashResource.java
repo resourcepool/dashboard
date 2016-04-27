@@ -43,6 +43,9 @@ public class FlashResource {
 		if (flash == null) {
 			return new Response("Message flash not found", 404);
 		}
+		if (flash.getClass() == ImageFlash.class) {
+			SaveFile.deleteFile(((ImageFlash) flash).getUrl());
+		}
 		mFlashService.delete(id);
 		return new Response(JsonMapper.objectAsJson(flash, null), 200);
 	}

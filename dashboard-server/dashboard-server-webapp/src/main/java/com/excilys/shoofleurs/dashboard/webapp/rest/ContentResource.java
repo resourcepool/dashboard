@@ -65,6 +65,7 @@ public class ContentResource {
 	public Response addContent(@FormDataParam("file") InputStream uploadedInputStream,
 							   @FormDataParam("file") FormDataContentDisposition fileDetail,
 							   @HeaderParam("content") String contentAsJson) {
+		System.out.println(contentAsJson);
 		if (contentAsJson != null && uploadedInputStream != null) {
 			AbstractContent content = JsonMapper.jsonAsAbstractContent(contentAsJson);
 			if (content == null) {
@@ -146,11 +147,13 @@ public class ContentResource {
 	@Path("{id}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response deleteContent(@PathParam("id") int id) {
+		AbstractContent content = mContentService.findById(id);
 		if (mContentService.delete(id)) {
+			if (mNotificationService.findBySlideShowId(id) == null) {
+				mNotificationService.create(new Notification(ObjectType.DIAPORAMA, id));
+			}
+			SaveFile.deleteFile(content.getUrl());
 			return new Response("Content with id " + id + " has been removed", 200);
-		}
-		if (mNotificationService.findBySlideShowId(id) == null) {
-			mNotificationService.create(new Notification(ObjectType.DIAPORAMA, id));
 		}
 		return new Response("Content with id " + id + " can't be delet. Check the id", 500);
 	}
