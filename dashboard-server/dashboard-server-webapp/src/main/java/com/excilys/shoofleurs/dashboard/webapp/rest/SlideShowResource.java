@@ -56,8 +56,6 @@ public class SlideShowResource {
 		}
 		return new Response(JsonMapper.objectAsJson(slideShows, getJsonView(type)), 200);
 	}
-
-
 	/**
 	 * Get slideshow by its id.
 	 * @param id ID slideshows

@@ -3,18 +3,19 @@ package excilys.dashboardadministrator.service;
 import android.content.Context;
 import android.util.Log;
 
-import com.android.volley.Request;
-import com.android.volley.Response;
 import com.android.volley.TimeoutError;
-import com.android.volley.VolleyError;
+import com.fasterxml.jackson.core.type.TypeReference;
 
 import java.util.Arrays;
 import java.util.List;
 
 import excilys.dashboardadministrator.model.entities.SlideShow;
-import excilys.dashboardadministrator.rest.JsonRequest;
-import excilys.dashboardadministrator.rest.VolleySingleton;
-import excilys.dashboardadministrator.utils.Data;
+import excilys.dashboardadministrator.model.json.ServerResponse;
+import excilys.dashboardadministrator.rest.ISlideShowApi;
+import excilys.dashboardadministrator.rest.JsonMapperUtils;
+import excilys.dashboardadministrator.rest.ServiceGenerator;
+import retrofit2.Call;
+import retrofit2.Callback;
 
 /**
  * This class performs all slides requests to the server.
@@ -24,6 +25,8 @@ public class SlideShowService {
 
     private Context mContext;
 
+    private ISlideShowApi mSlideShowApi;
+
     public static SlideShowService getInstance(Context context){
         if (S_INSTANCE == null) S_INSTANCE = new SlideShowService(context);
         return S_INSTANCE;
@@ -31,44 +34,46 @@ public class SlideShowService {
 
     private SlideShowService(Context context) {
         this.mContext = context;
+        mSlideShowApi = ServiceGenerator.createService(ISlideShowApi.class);
     }
 
     /**
      * This method checks if new slideshows are available to the server
      */
     public void checkUpdates(final OnSlideShowServiceResponse listener) {
-        @SuppressWarnings("unchecked")
-        JsonRequest<SlideShow[]> request = new JsonRequest<>(Data.GET_SLIDESHOWS_URL, SlideShow[].class, null, new Response.Listener<SlideShow[]>() {
+
+        Call<ServerResponse> call = mSlideShowApi.getSlideShows(ISlideShowApi.TYPE_TV);
+
+        call.enqueue(new Callback<ServerResponse>() {
             @Override
-            public void onResponse(SlideShow[] response) {
-                Log.i(SlideShowService.class.getSimpleName(), "onResponse: "+ Arrays.asList(response));
-                if (response.length != 0) {
-                    listener.onCheckUpdatesResponse(Arrays.asList(response));
+            public void onResponse(Call<ServerResponse> call, retrofit2.Response<ServerResponse> response) {
+                ServerResponse serverResponse = response.body();
+                if (serverResponse != null) {
+                    List<SlideShow> slideShows = JsonMapperUtils.getServerResponseContent(serverResponse, new TypeReference<List<SlideShow>>() {});
+                    Log.i(SlideShowService.class.getSimpleName(), "onResponse: "+ Arrays.asList(response));
+                    if (slideShows.size() != 0) {
+                        listener.onCheckUpdatesResponse(slideShows);
+                    }
+                    else {
+                        Log.i(getClass().getSimpleName(), "checkUpdate onResponse: empty");
+                    }
+
                 }
-                else {
-                    Log.i(getClass().getSimpleName(), "checkUpdate onResponse: empty");
-                }
+
             }
-        }, new Response.ErrorListener() {
+
             @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.e(SlideShowService.class.getSimpleName(), "checkUpdate onErrorResponse: "+error);
-                if (error instanceof TimeoutError) {
+            public void onFailure(Call<ServerResponse> call, Throwable t) {
+                Log.e(SlideShowService.class.getSimpleName(), "checkUpdate onErrorResponse: "+ t.toString());
+                if (t instanceof TimeoutError) {
                     Log.i(SlideShowService.class.getSimpleName(), "TimoutError: trying to resend the request");
                     checkUpdates(listener);
                 }
             }
         });
-
-        executeRequest(request);
-    }
-
-    private void executeRequest(Request request) {
-        VolleySingleton.getInstance(mContext).addToRequestQueue(request);
     }
 
     public interface OnSlideShowServiceResponse {
         void onCheckUpdatesResponse(List<SlideShow> slideShows);
     }
-
 }

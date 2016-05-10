@@ -82,9 +82,9 @@ public class MessageController {
     }
 
 
-    public void addMessages(Message... messages) {
-        Log.i(MessageController.class.getSimpleName(), "addMessages: " + Arrays.asList(messages));
-        mMessages.addAll(Arrays.asList(messages));
+    public void addMessages(List<Message> messages) {
+        Log.i(MessageController.class.getSimpleName(), "addMessages: " + messages);
+        mMessages.addAll(messages);
         refresh();
     }
 

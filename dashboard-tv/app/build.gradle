@@ -47,6 +47,9 @@ dependencies {
     // Pour REST
     compile 'org.springframework.android:spring-android-rest-template:1.0.1.RELEASE'
     compile 'com.android.volley:volley:1.0.0'
+    compile 'com.squareup.retrofit2:retrofit:2.0.2'
+    compile 'com.squareup.retrofit2:converter-jackson:2.0.2'
+    compile 'com.google.code.gson:gson:2.4'
 
     // JSON formatter
     compile 'com.fasterxml.jackson.core:jackson-core:2.7.3'

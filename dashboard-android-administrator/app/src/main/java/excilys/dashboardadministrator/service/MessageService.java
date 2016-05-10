@@ -5,13 +5,19 @@ import android.util.Log;
 import com.android.volley.Response;
 import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
+import com.fasterxml.jackson.core.type.TypeReference;
 
 import java.util.Arrays;
 import java.util.List;
 
 import excilys.dashboardadministrator.model.entities.Message;
-import excilys.dashboardadministrator.rest.JsonRequest;
+import excilys.dashboardadministrator.model.json.ServerResponse;
+import excilys.dashboardadministrator.rest.IMessageApi;
+import excilys.dashboardadministrator.rest.JsonMapperUtils;
+import excilys.dashboardadministrator.rest.ServiceGenerator;
 import excilys.dashboardadministrator.utils.Data;
+import retrofit2.Call;
+import retrofit2.Callback;
 
 /**
  * This class performs all messages requests to the server.
@@ -21,6 +27,8 @@ public class MessageService {
 
     private OnMessageServiceResponse mListener;
 
+    private IMessageApi mMessageApi;
+
     public static MessageService getInstance(OnMessageServiceResponse listener){
         if (S_INSTANCE == null) S_INSTANCE = new MessageService(listener);
         return S_INSTANCE;
@@ -28,28 +36,36 @@ public class MessageService {
 
     private MessageService(OnMessageServiceResponse listener) {
         this.mListener = listener;
+        mMessageApi = ServiceGenerator.createService(IMessageApi.class);
     }
 
 
 
     public void checkUpdates() {
-        @SuppressWarnings("unchecked")
-        JsonRequest<Message[]> request = new JsonRequest<>(Data.GET_MESSAGES_URL, Message[].class, null, new Response.Listener<Message[]>() {
+        Call<ServerResponse> call = mMessageApi.getMessages();
+
+        call.enqueue(new Callback<ServerResponse>() {
             @Override
-            public void onResponse(Message[] response) {
-                Log.i(MessageService.class.getSimpleName(), "onResponse: "+ Arrays.asList(response));
-                if (response.length != 0) {
-                    mListener.onCheckUpdatesResponse(Arrays.asList(response));
-                }
-                else {
-                    Log.i(MessageService.class.getSimpleName(), "checkUpdate onResponse: empty");
+            public void onResponse(Call<ServerResponse> call, retrofit2.Response<ServerResponse> response) {
+                ServerResponse serverResponse = response.body();
+                if (serverResponse != null) {
+                    List<Message> messages = JsonMapperUtils.getServerResponseContent(serverResponse, new TypeReference<List<Message>>() {});
+                    Log.i(MessageService.class.getSimpleName(), "onResponse: "+ Arrays.asList(response));
+                    if (messages.size() != 0) {
+                        if (mListener != null) {
+                            mListener.onCheckUpdatesResponse(messages);
+                        }
+                    }
+                    else {
+                        Log.i(MessageService.class.getSimpleName(), "checkUpdate onResponse: empty");
+                    }
                 }
             }
-        }, new Response.ErrorListener() {
+
             @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.e(MessageService.class.getSimpleName(), "checkUpdate onErrorResponse: "+error);
-                if (error instanceof TimeoutError) {
+            public void onFailure(Call<ServerResponse> call, Throwable t) {
+                Log.e(MessageService.class.getSimpleName(), "checkUpdate onErrorResponse: "+t);
+                if (t instanceof TimeoutError) {
                     Log.i(MessageService.class.getSimpleName(), "TimoutError: trying to resend the request");
                     checkUpdates();
                 }

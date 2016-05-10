@@ -9,6 +9,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.excilys.shoofleurs.dashboard.R;
+import com.excilys.shoofleurs.dashboard.model.entities.SlideShow;
 import com.excilys.shoofleurs.dashboard.ui.controllers.MessageController;
 import com.excilys.shoofleurs.dashboard.ui.controllers.SlideShowController;
 import com.excilys.shoofleurs.dashboard.ui.factories.AnimatorFactory;
@@ -16,12 +17,15 @@ import com.excilys.shoofleurs.dashboard.service.MessageService;
 import com.excilys.shoofleurs.dashboard.service.SlideShowService;
 import com.excilys.shoofleurs.dashboard.ui.utils.AndroidUtils;
 
+import java.util.List;
+
 /**
  * This Activity represents the main view of the application.
  * It asks the server for slideshows updates via the SlideShowService and
  * display them.
  */
-public class DashboardActivity extends FragmentActivity {
+public class DashboardActivity extends FragmentActivity implements
+        SlideShowService.OnDebugMessageListener, SlideShowService.OnMessageServiceListener {
     private RelativeLayout mMenuLayout;
 
     private AnimatorSet mProgressAnimatorSet1,
@@ -66,7 +70,9 @@ public class DashboardActivity extends FragmentActivity {
 
         startWaitingAnimation();
         mSlideShowController = SlideShowController.getInstance(this);
-        mSlideShowService = SlideShowService.getInstance(this);
+        mSlideShowService = new SlideShowService();
+        mSlideShowService.setDebugMessageListener(this);
+        mSlideShowService.setMessageServiceListener(this);
 
         mMessageController = MessageController.getInstance(this);
         mMessageService = MessageService.getInstance(this);
@@ -122,10 +128,6 @@ public class DashboardActivity extends FragmentActivity {
         mDebugTextView.setText(getResources().getString(messageId));
     }
 
-    public SlideShowController getSlideShowController() {
-        return mSlideShowController;
-    }
-
     public MessageController getMessageController() {
         return mMessageController;
     }
@@ -133,5 +135,15 @@ public class DashboardActivity extends FragmentActivity {
     @Override
     protected void onResume() {
         super.onResume();
+    }
+
+    @Override
+    public void onDebugMessage(int messageId) {
+        setDebugMessage(messageId);
+    }
+
+    @Override
+    public void onCheckUpdatesResponse(List<SlideShow> slideShows) {
+        mSlideShowController.addSlideShows(slideShows);
     }
 }

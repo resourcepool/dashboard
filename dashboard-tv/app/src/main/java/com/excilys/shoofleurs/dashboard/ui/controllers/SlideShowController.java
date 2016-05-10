@@ -16,6 +16,7 @@ import com.excilys.shoofleurs.dashboard.ui.utils.ZoomOutPageTransformer;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.PriorityQueue;
 import java.util.Queue;
 
@@ -64,8 +65,8 @@ public class SlideShowController {
         mViewPager.setPageTransformer(true, new ZoomOutPageTransformer());
     }
 
-    public void addSlideShows(SlideShow... slideShows) {
-        Log.d(getClass().getSimpleName(), "addSlideShows: " + Arrays.asList(slideShows));
+    public void addSlideShows(List<SlideShow> slideShows) {
+        Log.d(getClass().getSimpleName(), "addSlideShows: " + slideShows);
         for (SlideShow d : slideShows) {
             if (!mSlideShowQueue.contains(d)){
                 mSlideShowQueue.add(d);
