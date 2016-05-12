@@ -2,9 +2,7 @@ package excilys.dashboardadministrator.service;
 
 import android.util.Log;
 
-import com.android.volley.Response;
 import com.android.volley.TimeoutError;
-import com.android.volley.VolleyError;
 import com.fasterxml.jackson.core.type.TypeReference;
 
 import java.util.Arrays;
@@ -13,9 +11,8 @@ import java.util.List;
 import excilys.dashboardadministrator.model.entities.Message;
 import excilys.dashboardadministrator.model.json.ServerResponse;
 import excilys.dashboardadministrator.rest.IMessageApi;
-import excilys.dashboardadministrator.rest.JsonMapperUtils;
+import excilys.dashboardadministrator.utils.JsonMapperUtils;
 import excilys.dashboardadministrator.rest.ServiceGenerator;
-import excilys.dashboardadministrator.utils.Data;
 import retrofit2.Call;
 import retrofit2.Callback;
 

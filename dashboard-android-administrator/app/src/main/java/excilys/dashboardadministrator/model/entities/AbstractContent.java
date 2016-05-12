@@ -3,6 +3,7 @@ package excilys.dashboardadministrator.model.entities;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
@@ -15,8 +16,6 @@ import excilys.dashboardadministrator.model.json.Views;
  * A content can be an image, a video, a pdf, or a web page. A content is associated
  * with a slideshow. It can only exist with a slideshow.
  */
-@JsonAutoDetect(fieldVisibility= JsonAutoDetect.Visibility.ANY, getterVisibility=JsonAutoDetect.Visibility.NONE,
-		isGetterVisibility=JsonAutoDetect.Visibility.NONE, setterVisibility= JsonAutoDetect.Visibility.NONE)
 @JsonTypeInfo(use=JsonTypeInfo.Id.NAME, include=JsonTypeInfo.As.PROPERTY, property="@type")
 @JsonSubTypes({
 		@JsonSubTypes.Type(value = ImageContent.class, name = "ImageContent"),
@@ -46,8 +45,7 @@ public abstract class AbstractContent {
 	@JsonView(Views.FullContent.class)
 	private int mGlobalDuration;
 
-	@JsonProperty("slideShow")
-	@JsonBackReference
+	@JsonIgnore
 	private SlideShow mSlideShow;
 
 	@JsonProperty("positionInSlideShow")
@@ -108,10 +106,12 @@ public abstract class AbstractContent {
 		mGlobalDuration = globalDuration;
 	}
 
-	public SlideShow getSlideShow() {
+    @JsonProperty("slideShow")
+    public SlideShow getSlideShow() {
 		return mSlideShow;
 	}
 
+    @JsonIgnore
 	public void setSlideShow(SlideShow slideShow) {
 		mSlideShow = slideShow;
 	}

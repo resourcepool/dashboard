@@ -25,6 +25,7 @@ public class ImageDisplayable extends AbstractDisplayable {
 
     @Override
     public void display(final Context context, ViewGroup layout) {
+        
         final ImageView imageView = addOrReplaceViewByType(layout, context, ImageView.class);
         imageView.setImageBitmap(null);
         if (mUrl == null) {

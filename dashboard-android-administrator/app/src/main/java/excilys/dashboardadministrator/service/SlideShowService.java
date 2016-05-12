@@ -12,7 +12,7 @@ import java.util.List;
 import excilys.dashboardadministrator.model.entities.SlideShow;
 import excilys.dashboardadministrator.model.json.ServerResponse;
 import excilys.dashboardadministrator.rest.ISlideShowApi;
-import excilys.dashboardadministrator.rest.JsonMapperUtils;
+import excilys.dashboardadministrator.utils.JsonMapperUtils;
 import excilys.dashboardadministrator.rest.ServiceGenerator;
 import retrofit2.Call;
 import retrofit2.Callback;

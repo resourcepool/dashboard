@@ -16,18 +16,32 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import excilys.dashboardadministrator.R;
+import excilys.dashboardadministrator.model.entities.ImageContent;
 import excilys.dashboardadministrator.model.entities.SlideShow;
+import excilys.dashboardadministrator.model.json.ServerResponse;
+import excilys.dashboardadministrator.rest.IContentApi;
+import excilys.dashboardadministrator.rest.ServiceGenerator;
 import excilys.dashboardadministrator.ui.adapters.ContentsAdapter;
 import excilys.dashboardadministrator.ui.dialogs.ChooseContentDialog;
 import excilys.dashboardadministrator.ui.displayables.Displayable;
 import excilys.dashboardadministrator.ui.displayables.DisplayableFactory;
 import excilys.dashboardadministrator.ui.displayables.ImageDisplayable;
 import excilys.dashboardadministrator.ui.utils.FilePathUtils;
+import excilys.dashboardadministrator.utils.JsonMapperUtils;
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -50,8 +64,10 @@ public class ContentsFragment extends Fragment {
 
     private SlideShow mSlideShow;
 
+    private IContentApi mContentApi;
+
     public ContentsFragment() {
-        // Required empty public constructor
+        mContentApi = ServiceGenerator.createService(IContentApi.class);
     }
 
     /**
@@ -112,7 +128,28 @@ public class ContentsFragment extends Fragment {
                 String realPath = FilePathUtils.getPath(getContext(), data.getData());
                 Log.i(getClass().getSimpleName(), "onActivityResult: PICK_IMAGE " + realPath);
                 Log.i(getClass().getSimpleName(), "RealPath: "+realPath);
-                mAdapter.addDisplayable(new ImageDisplayable(realPath));
+
+                ImageContent imageContent = new ImageContent("Default");
+                imageContent.setGlobalDuration(0);
+                imageContent.setDurationInSlideShow(10);
+                imageContent.setSlideShow(mSlideShow);
+                imageContent.setPositionInSlideShow(mSlideShow.getContents().size());
+
+                File image = new File(realPath);
+                RequestBody requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), image);
+                MultipartBody.Part body = MultipartBody.Part.createFormData("file", image.getName(), requestFile);
+
+                Call<ServerResponse> call = mContentApi.postContents(JsonMapperUtils.writeValueAsString(imageContent), body);
+                call.enqueue(new Callback<ServerResponse>() {
+                    @Override
+                    public void onResponse(Call<ServerResponse> call, Response<ServerResponse> response) {
+                        ImageContent imageContent1 = JsonMapperUtils.getServerResponseContent(response.body(), ImageContent.class);
+                        mAdapter.addDisplayable(new ImageDisplayable(imageContent1.getUrl()));
+                    }
+
+                    @Override
+                    public void onFailure(Call<ServerResponse> call, Throwable t) { }
+                });
             }
 
             else if (requestCode == ChooseContentDialog.PICK_VIDEO_REQUEST) {

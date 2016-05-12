@@ -36,7 +36,7 @@ public class WebContent extends AbstractContent {
 		super(title, url);
 	}
 
-	public int getDurationInSlideshow() {
+	public int getDurationInSlideShow() {
 		return mDurationInSlideShow;
 	}
 

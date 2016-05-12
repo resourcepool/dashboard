@@ -1,6 +1,7 @@
 package excilys.dashboardadministrator.model.entities;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonView;
@@ -36,7 +37,7 @@ public class SlideShow {
 
 	@JsonProperty("contents")
 	@JsonView(Views.TvContent.class)
-	@JsonManagedReference
+	@JsonIgnore
 	private List<AbstractContent> mContents = new ArrayList<>();
 
 	public SlideShow() {
