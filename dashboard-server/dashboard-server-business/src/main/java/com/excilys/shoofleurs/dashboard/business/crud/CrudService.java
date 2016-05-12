@@ -54,8 +54,17 @@ public class CrudService<T> {
 	public T update(T entity) throws SQLException {
 		mEntityManager.merge(entity);
 		mEntityManager.flush();
-		mEntityManager.refresh(entity);
 		return entity;
+	}
+
+	/**
+	 * Delete an entity from the database.
+	 * @param entity Entity to delete
+	 * @throws SQLException Test if something went wrong with the database
+	 */
+	public void delete(T entity) throws SQLException {
+		mEntityManager.remove(entity);
+		mEntityManager.flush();
 	}
 
 	/**

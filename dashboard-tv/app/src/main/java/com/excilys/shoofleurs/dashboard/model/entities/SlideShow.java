@@ -96,6 +96,21 @@ public class SlideShow {
 	}
 
 	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+
+		SlideShow slideShow = (SlideShow) o;
+
+		return mId == slideShow.mId;
+	}
+
+	@Override
+	public int hashCode() {
+		return mId;
+	}
+
+	@Override
 	public String toString() {
 		return "SlideShow{" +
 				"mId=" + mId +

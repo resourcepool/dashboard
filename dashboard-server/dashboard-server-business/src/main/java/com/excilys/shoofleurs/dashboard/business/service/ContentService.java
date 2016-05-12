@@ -51,4 +51,38 @@ public class ContentService {
 		}
 		return abstractContent;
 	}
+
+
+	/**
+	 * Delete a content.
+	 * @param id ID to delete
+	 * @return Result of the operation
+	 */
+	public boolean delete(int id) {
+		boolean result;
+		try {
+			result = mAbstractContentDao.delete(id);
+		} catch (SQLException e) {
+			result = false;
+			LOGGER.error("Delete content with id " + id + " failded. Cause : " + e.getMessage());
+		}
+		return result;
+	}
+
+
+	/**
+	 * Find a content by its id.
+	 * @param id ID to find
+	 * @return Abstract content if id exists
+	 */
+	public AbstractContent findById(int id) {
+		AbstractContent abstractContent;
+		try {
+			abstractContent = mAbstractContentDao.findById(id);
+		} catch (SQLException e) {
+			abstractContent = null;
+			LOGGER.error("Error during find. Id " + id + " not found. Cause  : " + e.getMessage());
+		}
+		return abstractContent;
+	}
 }

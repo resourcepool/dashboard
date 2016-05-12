@@ -17,18 +17,18 @@ public class WebContent extends AbstractContent {
 	 * Duration display, by default 20.
 	 */
 	@Column(name = "duration_in_slideshow")
-	@JsonProperty("durationInSlideshow")
+	@JsonProperty("durationInSlideShow")
 	@JsonView(Views.FullContent.class)
-	private int mDurationInSlideshow = 20;
+	private int mDurationInSlideShow = 20;
 
 	/**
 	 * If the website doesn't fit into the screen, enable auto scroll
 	 * to the the page. Default set to true.
 	 */
 	@Column(name = "auto_scroll")
-	@JsonProperty("autoScroll")
+	@JsonProperty("isAutoScroll")
 	@JsonView(Views.FullContent.class)
-	private boolean mAutoScroll = true;
+	private boolean mIsAutoScroll = true;
 
 
 	public WebContent() {
@@ -43,19 +43,19 @@ public class WebContent extends AbstractContent {
 		super(title, url);
 	}
 
-	public int getDurationInSlideshow() {
-		return mDurationInSlideshow;
+	public int getDurationInSlideShow() {
+		return mDurationInSlideShow;
 	}
 
-	public void setDurationInSlideshow(int durationInSlideshow) {
-		mDurationInSlideshow = durationInSlideshow;
+	public void setDurationInSlideShow(int durationInSlideshow) {
+		mDurationInSlideShow = durationInSlideshow;
 	}
 
-	public boolean isAutoScroll() {
-		return mAutoScroll;
+	public boolean getIsAutoScroll() {
+		return mIsAutoScroll;
 	}
 
 	public void setAutoScroll(boolean autoScroll) {
-		mAutoScroll = autoScroll;
+		mIsAutoScroll = autoScroll;
 	}
 }

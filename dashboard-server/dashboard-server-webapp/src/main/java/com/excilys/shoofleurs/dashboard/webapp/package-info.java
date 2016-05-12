@@ -1,1 +1,0 @@
-package com.excilys.shoofleurs.dashboard.webapp;

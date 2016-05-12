@@ -27,7 +27,7 @@ public class SlideShowService {
 	 * @param slideShow SlideShow to persist.
 	 * @return SlideShow created with refreshed id or null if something went wrong
 	 */
-	public SlideShow createSlideShow(SlideShow slideShow) {
+	public SlideShow create(SlideShow slideShow) {
 		try {
 			slideShow = mSlideShowDao.create(slideShow);
 		} catch (SQLException e) {
@@ -68,7 +68,7 @@ public class SlideShowService {
 	 * @param id ID to find
 	 * @return SlideShow found or null if someting went wrong or slideshow was not found.
 	 */
-	public SlideShow getById(int id) {
+	public SlideShow findById(int id) {
 		SlideShow slideShow;
 		try {
 			slideShow = mSlideShowDao.findById(id);
@@ -77,6 +77,22 @@ public class SlideShowService {
 			LOGGER.info("Find slideshow with id : " + id + " failed, caused by : " + e.getCause());
 		}
 		return slideShow;
+	}
+
+	/**
+	 * Delete a slideshow by id.
+	 * @param id Slideshow id to delete
+	 * @return Result of the operation
+	 */
+	public boolean delete(int id) {
+		boolean result;
+		try {
+			result = mSlideShowDao.delete(id);
+		} catch (SQLException e) {
+			result = false;
+			LOGGER.info("Delete slideshow with id : " + id + " failed, caused by : " + e.getCause());
+		}
+		return result;
 	}
 
 	/**

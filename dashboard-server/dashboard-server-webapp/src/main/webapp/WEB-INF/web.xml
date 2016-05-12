@@ -20,11 +20,11 @@
         </init-param>
         <init-param>
             <param-name>cors.supportedMethods</param-name>
-            <param-value>GET, HEAD, POST, OPTIONS</param-value>
+            <param-value>GET, HEAD, POST, PUT, DELETE, OPTIONS</param-value>
         </init-param>
         <init-param>
             <param-name>cors.supportedHeaders</param-name>
-            <param-value>Content-Type, X-Requested-With</param-value>
+            <param-value>*</param-value>
         </init-param>
         <init-param>
             <param-name>cors.exposedHeaders</param-name>
@@ -42,9 +42,8 @@
 
     <filter-mapping>
         <filter-name>CORS</filter-name>
-        <url-pattern>/api/*</url-pattern>
+        <url-pattern>/*</url-pattern>
     </filter-mapping>
-
 
     <servlet>
         <servlet-name>Jersey Web Application</servlet-name>
@@ -64,6 +63,4 @@
         <servlet-name>Jersey Web Application</servlet-name>
         <url-pattern>/api/*</url-pattern>
     </servlet-mapping>
-
-
 </web-app>

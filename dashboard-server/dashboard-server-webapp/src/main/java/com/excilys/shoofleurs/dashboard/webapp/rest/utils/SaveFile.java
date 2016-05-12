@@ -5,7 +5,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
@@ -41,5 +43,11 @@ public class SaveFile {
 			return null;
 		}
 		return idContent + data.getFileName().substring(data.getFileName().lastIndexOf("."));
+	}
+
+	public static boolean deleteFile(String url) {
+		File file = new File("/root/payara41/glassfish/domains/domain1/applications/dashboard/img/" +
+						url.substring(url.lastIndexOf("/"), url.length()));
+		return file.exists() && file.delete();
 	}
 }
