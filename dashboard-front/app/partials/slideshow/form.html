@@ -5,22 +5,23 @@
 			<form name="form" ng-submit="submit(form.$valid)" novalidate>
 				<fieldset>
 					<p id="status"></p>
-							
 					<div class="form-group">
 						<label for="title">Title</label> 
-						<input name="title" type="text" placeholder="Enter a title" class="form-control" minlength="2" maxlength="30" required ng-model="slideshow.title">
+						<input name="title" type="text" placeholder="Enter a title" class="form-control" minlength="2" maxlength="30" required ng-model="slideShow.title">
 						<p ng-show="form.$submitted && form.title.$error.required" class="help-block">The field must not be empty</p>
 						<p ng-show="form.$submitted && form.title.$error.minlength" class="help-block">The value must have at least 2 characters</p>
 						<p ng-show="form.title.$error.maxlength" class="help-block">The value must have no more than characters</p>
 					</div>
 
 					<div class="form-group">
-						<label for="diaporamaStartDateTime">Start Datetime</label>
-						<input id="diaporamaStartDateTime" name="diaporamaStartDateTime" type="text" class="datetimepicker form-control" placeholder="Slideshow start datetime" ng-model="slideshow.startDateTime">
+						<label for="slideShowStartDateTime">Start Datetime</label>
+						<input id="slideShowStartDateTime" name="slideShowStartDateTime" type="text" class="datetimepicker form-control" placeholder="Slideshow start datetime" date-picker="startDateTime"  ng-model="slideShow.startDateTime">
+						<pre>{{ slideShow.startDateTime }}</pre>
 					</div>
 					<div class="form-group">
-						<label for="diaporamaEndTime">End Datetime</label>
-						<input id="diaporamaEndTime" name="diaporamaEndTime" type="text" class="datetimepicker form-control" placeholder="Slideshow end datetime" ng-model="slideshow.endDateTime">
+						<label for="slideShowEndDateTime">End Datetime</label>
+						<input id="slideShowEndDateTime" name="slideShowEndDateTime" type="text" class="datetimepicker form-control" placeholder="Slideshow end datetime" date-picker="endDateTime" ng-model="slideShow.endDateTime">
+						<pre>{{ slideShow.endDateTime }}</pre>
 					</div>
 
 				</fieldset>

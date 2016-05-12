@@ -3,6 +3,7 @@
 	<p><a href="#/diaporama/create">Create diaporama</a></p>
 	<p><a href="#/diaporama/list">List of diaporamas</a></p>
 	-->
+	
 	<div class="container">
 		<h1 id="homeTitle">
 			{{ slideshows.length }} Slideshows found :
@@ -26,17 +27,18 @@
 	</form>
 
 	<div class="container" style="margin-top: 10px;">
-		
 		<div class="bs-component">
-              <div class="jumbotron" ng-repeat="slideshow in slideshows">
-                <h2><a href="#/slideshow/edit/{{ slideshow.id }}">{{ slideshow.title }} ( {{ slideshow.startDateTime }} - {{ slideshow.endDateTime }} )</a></h2>
-                <ul class="list-inline" ng-if="slideshow.contents.length > 0">
-                	<li ng-repeat="content in slideshow.contents">
-                		<a href="#/slideshow/content/edit/{{ content.id }}"><!-- <span aria-hidden="true" style="" class="glyphicon glyphicon-pencil modify-pencil">--></span><img style="width:100px; height:100px" alt="img" src="{{ content.url }}"></a>
+              <div class="jumbotron" ng-repeat="slideShow in slideShows">
+                <h2><a href="#/slideshow/edit/{{ slideShow.id }}">{{ slideShow.title }} ( {{ slideShow.startDateTime }} - {{ slideShow.endDateTime }} )</a></h2>
+                <ul class="list-inline" ng-if="slideShow.contents.length > 0">
+                	<li ng-repeat="content in slideShow.contents">
+                		<a ng-if="content['@type'] == 'ImageContent'" href="#/slideshow/content/edit/{{ content.id }}"><!-- <span aria-hidden="true" style="" class="glyphicon glyphicon-pencil modify-pencil"></span>--><img style="width:100px; height:100px" alt="img" src="{{ content.url }}"></a>
+                		<a ng-if="content['@type'] == 'WebContent'" href="#/slideshow/content/edit/{{ content.id }}"><img style="width:100px; height:100px" alt="img" src="images/webcontent.png"></a> 
                 	</li>
                 </ul>
-                <p ng-if="slideshow.contents.length == 0">No contents</p>
-                <a class="btn btn-success" id="addSlideshow" href="#/slideshow/{{ slideshow.id }}/content/add/">Add a content</a>
+                <p ng-if="slideShow.contents.length == 0">No contents</p>
+                <a class="btn btn-success" href="#/slideshow/{{ slideShow.id }}/content/add/">Add a content</a>
+                <a class="btn btn-danger delete-buttons" href="" ng-click="remove(slideShow.id);" >Delete</a>
               </div>
             <div class="btn btn-primary btn-xs" id="source-button" style="display: none;">&lt; &gt;</div></div>
 </div>
