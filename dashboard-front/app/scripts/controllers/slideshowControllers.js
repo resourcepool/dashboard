@@ -2,26 +2,27 @@
 
 var slideshowControllers = angular.module('slideshowControllers', []);
 
-slideshowControllers.controller('HomeCtrl', [ '$scope', '$http', '$window', function ($scope, $http, $window) {
-	
+slideshowControllers.controller('HomeCtrl', [ '$scope', '$http', '$window', 'API', 'DATE', function ($scope, $http, $window, API, DATE) {
+
 	$scope.slideShows = {};
-	
+
+
 	$http({
 		method: 'GET',
-		url: "http://vps229493.ovh.net:8080/dashboard/api/slideshows?json=tv",
+		url: API.BASE_URL + "slideshows?json=tv",
 	}).then(function(success) {
 		$scope.slideShows = angular.fromJson(success.data.objectAsJson);
-		
+
 		// on formatte les dates avec momentJS
 		for (var slideShow of $scope.slideShows) {
 			console.log(slideShow);
-			slideShow.startDateTime = moment(slideShow.startDateTime, "dd-MM-YYYY HH:mm:ss").format("DD/MM/YYYY HH:mm");
-			slideShow.endDateTime = moment(slideShow.endDateTime, "dd-MM-YYYY HH:mm:ss").format("DD/MM/YYYY HH:mm");
+			slideShow.startDateTime = moment(slideShow.startDateTime, DATE.SERVER_FORMAT).format(DATE.DISPLAY_FORMAT);
+			slideShow.endDateTime = moment(slideShow.endDateTime, DATE.SERVER_FORMAT).format(DATE.DISPLAY_FORMAT);
 		}
 		 $scope.remove = function(id){
 			 if (confirm("Do you want to delete selected slideshow ?")) {
-				 
-				 $http.delete("http://vps229493.ovh.net:8080/dashboard/api/slideshows/" + id)
+
+				 $http.delete(API.BASE_URL + "slideshows/" + id)
 		            .success(function (success) {
 		            	console.log(success);
 		            	$window.location.href = '#/dashboard';
@@ -31,86 +32,94 @@ slideshowControllers.controller('HomeCtrl', [ '$scope', '$http', '$window', func
 		            });
 		        }
 			 };
-			  
-		
+
 	}, function(error) {
 		console.log(error);
 	});
 }]);
 
-slideshowControllers.controller('SlideshowAddCtrl', ['$scope', '$http', '$window', function ($scope, $http, $window) {
+slideshowControllers.controller('SlideshowAddCtrl', ['$scope', '$http', '$window', 'API', function ($scope, $http, $window, API) {
 	$scope.slideShow = {};
 	$scope.title = "Add a slideshow :";
-	
-	/*
-	$('.datetimepicker').each(function() {
-		jQuery(this).datetimepicker({
-			format: 'd-m-Y H:i:s',
-			theme: 'dark',
-			onSelect: function(date) {
-				alert(date);
-			}
-		});
-	});
-	*/
-	
+
+	// requete d'envoi d'un slideshow
+	var addRequest = {
+		method: 'POST',
+	    url: API.BASE_URL + "slideshows/",
+	    headers: {
+	      'Content-Type': 'application/json',
+	    },
+	    data: $scope.slideShow
+	  };
+
 	$scope.submit = function (isValid) {
 		if (isValid) {
 			$("#status").text("Sending...").show();
 			console.log($scope.slideShow);
-			$http({
-				method: 'POST',
-				url: 'http://vps229493.ovh.net:8080/dashboard/api/slideshows ',
-				data: $scope.slideShow
-			}).then(function (success) {
-				console.log(success);
-				$window.location.href = '#/dashboard';
-				
-			}, function (error) {
-				$("#status").text("Erreur d'envoi");
-				console.log(error);
-			});
+			
+			$http(addRequest).then(
+	          function success(response) {
+	            console.log(success);
+	            $window.location.href = '#/dashboard';
+	          },
+	          function error(response) {
+	            console.log(response);
+	          }
+	        )
 		}
 	}
 }]);
-slideshowControllers.controller('SlideshowEditCtrl', ['$scope', '$http', '$routeParams', function ($scope, $http, $routeParams) {
-	
-	var id = $routeParams.contentId;
-	
-	$scope.slideshow = {};
-	$scope.title = "Edit a slideshow :";
-	
+slideshowControllers.controller('SlideshowEditCtrl', ['$scope', '$http', '$routeParams', '$window', 'API', 'DATE', function ($scope, $http, $routeParams, $window, API, DATE) {
+
+	var id = $routeParams.slideshowId;
+
+	$scope.slideShow = {};
+
+	// on définit les datetimepicker
 	$('.datetimepicker').each(function(){
 		jQuery(this).datetimepicker({
 			format: 'd-m-Y H:i',
 			theme: 'dark'
 		});
 	});
-	
+
+	// requete de mise à jour d'un slideshow
+	  var updateRequest = {
+	    method: 'PUT',
+	    url: API.BASE_URL + "slideshows/",
+	    headers: {
+	      'Content-Type': 'application/json',
+	    },
+	    data: $scope.slideShow
+	  };
+
+
+	// on récupère le slideshow
 	$http({
 		method: 'GET',
-		url: "http://vps229493.ovh.net:8080/dashboard/api/slideshows/" + 1 + "?json=full"
+		url: API.BASE_URL + "slideshows/" + id + "?json=full"
 	}).then(function(success) {
-		$scope.slideshow = angular.fromJson(success.data.objectAsJson);
-		console.log($scope.slideshow);
+		$scope.slideShow = angular.fromJson(success.data.objectAsJson);
 		console.log(success);
-		
-		$scope.slideshow.startDateTime = moment($scope.slideshow.startDateTime, "dd-MM-YYYY HH:mm:ss").format("DD-MM-YYYY HH:mm");
-		$scope.slideshow.endDateTime = moment($scope.slideshow.endDateTime, "dd-MM-YYYY HH:mm:ss").format("DD-MM-YYYY HH:mm");
-		
+		$scope.title = "Edit slideshow : " + $scope.slideShow.title;
 	}, function(error) {
 		console.log(error);
 		// traitement
-		// $location.path : redirection
 	});
 	
-	
-	$scope.create = function () {
-		$http({
-			method: 'POST',
-			url: 'url_update',
-			data: $scope.diaporama
-		});
+	$scope.submit = function (isValid) {
+		console.log(isValid);
+		if (isValid) {
+			$http(updateRequest).then(
+	          function success(response) {
+	            console.log(success);
+	            $window.location.href = '#/dashboard';
+	          },
+	          function error(response) {
+	            console.log(response);
+	          }
+	        )
+		}
 	}
 }]);
 

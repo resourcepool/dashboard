@@ -15,6 +15,15 @@ var dashboardFrontApp = angular.module('dashboardFrontApp', [
  'contentControllers',
  ]);
 
+dashboardFrontApp.constant("API", {
+  "BASE_URL": "http://vps229493.ovh.net:8080/dashboard/api/"
+})
+.constant("DATE", {
+    "SERVER_FORMAT": "dd-MM-YYYY HH:mm:ss",
+    "DISPLAY_FORMAT": "DD-MM-YYYY HH:mm"
+});
+
+
 dashboardFrontApp.config(['$routeProvider',
 	function($routeProvider) {
 		$routeProvider.
@@ -49,7 +58,7 @@ dashboardFrontApp.directive('fileModel', ['$parse', function ($parse) {
         link: function(scope, element, attrs) {
             var model = $parse(attrs.fileModel);
             var modelSetter = model.assign;
-            
+
             element.bind('change', function(){
                 scope.$apply(function(){
                     modelSetter(scope, element[0].files[0]);
@@ -83,7 +92,7 @@ dashboardFrontApp.directive('datePicker', ['$parse', function ($parse) {
         	/*
             var model = $parse(attrs.fileModel);
             var modelSetter = model.assign;
-            
+
             element.bind('change', function(){
                 scope.$apply(function(){
                     modelSetter(scope, element[0].files[0]);
