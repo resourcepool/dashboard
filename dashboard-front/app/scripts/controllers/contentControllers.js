@@ -37,7 +37,7 @@ contentControllers.controller('ContentAddCtrl', ['$scope', '$http', '$routeParam
   $scope.submit = function (isValid) {
     console.log(isValid);
     if (isValid) {
-
+      $("#status").show();
       // si upload de type Web Content
       if ($scope.content['@type'] == 'WebContent') {
         $http(uploadWebContentRequest).then(
@@ -134,8 +134,10 @@ contentControllers.controller('ContentEditCtrl', ['$scope', '$http', '$routePara
 
   $scope.submit = function (isValid) {
     console.log(isValid);
-    if (isValid) {
 
+    if (isValid) {
+      
+      $("#status").show();
       // si upload de type Web Content
       if ($scope.content['@type'] == 'WebContent') {
         $http(uploadWebContentRequest).then(

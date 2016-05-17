@@ -2,40 +2,46 @@
 
 var slideshowControllers = angular.module('slideshowControllers', []);
 
-slideshowControllers.controller('HomeCtrl', [ '$scope', '$http', '$window', 'API', 'DATE', function ($scope, $http, $window, API, DATE) {
+slideshowControllers.controller('HomeCtrl', [ '$scope', '$http', '$window', 'API', 'DATE', 'slideShowService', function ($scope, $http, $window, API, DATE, slideShowService) {
 
 	$scope.slideShows = {};
 
+	// on récupère tous les slideshows
+	slideShowService.getAll("tv",
+		
+		// récupération des slideshows OK
+		function (success) {
 
-	$http({
-		method: 'GET',
-		url: API.BASE_URL + "slideshows?json=tv",
-	}).then(function(success) {
-		$scope.slideShows = angular.fromJson(success.data.objectAsJson);
+			$scope.slideShows = angular.fromJson(success.data.objectAsJson);
+			
+			// on formatte les dates avec momentJS
+			for (var slideShow of $scope.slideShows) {
+				console.log(slideShow);
+				slideShow.startDateTime = moment(slideShow.startDateTime, DATE.SERVER_FORMAT).format(DATE.DISPLAY_FORMAT);
+				slideShow.endDateTime = moment(slideShow.endDateTime, DATE.SERVER_FORMAT).format(DATE.DISPLAY_FORMAT);
+			}
 
-		// on formatte les dates avec momentJS
-		for (var slideShow of $scope.slideShows) {
-			console.log(slideShow);
-			slideShow.startDateTime = moment(slideShow.startDateTime, DATE.SERVER_FORMAT).format(DATE.DISPLAY_FORMAT);
-			slideShow.endDateTime = moment(slideShow.endDateTime, DATE.SERVER_FORMAT).format(DATE.DISPLAY_FORMAT);
+			// on bind la fonction de suppression
+			$scope.remove = function(id) {
+				 if (confirm("Do you want to delete selected slideshow ?")) {
+				 	slideShowService.removeById(id,
+				 		function (success) {
+				 			console.log(success);
+			            	$window.location.href = '#/dashboard';
+				 		},
+				 		function (error) {
+				 			console.log(error);
+				 		}
+				 	)
+			      }
+			};
+		},
+
+		// Error lors de la récupération des slideshows
+		function (error) {
+			console.log(error);
 		}
-		 $scope.remove = function(id){
-			 if (confirm("Do you want to delete selected slideshow ?")) {
-
-				 $http.delete(API.BASE_URL + "slideshows/" + id)
-		            .success(function (success) {
-		            	console.log(success);
-		            	$window.location.href = '#/dashboard';
-		            })
-		            .error(function (error) {
-		                console.log(error);
-		            });
-		        }
-			 };
-
-	}, function(error) {
-		console.log(error);
-	});
+		);
 }]);
 
 slideshowControllers.controller('SlideshowAddCtrl', ['$scope', '$http', '$window', 'API', function ($scope, $http, $window, API) {
@@ -46,15 +52,12 @@ slideshowControllers.controller('SlideshowAddCtrl', ['$scope', '$http', '$window
 	var addRequest = {
 		method: 'POST',
 	    url: API.BASE_URL + "slideshows/",
-	    headers: {
-	      'Content-Type': 'application/json',
-	    },
 	    data: $scope.slideShow
 	  };
 
 	$scope.submit = function (isValid) {
 		if (isValid) {
-			$("#status").text("Sending...").show();
+			$("#status").show();
 			console.log($scope.slideShow);
 			
 			$http(addRequest).then(
@@ -63,13 +66,15 @@ slideshowControllers.controller('SlideshowAddCtrl', ['$scope', '$http', '$window
 	            $window.location.href = '#/dashboard';
 	          },
 	          function error(response) {
+	          	$("#status").hide();
 	            console.log(response);
 	          }
 	        )
 		}
 	}
 }]);
-slideshowControllers.controller('SlideshowEditCtrl', ['$scope', '$http', '$routeParams', '$window', 'API', 'DATE', function ($scope, $http, $routeParams, $window, API, DATE) {
+
+slideshowControllers.controller('SlideshowEditCtrl', ['$scope', '$http', '$routeParams', '$window', 'API', 'DATE', 'slideShowService', function ($scope, $http, $routeParams, $window, API, DATE, slideShowService) {
 
 	var id = $routeParams.slideshowId;
 
@@ -87,35 +92,31 @@ slideshowControllers.controller('SlideshowEditCtrl', ['$scope', '$http', '$route
 	  var updateRequest = {
 	    method: 'PUT',
 	    url: API.BASE_URL + "slideshows/",
-	    headers: {
-	      'Content-Type': 'application/json',
-	    },
 	    data: $scope.slideShow
 	  };
 
 
-	// on récupère le slideshow
-	$http({
-		method: 'GET',
-		url: API.BASE_URL + "slideshows/" + id + "?json=full"
-	}).then(function(success) {
-		$scope.slideShow = angular.fromJson(success.data.objectAsJson);
-		console.log(success);
-		$scope.title = "Edit slideshow : " + $scope.slideShow.title;
-	}, function(error) {
-		console.log(error);
-		// traitement
-	});
-	
+	slideShowService.getById(id,
+		function(success){
+			$scope.slideShow = angular.fromJson(success.data.objectAsJson);
+			console.log(success);
+			$scope.title = "Edit slideshow : " + $scope.slideShow.title;
+		},
+		function(error) {
+			console.log(error);
+		});
+
 	$scope.submit = function (isValid) {
 		console.log(isValid);
 		if (isValid) {
+			$("#status").show();
 			$http(updateRequest).then(
 	          function success(response) {
 	            console.log(success);
 	            $window.location.href = '#/dashboard';
 	          },
 	          function error(response) {
+	          	$("#status").hide();
 	            console.log(response);
 	          }
 	        )

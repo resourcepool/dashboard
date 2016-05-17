@@ -5,7 +5,7 @@
 			<form name="form" ng-submit="submit(form.$valid)" novalidate>
 				<fieldset>
 					<img ng-show="content['@type'] != 'WebContent' && content.id" style="width:150px; height:150px" alt="img" src="{{ content.url }}">
-					<pre>{{ content['@type']}}</pre>
+					<p id="status" style="display:none;">Sending ... <img src="images/loader.gif"></p>
 					<div class="form-group">
 						<label for="contentType">Content Type</label>
 						<select name="type" class="form-control" required ng-model="content['@type']">
@@ -23,7 +23,6 @@
 						<p ng-show="form.$submitted && form.url.$error.required" class="help-block">The field must not be empty</p>
 					</div>
 
-					<pre>{{ content.durationInSlideShow }}</pre>
 					<div class="form-group">
 						<label for="durationInSlideShow">Duration (seconds)</label>
 						<input name="durationInSlideShow" id="durationInSlideShow" type="text" class="form-control" placeholder="Duration (seconds)" ng-model="content.durationInSlideShow">
@@ -36,10 +35,9 @@
 
 				</fieldset>
 				<div class="actions pull-right">
-          <a class="btn btn-danger delete-buttons" href="" ng-click="remove(content.id);" >Delete</a>
-          or
 					<input type="submit" class="btn btn-primary" value="Send">
 					or <a href="dashboard.html" class="btn btn-default"  ng-click="reset()">Cancel</a>
+					or <a class="btn btn-danger delete-buttons" href="" ng-click="remove(content.id);" >Delete</a>
 				</div>
 			</form>
 		</div>

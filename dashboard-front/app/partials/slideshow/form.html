@@ -4,7 +4,7 @@
 			<h1>{{ title }} </h1>
 			<form name="form" ng-submit="submit(form.$valid)" novalidate>
 				<fieldset>
-					<p id="status"></p>
+					<p id="status" style="display:none;">Sending ... <img src="images/loader.gif"></p>
 					<div class="form-group">
 						<label for="title">Title</label> 
 						<input name="title" type="text" placeholder="Enter a title" class="form-control" minlength="2" maxlength="30" required ng-model="slideShow.title">
@@ -23,7 +23,6 @@
 						<input id="slideShowEndDateTime" name="slideShowEndDateTime" required type="text" class="datetimepicker form-control" placeholder="Slideshow end datetime" date-picker="endDateTime" ng-model="slideShow.endDateTime">
 						<p ng-show="form.$submitted && form.slideShowEndDateTime.$error.required" class="help-block">The field must not be empty</p>
 					</div>
-
 				</fieldset>
 				<div class="actions pull-right">
 					<input type="submit" class="btn btn-primary" value="Send">

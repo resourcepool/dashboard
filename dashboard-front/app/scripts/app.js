@@ -89,33 +89,43 @@ dashboardFrontApp.directive('datePicker', ['$parse', function ($parse) {
         	element.bind('change', function(){
         		console.log("ok");
         	});
-        	/*
-            var model = $parse(attrs.fileModel);
-            var modelSetter = model.assign;
-
-            element.bind('change', function(){
-                scope.$apply(function(){
-                    modelSetter(scope, element[0].files[0]);
-                });
-            });
-            */
         }
     };
 }]);
 
-/*
-dashboardFrontApp.service('fileUpload', ['$http', function ($http) {
-    this.uploadFileToUrl = function(file, uploadUrl){
-        var fd = new FormData();
-        fd.append('file', file);
-        $http.post(uploadUrl, fd, {
-            transformRequest: angular.identity,
-            headers: {'Content-Type': undefined}
-        })
-        .success(function(){
-        })
-        .error(function(){
+
+dashboardFrontApp.service('slideShowService', ['$http', 'API', function ($http, API) {
+    this.getById = function (id, successCallBack, errorCallBack) {
+        $http({
+            method: 'GET',
+            url: API.BASE_URL + "slideshows/" + id + "?json=full"
+        }).then(function(success) {
+            successCallBack(success);
+        }, function(error) {
+            errorCallBack(error);
+        });
+    }
+
+    this.removeById = function(id, successCallBack, errorCallBack) {
+         $http.delete(API.BASE_URL + "slideshows/" + id)
+            .success(function (success) {
+                successCallBack(success);
+            })
+            .error(function (error) {
+                errorCallBack(error);
+            });
+    }
+
+    this.getAll = function (param, successCallBack, errorCallBack) {
+        
+        $http({
+            method: 'GET',
+            url: API.BASE_URL + "slideshows?json=" + param
+        }).then(function(success) {
+            successCallBack(success);
+        }, function(error) {
+            errorCallBack(error);
         });
     }
 }]);
-*/
+
