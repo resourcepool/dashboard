@@ -1,76 +1,53 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.excilys.shoofleurs.dashboard</groupId>
     <artifactId>dashboard-server</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0</version>
     <packaging>pom</packaging>
 
     <name>dashboard-server</name>
     <url>http://maven.apache.org</url>
 
+    <!-- Modules -->
+    <modules>
+        <module>dashboard-server-entities</module>
+        <module>dashboard-server-webapp</module>
+        <module>dashboard-server-business</module>
+        <module>dashboard-server-persistence</module>
+    </modules>
+
+    <!-- Properties -->
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <junit.version>4.12</junit.version>
         <mavenplugin.version>2.5.1</mavenplugin.version>
         <java.version>1.8</java.version>
-        <logback>1.1.6</logback>
-        <slf4j>1.7.21</slf4j>
+        <hibernate.persistence.version>5.1.0.Final</hibernate.persistence.version>
+        <jackson.annotations.version>2.7.4</jackson.annotations.version>
+        <h2.version>1.4.191</h2.version>
+        <spring.version>4.2.6.RELEASE</spring.version>
+        <spring.jpa.version>1.10.1.RELEASE</spring.jpa.version>
+        <hikari.version>2.4.6</hikari.version>
+        <tomcatplugin.version>2.2</tomcatplugin.version>
+        <mysql.version>5.1.38</mysql.version>
     </properties>
 
+    <!-- Dependencies -->
     <dependencies>
-        <!-- Unit tests -->
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>${junit.version}</version>
             <scope>test</scope>
         </dependency>
-
-        <!-- JEE -->
-        <dependency>
-            <groupId>org.glassfish</groupId>
-            <artifactId>javax.ejb</artifactId>
-            <version>3.1</version>
-            <scope>provided</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>javax</groupId>
-            <artifactId>javaee-web-api</artifactId>
-            <version>7.0</version>
-            <scope>provided</scope>
-        </dependency>
-
-        <!-- Logging -->
-        <dependency>
-            <groupId>ch.qos.logback</groupId>
-            <artifactId>logback-classic</artifactId>
-            <version>${logback}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-            <version>${slf4j}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-simple</artifactId>
-            <version>${slf4j}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.thetransactioncompany</groupId>
-            <artifactId>cors-filter</artifactId>
-            <version>2.5</version>
-        </dependency>
-
     </dependencies>
 
+    <!-- Build -->
     <build>
         <finalName>dashboard</finalName>
         <plugins>
@@ -83,12 +60,17 @@
                     <target>${java.version}</target>
                 </configuration>
             </plugin>
+
+            <!-- Tomcat embedded -->
+            <plugin>
+                <groupId>org.apache.tomcat.maven</groupId>
+                <artifactId>tomcat7-maven-plugin</artifactId>
+                <version>${tomcatplugin.version}</version>
+                <configuration>
+                    <port>8080</port>
+                    <path>/</path>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
-
-  <modules>
-      <module>dashboard-server-entities</module>
-      <module>dashboard-server-webapp</module>
-    <module>dashboard-server-business</module>
-  </modules>
 </project>

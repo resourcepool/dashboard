@@ -11,9 +11,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
-import javax.persistence.MappedSuperclass;
 
-@Entity
+@Entity(name = "flash")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @JsonTypeInfo(use=JsonTypeInfo.Id.NAME, include=JsonTypeInfo.As.PROPERTY, property="@type")
 @JsonSubTypes({
@@ -23,16 +22,16 @@ import javax.persistence.MappedSuperclass;
 public abstract class Flash {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	@Column(name = "flashId")
-	@JsonProperty("flashId")
-	private int mFlashId;
+	@GeneratedValue
+	@Column
+	@JsonProperty
+	private int flashId;
 
 	public int getFlashId() {
-		return mFlashId;
+		return flashId;
 	}
 
 	public void setFlashId(int flashId) {
-		mFlashId = flashId;
+		this.flashId = flashId;
 	}
 }

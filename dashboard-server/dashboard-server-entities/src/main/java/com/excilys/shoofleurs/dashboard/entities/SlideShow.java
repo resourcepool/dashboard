@@ -1,20 +1,15 @@
 package com.excilys.shoofleurs.dashboard.entities;
 
 
-import com.excilys.shoofleurs.dashboard.json.Views;
-
+import com.excilys.shoofleurs.dashboard.entities.content.AbstractContent;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonView;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,89 +22,84 @@ import java.util.List;
  * never stop.
  */
 @Entity(name = "slideshow")
-@NamedQueries({@NamedQuery(name = "slideshow.findAll", query = "Select d FROM slideshow d")})
-public class SlideShow {
+public class Slideshow {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	@Column(name = "slideshow_id")
-	@JsonProperty("id")
-	@JsonView(Views.LightContent.class)
-	private int mId;
+	@GeneratedValue
+	@Column
+	@JsonProperty
+	private int id;
 
-	@Column(name = "title")
-	@JsonProperty("title")
-	@JsonView(Views.LightContent.class)
-	private String mTitle;
+	@Column
+	@JsonProperty
+	private String title;
 
-	@Column(name = "start")
-	@JsonProperty("startDateTime")
-	@JsonView(Views.FullContent.class)
-	private String mStartDateTime;
+	@Column
+	@JsonProperty
+	private String startDateTime;
 
-	@Column(name = "end")
-	@JsonProperty("endDateTime")
-	@JsonView(Views.FullContent.class)
-	private String mEndDateTime;
+	@Column
+	@JsonProperty
+	private String endDateTime;
 
-	@OneToMany(mappedBy = "mSlideShow", cascade = CascadeType.ALL)
-	@JsonProperty("contents")
-	@JsonView(Views.TvContent.class)
+	@OneToMany(mappedBy = "slideshow", cascade = CascadeType.ALL)
+	@JsonProperty
 	@JsonManagedReference
-	private List<AbstractContent> mContents = new ArrayList<>();
+	private List<AbstractContent> contents = new ArrayList<>();
 
-	public SlideShow() {
+
+	public Slideshow() {
 
 	}
 
-	public SlideShow(String title, String startDateTime, String endDateTime) {
-		mTitle = title;
-		mStartDateTime = startDateTime;
-		mEndDateTime = endDateTime;
+	public Slideshow(String title, String startDateTime, String endDateTime) {
+		this.title = title;
+		this.startDateTime = startDateTime;
+		this.endDateTime = endDateTime;
 	}
 
 
 	public int getId() {
-		return mId;
+		return id;
 	}
 
 	public void setId(int id) {
-		mId = id;
+		this.id = id;
 	}
 
 	public String getTitle() {
-		return mTitle;
+		return title;
 	}
 
 	public void setTitle(String title) {
-		mTitle = title;
+		this.title = title;
 	}
 
 	public String getStartDateTime() {
-		return mStartDateTime;
+		return startDateTime;
 	}
 
 	public void setStartDateTime(String startDateTime) {
-		mStartDateTime = startDateTime;
+		this.startDateTime = startDateTime;
 	}
 
 	public String getEndDateTime() {
-		return mEndDateTime;
+		return endDateTime;
 	}
 
 	public void setEndDateTime(String endDateTime) {
-		mEndDateTime = endDateTime;
+		this.endDateTime = endDateTime;
 	}
 
 	public List<AbstractContent> getContents() {
-		return mContents;
+		return contents;
 	}
 
 	public void setContents(List<AbstractContent> contents) {
-		mContents = contents;
+		this.contents = contents;
 	}
 
 	public void addContent(AbstractContent content) {
-		mContents.add(content);
+		contents.add(content);
 	}
 }

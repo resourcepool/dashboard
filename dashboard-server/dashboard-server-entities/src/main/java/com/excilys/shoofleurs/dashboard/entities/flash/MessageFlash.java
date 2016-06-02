@@ -8,22 +8,22 @@ import javax.persistence.Entity;
 @Entity(name = "message_flash")
 public class MessageFlash extends Flash {
 
-	@Column(name = "messageFlash")
-	@JsonProperty("messageFlash")
-	private String mMessageFlash;
+	@Column
+	@JsonProperty
+	private String messageFlash;
 
 	public MessageFlash() {
 	}
 
 	public MessageFlash(String messageFlash) {
-		mMessageFlash = messageFlash;
+		this.messageFlash = messageFlash;
 	}
 
 	public String getMessageFlash() {
-		return mMessageFlash;
+		return messageFlash;
 	}
 
 	public void setMessageFlash(String messageFlash) {
-		mMessageFlash = messageFlash;
+		this.messageFlash = messageFlash;
 	}
 }
