@@ -9,21 +9,21 @@ import javax.persistence.Entity;
 public class ImageFlash extends Flash {
 
 
-	@Column(name = "url")
-	@JsonProperty("url")
-	private String mUrl;
+	@Column
+	@JsonProperty
+	private String url;
 
 	public ImageFlash() { }
 
 	public ImageFlash(String url) {
-		mUrl = url;
+		this.url = url;
 	}
 
 	public String getUrl() {
-		return mUrl;
+		return url;
 	}
 
 	public void setUrl(String url) {
-		mUrl = url;
+		this.url = url;
 	}
 }

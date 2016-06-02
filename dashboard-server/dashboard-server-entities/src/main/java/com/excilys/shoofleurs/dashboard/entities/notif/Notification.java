@@ -7,61 +7,54 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
 
 @Entity(name = "notifications")
-@NamedQueries({
-		@NamedQuery(name = "findBySlideShowId", query = "SELECT n FROM notifications n WHERE n.mObjectId = :id"),
-		@NamedQuery(name = "findAll.notifications", query = "SELECT n FROM notifications n")
-})
 public class Notification {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	@Column(name = "notification_id")
-	@JsonProperty("id")
-	private int mId;
+	@GeneratedValue
+	@Column
+	@JsonProperty
+	private int id;
 
-	@Column(name = "object_type")
-	@JsonProperty("objectType")
-	private ObjectType mObjectType;
+	@Column
+	@JsonProperty
+	private ObjectType objectType;
 
 	@Column(name = "object_id")
 	@JsonProperty("objectId")
-	private int mObjectId;
+	private int objectId;
 
 
 	public Notification() { }
 
 	public Notification(ObjectType objectType, int objectId) {
-		mObjectType = objectType;
-		mObjectId = objectId;
+		this.objectType = objectType;
+		this.objectId = objectId;
 	}
 
 	public int getId() {
-		return mId;
+		return id;
 	}
 
 	public void setId(int id) {
-		mId = id;
+		this.id = id;
 	}
 
 	public ObjectType getObjectType() {
-		return mObjectType;
+		return objectType;
 	}
 
 	public void setObjectType(ObjectType objectType) {
-		mObjectType = objectType;
+		this.objectType = objectType;
 	}
 
 	public int getObjectId() {
-		return mObjectId;
+		return objectId;
 	}
 
 	public void setObjectId(int objectId) {
-		mObjectId = objectId;
+		this.objectId = objectId;
 	}
 }
