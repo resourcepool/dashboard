@@ -14,9 +14,7 @@ public class MediaMetadataDto {
 
     private String mediaType;
 
-    private String start;
-
-    private String end;
+    private ValidityDto validityDto;
 
     private String url;
 
@@ -25,8 +23,7 @@ public class MediaMetadataDto {
         this.name = name;
         this.duration = duration;
         this.mediaType = mediaType.toString();
-        this.start = validityDto.getStart();
-        this.end = validityDto.getEnd();
+        this.validityDto = validityDto;
         this.url = url;
     }
 
@@ -111,20 +108,12 @@ public class MediaMetadataDto {
         this.mediaType = mediaType;
     }
 
-    public String getStart() {
-        return start;
+    public ValidityDto getValidityDto() {
+        return validityDto;
     }
 
-    public void setStart(String start) {
-        this.start = start;
-    }
-
-    public String getEnd() {
-        return end;
-    }
-
-    public void setEnd(String end) {
-        this.end = end;
+    public void setValidityDto(ValidityDto validityDto) {
+        this.validityDto = validityDto;
     }
 
     public String getUrl() {

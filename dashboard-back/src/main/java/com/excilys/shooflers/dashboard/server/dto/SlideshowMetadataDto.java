@@ -10,17 +10,14 @@ public class SlideshowMetadataDto {
 
     private String name;
 
-    private String start;
-
-    private String end;
+    private ValidityDto validityDto;
 
     private List<MediaMetadataDto> medias;
 
     private SlideshowMetadataDto(String uuid, String name, ValidityDto validityDto, List<MediaMetadataDto> medias) {
         this.uuid = uuid;
         this.name = name;
-        this.start = validityDto.getStart();
-        this.end = validityDto.getEnd();
+        this.validityDto = validityDto;
         this.medias = medias;
     }
 
@@ -77,20 +74,12 @@ public class SlideshowMetadataDto {
         this.name = name;
     }
 
-    public String getStart() {
-        return start;
+    public ValidityDto getValidityDto() {
+        return validityDto;
     }
 
-    public void setStart(String start) {
-        this.start = start;
-    }
-
-    public String getEnd() {
-        return end;
-    }
-
-    public void setEnd(String end) {
-        this.end = end;
+    public void setValidityDto(ValidityDto validityDto) {
+        this.validityDto = validityDto;
     }
 
     public List<MediaMetadataDto> getMedias() {
