@@ -10,9 +10,9 @@ import java.time.format.DateTimeFormatter;
 @Component
 public class ValidityDtoMapperImpl implements MapperDto<Validity, ValidityDto> {
 
-    private static final String PATTERN = "yyyy-MM-dd hh:mm";
 
-    private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern(PATTERN);
+
+    private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ISO_DATE_TIME;
 
     @Override
     public ValidityDto toDto(Validity model) {

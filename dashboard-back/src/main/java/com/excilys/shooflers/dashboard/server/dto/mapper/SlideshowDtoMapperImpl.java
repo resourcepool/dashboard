@@ -30,7 +30,7 @@ public class SlideshowDtoMapperImpl implements MapperDto<SlideshowMetadata, Slid
         return new SlideshowMetadata.Builder()
                 .uuid(dto.getUuid())
                 .name(dto.getName())
-                .validity(validityDtoMapper.fromDto(new ValidityDto(dto.getStart(), dto.getEnd())))
+                .validity(validityDtoMapper.fromDto(dto.getValidityDto()))
                 .medias(mediaDtoMapper.fromListDto(dto.getMedias()))
                 .build();
     }

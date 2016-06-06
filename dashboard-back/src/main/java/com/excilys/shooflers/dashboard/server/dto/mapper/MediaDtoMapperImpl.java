@@ -32,7 +32,7 @@ public class MediaDtoMapperImpl implements MapperDto<MediaMetadata, MediaMetadat
                 .name(dto.getName())
                 .duration(dto.getDuration())
                 .mediaType(MediaType.valueOf(dto.getMediaType()))
-                .validity(validityDtoMapper.fromDto(new ValidityDto(dto.getStart(), dto.getEnd())))
+                .validity(validityDtoMapper.fromDto(dto.getValidityDto()))
                 .url(dto.getUrl())
                 .build();
     }
