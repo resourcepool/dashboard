@@ -14,8 +14,8 @@ import com.excilys.shoofleurs.dashboard.model.entities.SlideShow;
 import com.excilys.shoofleurs.dashboard.ui.controllers.MessageController;
 import com.excilys.shoofleurs.dashboard.ui.controllers.SlideShowController;
 import com.excilys.shoofleurs.dashboard.ui.factories.AnimatorFactory;
-import com.excilys.shoofleurs.dashboard.service.MessageService;
-import com.excilys.shoofleurs.dashboard.service.SlideShowService;
+import com.excilys.shoofleurs.dashboard.rest.service.MessageService;
+import com.excilys.shoofleurs.dashboard.rest.service.SlideShowService;
 import com.excilys.shoofleurs.dashboard.ui.utils.AndroidUtils;
 
 import java.util.List;
@@ -88,13 +88,6 @@ public class DashboardActivity extends FragmentActivity implements
     private void checkUpdates() {
         mSlideShowService.checkUpdates();
         mMessageService.checkUpdates();
-
-//        mHandler.postDelayed(new Runnable() {
-//            @Override
-//            public void run() {
-//                checkUpdates();
-//            }
-//        }, 30000);
     }
 
     /**

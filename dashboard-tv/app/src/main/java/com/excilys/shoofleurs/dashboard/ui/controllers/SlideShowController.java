@@ -61,7 +61,6 @@ public class SlideShowController {
         mViewPager = (ViewPagerCustomDuration) mDashboardActivity.findViewById(R.id.view_pager);
         mViewPager.addOnPageChangeListener(mAdapter);
         mViewPager.setAdapter(mAdapter);
-        mViewPager.setScrollDuration(1000);
         mViewPager.setPageTransformer(true, new ZoomOutPageTransformer());
     }
 
@@ -116,8 +115,8 @@ public class SlideShowController {
 
         if (mCurrentSlideShow != null) {
             if (mCurrentSlideShow.getContents().size() > 0) {
-                mAdapter.clearContents();
-                mAdapter.addContents(DisplayableFactory.createAll(mCurrentSlideShow.getContents(), mAdapter));
+                mAdapter.clearAllDatas();
+                mAdapter.addAllDatas(DisplayableFactory.createAll(mCurrentSlideShow.getContents(), mAdapter));
                 mAdapter.onPageSelected(0);
             } else {
                 Log.i(SlideShowController.class.getSimpleName(), "startSlideShow: The contents are empty!!");

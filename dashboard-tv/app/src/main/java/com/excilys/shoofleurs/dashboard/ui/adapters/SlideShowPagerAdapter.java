@@ -2,54 +2,40 @@ package com.excilys.shoofleurs.dashboard.ui.adapters;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentStatePagerAdapter;
-import android.support.v4.view.ViewPager;
 import android.util.Log;
 
 import com.excilys.shoofleurs.dashboard.ui.controllers.SlideShowController;
 import com.excilys.shoofleurs.dashboard.ui.displayables.AbstractDisplayable;
 import com.excilys.shoofleurs.dashboard.ui.displayables.Displayable;
 import com.excilys.shoofleurs.dashboard.ui.fragments.DisplayableFragment;
+import com.excilys.shoofleurs.dashboard.ui.utils.LoopingPagerAdapter;
 
 import java.util.List;
 
-public class SlideShowPagerAdapter extends FragmentStatePagerAdapter implements ViewPager.OnPageChangeListener, AbstractDisplayable.OnCompletionListener {
+public class SlideShowPagerAdapter extends LoopingPagerAdapter<AbstractDisplayable> implements AbstractDisplayable.OnCompletionListener {
     private List<AbstractDisplayable> mDisplayables;
     private SlideShowController mController;
     private int mCurrentPage;
 
     public SlideShowPagerAdapter(FragmentManager fragmentManager, SlideShowController controller, List<AbstractDisplayable> displayables) {
-        super(fragmentManager);
+        super(fragmentManager, displayables);
         this.mDisplayables = displayables;
         this.mController = controller;
     }
 
-    public void addContents(List<AbstractDisplayable> contents) {
-        mDisplayables.addAll(contents);
-        notifyDataSetChanged();
-    }
-
-    public void clearContents() {
-        mDisplayables.clear();
-        notifyDataSetChanged();
-    }
-
-
     @Override
-    public Fragment getItem(final int position) {
+    public Fragment getRealItem(int position) {
         Log.i(SlideShowPagerAdapter.class.getSimpleName(), "getItem: " + position);
         AbstractDisplayable displayable = mDisplayables.get(position);
         return DisplayableFragment.newInstance(displayable);
     }
 
     @Override
-    public int getCount() {
-        return mDisplayables.size();
-    }
-
-    @Override
-    public void onPageSelected(int position) {
+    public void onRealPageSelected(int position) {
         Log.i(SlideShowPagerAdapter.class.getSimpleName(), "onPageSelected: " + position);
+        if (mDisplayables.isEmpty()) {
+            return;
+        }
         mDisplayables.get(position).start();
         mCurrentPage = position;
     }
