@@ -1,4 +1,4 @@
-package com.excilys.shoofleurs.dashboard.rest;
+package com.excilys.shoofleurs.dashboard.rest.json;
 
 import com.excilys.shoofleurs.dashboard.model.json.ServerResponse;
 import com.fasterxml.jackson.core.type.TypeReference;

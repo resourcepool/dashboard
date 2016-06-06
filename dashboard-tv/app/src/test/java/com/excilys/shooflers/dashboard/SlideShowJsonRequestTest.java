@@ -21,7 +21,6 @@ public class SlideShowJsonRequestTest {
         ServerResponse response = objectMapper.readValue(responseJson, ServerResponse.class);
         Assert.assertNotNull(response);
 
-
         SlideShow[] slideShows = objectMapper.readValue(response.getObjectAsJson(), SlideShow[].class);
     }
 

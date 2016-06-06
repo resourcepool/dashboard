@@ -1,11 +1,9 @@
-package com.excilys.shoofleurs.dashboard.service;
+package com.excilys.shoofleurs.dashboard.rest.service;
 
 import android.util.Log;
 
-import com.android.volley.TimeoutError;
 import com.excilys.shoofleurs.dashboard.model.json.ServerResponse;
-import com.excilys.shoofleurs.dashboard.rest.IMessageApi;
-import com.excilys.shoofleurs.dashboard.rest.JsonMapperUtils;
+import com.excilys.shoofleurs.dashboard.rest.json.JsonMapperUtils;
 import com.excilys.shoofleurs.dashboard.rest.ServiceGenerator;
 import com.excilys.shoofleurs.dashboard.ui.activities.DashboardActivity;
 import com.excilys.shoofleurs.dashboard.model.entities.Message;
@@ -26,7 +24,7 @@ public class MessageService {
 
     private DashboardActivity mDashboardActivity;
 
-    private IMessageApi mMessageApi;
+    private MessageServiceInterface mMessageApi;
 
     public static MessageService getInstance(DashboardActivity dashboardActivity) {
         if (S_INSTANCE == null) {
@@ -37,7 +35,7 @@ public class MessageService {
 
     private MessageService(DashboardActivity dashboardActivity) {
         this.mDashboardActivity = dashboardActivity;
-        mMessageApi = ServiceGenerator.createService(IMessageApi.class);
+        mMessageApi = ServiceGenerator.createService(MessageServiceInterface.class);
     }
 
 
@@ -64,10 +62,7 @@ public class MessageService {
             @Override
             public void onFailure(Call<ServerResponse> call, Throwable t) {
                 Log.e(MessageService.class.getSimpleName(), "checkUpdate onErrorResponse: " + t.toString());
-                if (t instanceof TimeoutError) {
-                    Log.i(MessageService.class.getSimpleName(), "TimoutError: trying to resend the request");
-                    checkUpdates();
-                }
+                /**TODO renvoyer la requete si le réseau est disponible à nouveau **/
             }
         });
 
