@@ -10,7 +10,6 @@ import com.android.volley.toolbox.ImageLoader;
 import com.excilys.shoofleurs.dashboard.rest.VolleySingleton;
 
 
-
 public class ImageDisplayable extends AbstractDisplayable {
     private boolean waitForNoImmediate;
 
@@ -31,14 +30,11 @@ public class ImageDisplayable extends AbstractDisplayable {
                 if (isImmediate) {
                     if (response.getBitmap() == null) {
                         waitForNoImmediate = true;
-                    }
-                    else{
+                    } else {
                         imageView.setImageBitmap(response.getBitmap());
                     }
-                }
-
+                } else {
                 /* If this is the first time, we wait for the request response (when isImmediate = false)*/
-                else {
                     if (waitForNoImmediate) {
                         imageView.setImageBitmap(response.getBitmap());
                         waitForNoImmediate = false;
@@ -48,7 +44,7 @@ public class ImageDisplayable extends AbstractDisplayable {
 
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.i(getClass().getSimpleName(), "onErrorResponse :"+error);
+                Log.i(getClass().getSimpleName(), "onErrorResponse :" + error);
             }
         });
     }

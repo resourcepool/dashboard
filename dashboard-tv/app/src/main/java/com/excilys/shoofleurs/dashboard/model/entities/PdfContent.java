@@ -10,30 +10,30 @@ import com.fasterxml.jackson.annotation.JsonView;
  */
 public class PdfContent extends AbstractContent {
 
-	/**
-	 * Duration display of each page. By default, 10.
-	 */
-	@JsonProperty("durationPerPage")
-	@JsonView(Views.FullContent.class)
-	private int mDurationPerPage = 10;
+    /**
+     * Duration display of each page. By default, 10.
+     */
+    @JsonProperty("durationPerPage")
+    @JsonView(Views.FullContent.class)
+    private int mDurationPerPage = 10;
 
-	public PdfContent() {
-		super();
-	}
+    public PdfContent() {
+        super();
+    }
 
-	public PdfContent(String title) {
-		super(title);
-	}
+    public PdfContent(String title) {
+        super(title);
+    }
 
-	public PdfContent(String title, String url) {
-		super(title, url);
-	}
+    public PdfContent(String title, String url) {
+        super(title, url);
+    }
 
-	public int getDurationPerPage() {
-		return mDurationPerPage;
-	}
+    public int getDurationPerPage() {
+        return mDurationPerPage;
+    }
 
-	public void setDurationPerPage(int durationPerPage) {
-		mDurationPerPage = durationPerPage;
-	}
+    public void setDurationPerPage(int durationPerPage) {
+        mDurationPerPage = durationPerPage;
+    }
 }

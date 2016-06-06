@@ -1,6 +1,5 @@
 package com.excilys.shoofleurs.dashboard.ui.controllers;
 
-import android.support.v4.view.ViewPager;
 import android.util.Log;
 
 import com.excilys.shoofleurs.dashboard.R;
@@ -15,7 +14,6 @@ import com.excilys.shoofleurs.dashboard.ui.utils.ViewPagerCustomDuration;
 import com.excilys.shoofleurs.dashboard.ui.utils.ZoomOutPageTransformer;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.PriorityQueue;
 import java.util.Queue;
@@ -48,7 +46,9 @@ public class SlideShowController {
     private int mCurrentContentIndex;
 
     public static SlideShowController getInstance(DashboardActivity dashboardActivity) {
-        if (S_INSTANCE == null) S_INSTANCE = new SlideShowController(dashboardActivity);
+        if (S_INSTANCE == null) {
+            S_INSTANCE = new SlideShowController(dashboardActivity);
+        }
         return S_INSTANCE;
     }
 
@@ -68,7 +68,7 @@ public class SlideShowController {
     public void addSlideShows(List<SlideShow> slideShows) {
         Log.d(getClass().getSimpleName(), "addSlideShows: " + slideShows);
         for (SlideShow d : slideShows) {
-            if (!mSlideShowQueue.contains(d)){
+            if (!mSlideShowQueue.contains(d)) {
                 mSlideShowQueue.add(d);
             }
         }
@@ -115,13 +115,11 @@ public class SlideShowController {
         mCurrentContentIndex = 0;
 
         if (mCurrentSlideShow != null) {
-            if (mCurrentSlideShow.getContents().size() > 0){
+            if (mCurrentSlideShow.getContents().size() > 0) {
                 mAdapter.clearContents();
                 mAdapter.addContents(DisplayableFactory.createAll(mCurrentSlideShow.getContents(), mAdapter));
                 mAdapter.onPageSelected(0);
-            }
-
-            else {
+            } else {
                 Log.i(SlideShowController.class.getSimpleName(), "startSlideShow: The contents are empty!!");
             }
         }

@@ -1,4 +1,4 @@
-package com.excilys.shoofleurs.dashboard.requests;
+package excilys.dashboardadministrator.rest;
 
 import android.util.Log;
 import com.android.volley.*;
@@ -177,6 +177,21 @@ public class MultiPartRequest extends Request<NetworkResponse> {
 				// TODO revoir si on ne peut pas trouver un autre moyer de mieux gérer les exceptions
 				throw new RuntimeException("Erreur lors de la création d'un MultipartRequest");
 			}
+		}
+
+		public Builder addPart(String key, String value) {
+			try {
+				dos.writeBytes(TWO_HYPHENS + boundary + LINE_END);
+				dos.writeBytes("Content-Disposition: form-data; name=\"" + key + "\"" + LINE_END);
+				dos.writeBytes("Content-Type: text/plain; charset=UTF-8" + LINE_END);
+				dos.writeBytes(LINE_END);
+				dos.writeBytes(value);
+				dos.writeBytes(LINE_END);
+			} catch (IOException pE) {
+				Log.e("Exception", "", pE);
+				throw new RuntimeException("Erreur lors de la création d'un MultipartRequest");
+			}
+			return this;
 		}
 
 		/**

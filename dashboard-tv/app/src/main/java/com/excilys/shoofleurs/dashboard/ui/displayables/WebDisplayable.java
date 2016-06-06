@@ -31,8 +31,7 @@ public class WebDisplayable extends AbstractDisplayable {
         onScrollCompleted = false;
         if (mDurationInSec == 0) {
             handleAutoscroll(mWebView);
-        }
-        else {
+        } else {
             handleDelayedCompletion();
         }
     }
@@ -44,28 +43,27 @@ public class WebDisplayable extends AbstractDisplayable {
             @Override
             public void run() {
                 webView.scrollBy(0, 1);
-                int contentHeight = (int) (webView.getContentHeight()*webView.getScale());
+                int contentHeight = (int) (webView.getContentHeight() * webView.getScale());
                 if (contentHeight - webView.getScrollY() <= webView.getHeight()) {
                     if (mCompletionListener != null && !onScrollCompleted) {
                         mCompletionListener.onDisplayableCompletion();
                         onScrollCompleted = true;
                         Log.i(WebDisplayable.class.getSimpleName(), "handleAutoscroll: onCompleted");
                     }
-                }
+                } else {
                 /* Restart the current thread after 20 ms*/
-                else {
                     mHandler.postDelayed(this, 20);
                 }
             }
         };
 
             /* Wait 5 seconds before start autoscrolling*/
-            mHandler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    Log.i(WebDisplayable.class.getSimpleName(), "handleAutoScroll: start autoScroll");
-                    mScrollRunnable.run();
-                }
-            }, 5000);
+        mHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                Log.i(WebDisplayable.class.getSimpleName(), "handleAutoScroll: start autoScroll");
+                mScrollRunnable.run();
+            }
+        }, 5000);
     }
 }

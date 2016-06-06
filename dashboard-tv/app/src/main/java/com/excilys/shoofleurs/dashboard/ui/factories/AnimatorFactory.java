@@ -17,7 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class AnimatorFactory {
-    public static AnimatorSet createBackTranslateAnimatorSet (View view){
+    public static AnimatorSet createBackTranslateAnimatorSet(View view) {
         Animator translationX = ObjectAnimator.ofFloat(view, View.TRANSLATION_X, 0f);
         Animator translationY = ObjectAnimator.ofFloat(view, View.TRANSLATION_Y, 0f);
 
@@ -28,7 +28,7 @@ public class AnimatorFactory {
         return animatorSet;
     }
 
-    public static Animator createFadeInAnimator (final View view){
+    public static Animator createFadeInAnimator(final View view) {
         Animator fadeAnimator = ObjectAnimator.ofFloat(view, View.ALPHA, 0f, 1f);
         fadeAnimator.setDuration(200);
         fadeAnimator.setInterpolator(new AccelerateInterpolator());
@@ -43,7 +43,7 @@ public class AnimatorFactory {
         return fadeAnimator;
     }
 
-    public static Animator createFadeInAnimator (final View view, int duration){
+    public static Animator createFadeInAnimator(final View view, int duration) {
         Animator fadeAnimator = ObjectAnimator.ofFloat(view, View.ALPHA, 0f, 1f);
         fadeAnimator.setDuration(duration);
         fadeAnimator.setInterpolator(new AccelerateInterpolator());
@@ -59,7 +59,7 @@ public class AnimatorFactory {
     }
 
 
-    public static Animator createFadeOutAnimator (final View view){
+    public static Animator createFadeOutAnimator(final View view) {
         Animator fadeAnimator = ObjectAnimator.ofFloat(view, View.ALPHA, 1f, 0f);
         fadeAnimator.setDuration(200);
         fadeAnimator.setInterpolator(new AccelerateInterpolator());
@@ -73,7 +73,7 @@ public class AnimatorFactory {
         return fadeAnimator;
     }
 
-    public static Animator createFadeOutAnimator (final View view, int duration){
+    public static Animator createFadeOutAnimator(final View view, int duration) {
         Animator fadeAnimator = ObjectAnimator.ofFloat(view, View.ALPHA, 1f, 0f);
         fadeAnimator.setDuration(duration);
         fadeAnimator.setInterpolator(new AccelerateInterpolator());
@@ -87,22 +87,24 @@ public class AnimatorFactory {
         return fadeAnimator;
     }
 
-    public static AnimatorSet createRightToLeftExitAnimatorSet (View ... views){
+    public static AnimatorSet createRightToLeftExitAnimatorSet(View... views) {
         int startDelay = 0;
         int difDelay = 100;
         List<Animator> animators = new ArrayList<>();
-        for (View view:views){
+        for (View view : views) {
             float xTranslate;
-            if (view.getX() >= 0)
-                xTranslate = view.getX()+view.getWidth()+100;
-            else xTranslate = view.getWidth()+100;
-            Log.i(AnimatorFactory.class.getSimpleName(), "translate : "+startDelay+" :"+xTranslate);
+            if (view.getX() >= 0) {
+                xTranslate = view.getX() + view.getWidth() + 100;
+            } else {
+                xTranslate = view.getWidth() + 100;
+            }
+            Log.i(AnimatorFactory.class.getSimpleName(), "translate : " + startDelay + " :" + xTranslate);
             Animator translateAnimator = ObjectAnimator.ofFloat(view, View.TRANSLATION_X, view.getTranslationX(), -xTranslate);
             translateAnimator.setStartDelay(startDelay);
             translateAnimator.setDuration(200);
             translateAnimator.setInterpolator(new AccelerateInterpolator());
             animators.add(translateAnimator);
-            startDelay+=difDelay;
+            startDelay += difDelay;
         }
 
         AnimatorSet animatorSet = new AnimatorSet();
@@ -111,11 +113,11 @@ public class AnimatorFactory {
         return animatorSet;
     }
 
-    public static AnimatorSet createLeftToRighEnterAnimatorSet (View ... views){
+    public static AnimatorSet createLeftToRighEnterAnimatorSet(View... views) {
         List<Animator> animators = new ArrayList<>();
-        for (View view:views){
+        for (View view : views) {
             view.setTranslationY(0);
-            float xTranslate = ((RelativeLayout)view.getParent()).getWidth()+view.getWidth()+100;
+            float xTranslate = ((RelativeLayout) view.getParent()).getWidth() + view.getWidth() + 100;
             Animator translateAnimator = ObjectAnimator.ofFloat(view, View.TRANSLATION_X, xTranslate, 0);
             translateAnimator.setDuration(200);
             translateAnimator.setInterpolator(new DecelerateInterpolator());
@@ -129,36 +131,36 @@ public class AnimatorFactory {
     }
 
 
-    public static Animator createDownToUpTranslationAnimator (View view, int height){
+    public static Animator createDownToUpTranslationAnimator(View view, int height) {
         Animator translateAnimator = ObjectAnimator.ofFloat(view, View.TRANSLATION_Y, height, 0);
         translateAnimator.setDuration(100);
         translateAnimator.setInterpolator(new DecelerateInterpolator());
         return translateAnimator;
     }
 
-    public static Animator createUpToDownTranslationAnimator (View view, int height){
+    public static Animator createUpToDownTranslationAnimator(View view, int height) {
         Animator translateAnimator = ObjectAnimator.ofFloat(view, View.TRANSLATION_Y, 0, height);
         translateAnimator.setDuration(100);
         translateAnimator.setInterpolator(new AccelerateInterpolator());
         return translateAnimator;
     }
 
-    public static AnimatorSet createVibrationAnimatorSet(View view){
+    public static AnimatorSet createVibrationAnimatorSet(View view) {
         float initialAngle = view.getRotation();
         Animator vibrationAnimator1 = ObjectAnimator.ofFloat(view, View.ROTATION, initialAngle, initialAngle + 10);
         vibrationAnimator1.setDuration(50);
-        Animator vibrationAnimator2 = ObjectAnimator.ofFloat(view, View.ROTATION, initialAngle + 10, initialAngle -10);
+        Animator vibrationAnimator2 = ObjectAnimator.ofFloat(view, View.ROTATION, initialAngle + 10, initialAngle - 10);
         vibrationAnimator2.setDuration(100);
-        Animator vibrationAnimator3 = ObjectAnimator.ofFloat(view, View.ROTATION, initialAngle -10, initialAngle);
+        Animator vibrationAnimator3 = ObjectAnimator.ofFloat(view, View.ROTATION, initialAngle - 10, initialAngle);
         vibrationAnimator3.setDuration(50);
 
-        AnimatorSet animatorSet  = new AnimatorSet();
+        AnimatorSet animatorSet = new AnimatorSet();
         animatorSet.playSequentially(vibrationAnimator1, vibrationAnimator2, vibrationAnimator3);
 
         return animatorSet;
     }
 
-    public static AnimatorSet createZoomInAndOutAnimatorSet (View view){
+    public static AnimatorSet createZoomInAndOutAnimatorSet(View view) {
         long duration = 60;
         Animator zoomInAnimatorX = ObjectAnimator.ofFloat(view, View.SCALE_X, 1f, 1.2f);
         zoomInAnimatorX.setDuration(duration);
@@ -181,7 +183,7 @@ public class AnimatorFactory {
         return animatorSet;
     }
 
-    public static AnimatorSet createTranslationToAnimatorSet (View view, float toX, float toY){
+    public static AnimatorSet createTranslationToAnimatorSet(View view, float toX, float toY) {
         Animator translateXAnimator = ObjectAnimator.ofFloat(view, View.TRANSLATION_X, toX);
         Animator translateYAnimator = ObjectAnimator.ofFloat(view, View.TRANSLATION_Y, toY);
 
@@ -191,19 +193,19 @@ public class AnimatorFactory {
         return animatorSet;
     }
 
-    public static AnimatorSet createActionBarRectanglesBackInAnimator(View rec0, View rec1, View rec2){
+    public static AnimatorSet createActionBarRectanglesBackInAnimator(View rec0, View rec1, View rec2) {
         ObjectAnimator animRotate0 = ObjectAnimator.ofFloat(rec0, View.ROTATION, -45);
         ObjectAnimator animRotate2 = ObjectAnimator.ofFloat(rec2, View.ROTATION, 45);
 
-        ObjectAnimator animTranslateX0 = ObjectAnimator.ofFloat(rec0, View.TRANSLATION_X, -rec1.getWidth()/4);
-        ObjectAnimator animTranslateX2 = ObjectAnimator.ofFloat(rec2, View.TRANSLATION_X, -rec1.getWidth()/4);
+        ObjectAnimator animTranslateX0 = ObjectAnimator.ofFloat(rec0, View.TRANSLATION_X, -rec1.getWidth() / 4);
+        ObjectAnimator animTranslateX2 = ObjectAnimator.ofFloat(rec2, View.TRANSLATION_X, -rec1.getWidth() / 4);
 
         ObjectAnimator animScaleX0 = ObjectAnimator.ofFloat(rec0, View.SCALE_X, 0.5f);
         ObjectAnimator animScaleX1 = ObjectAnimator.ofFloat(rec1, View.SCALE_X, 0.9f);
         ObjectAnimator animScaleX2 = ObjectAnimator.ofFloat(rec2, View.SCALE_X, 0.5f);
 
-        ObjectAnimator animTranslateY0 = ObjectAnimator.ofFloat(rec0, View.TRANSLATION_Y, rec1.getHeight()+rec1.getHeight()/2);
-        ObjectAnimator animTranslateY2 = ObjectAnimator.ofFloat(rec2, View.TRANSLATION_Y, -rec1.getHeight()-rec1.getHeight()/2);
+        ObjectAnimator animTranslateY0 = ObjectAnimator.ofFloat(rec0, View.TRANSLATION_Y, rec1.getHeight() + rec1.getHeight() / 2);
+        ObjectAnimator animTranslateY2 = ObjectAnimator.ofFloat(rec2, View.TRANSLATION_Y, -rec1.getHeight() - rec1.getHeight() / 2);
 
         AnimatorSet animatorSetGroup = new AnimatorSet();
         animatorSetGroup.setInterpolator(new DecelerateInterpolator());
@@ -211,7 +213,7 @@ public class AnimatorFactory {
         return animatorSetGroup;
     }
 
-    public static AnimatorSet createActionBarRectanglesBackOutAnimator(View rec0, View rec1, View rec2){
+    public static AnimatorSet createActionBarRectanglesBackOutAnimator(View rec0, View rec1, View rec2) {
         ObjectAnimator animRotate0 = ObjectAnimator.ofFloat(rec0, View.ROTATION, 0);
         ObjectAnimator animRotate2 = ObjectAnimator.ofFloat(rec2, View.ROTATION, 0);
 
@@ -232,7 +234,7 @@ public class AnimatorFactory {
     }
 
 
-    public static AnimatorSet createProgressRoundAnimatorSet (View progressRound1, View progressRound2){
+    public static AnimatorSet createProgressRoundAnimatorSet(View progressRound1, View progressRound2) {
         ObjectAnimator rotateAnimator1 = ObjectAnimator.ofFloat(progressRound1, View.ROTATION, 0, 720);
         ObjectAnimator rotateAnimator2 = ObjectAnimator.ofFloat(progressRound2, View.ROTATION, 720, 0);
 
@@ -252,29 +254,32 @@ public class AnimatorFactory {
         };
 
         animatorSet.addListener(animationListener);
-
         return animatorSet;
     }
 
-    public enum Position{TOP_LEFT, TOP_RIGHT, BOTTOM_LEFT, BOTTOM_RIGHT};
+    public enum Position { TOP_LEFT, TOP_RIGHT, BOTTOM_LEFT, BOTTOM_RIGHT }
 
-    public static AnimatorSet createSquarePointAnimatorSet(final View point, int size, int transitionDuration, float scaleFactor, Position position){
-        float scale = size*scaleFactor;
+    public static AnimatorSet createSquarePointAnimatorSet(final View point, int size, int transitionDuration, float scaleFactor, Position position) {
+        float scale = size * scaleFactor;
 
         if (position == null) {
             position = Position.TOP_LEFT;
         }
         AnimatorSet finalAnimatorSet = null;
         switch (position) {
-            case TOP_LEFT: finalAnimatorSet = createSquarePointFromTopLeftAnimatorSet(point, size, transitionDuration, scale);
+            case TOP_LEFT:
+                finalAnimatorSet = createSquarePointFromTopLeftAnimatorSet(point, size, transitionDuration, scale);
                 break;
-            case TOP_RIGHT: finalAnimatorSet = createSquarePointFromTopRightAnimatorSet(point, size, transitionDuration, scale);
+            case TOP_RIGHT:
+                finalAnimatorSet = createSquarePointFromTopRightAnimatorSet(point, size, transitionDuration, scale);
                 break;
 
-            case BOTTOM_LEFT: finalAnimatorSet = createSquarePointFromBottomLeftAnimatorSet(point, size, transitionDuration, scale);
+            case BOTTOM_LEFT:
+                finalAnimatorSet = createSquarePointFromBottomLeftAnimatorSet(point, size, transitionDuration, scale);
                 break;
 
-            case BOTTOM_RIGHT: finalAnimatorSet = createSquarePointFromBottomRightAnimatorSet(point, size, transitionDuration, scale);
+            case BOTTOM_RIGHT:
+                finalAnimatorSet = createSquarePointFromBottomRightAnimatorSet(point, size, transitionDuration, scale);
                 break;
 
         }
@@ -298,12 +303,12 @@ public class AnimatorFactory {
 
     public static AnimatorSet createSquarePointFromTopLeftAnimatorSet(View point, int size, int transitionDuration, float scale) {
         int pointSize = point.getLayoutParams().width;
-        AnimatorSet topBottomAnimatorSet = createTranslateAnimatorWithScaling(point, View.TRANSLATION_Y, View.SCALE_Y, 0, size-pointSize, scale, transitionDuration);
-        AnimatorSet leftRightAnimatorSet = createTranslateAnimatorWithScaling(point, View.TRANSLATION_X, View.SCALE_X, 0, size-pointSize, scale, transitionDuration);
-        AnimatorSet bottomTopAnimatorSet = createTranslateAnimatorWithScaling(point, View.TRANSLATION_Y, View.SCALE_Y, size-pointSize, 0, scale, transitionDuration);
-        AnimatorSet rightLeftAnimatorSet = createTranslateAnimatorWithScaling(point, View.TRANSLATION_X, View.SCALE_X, size-pointSize, 0, scale, transitionDuration);
+        AnimatorSet topBottomAnimatorSet = createTranslateAnimatorWithScaling(point, View.TRANSLATION_Y, View.SCALE_Y, 0, size - pointSize, scale, transitionDuration);
+        AnimatorSet leftRightAnimatorSet = createTranslateAnimatorWithScaling(point, View.TRANSLATION_X, View.SCALE_X, 0, size - pointSize, scale, transitionDuration);
+        AnimatorSet bottomTopAnimatorSet = createTranslateAnimatorWithScaling(point, View.TRANSLATION_Y, View.SCALE_Y, size - pointSize, 0, scale, transitionDuration);
+        AnimatorSet rightLeftAnimatorSet = createTranslateAnimatorWithScaling(point, View.TRANSLATION_X, View.SCALE_X, size - pointSize, 0, scale, transitionDuration);
 
-        AnimatorSet[] animatorSets = new AnimatorSet[] {
+        AnimatorSet[] animatorSets = new AnimatorSet[]{
                 leftRightAnimatorSet,
                 bottomTopAnimatorSet,
                 rightLeftAnimatorSet,
@@ -319,10 +324,10 @@ public class AnimatorFactory {
 
     public static AnimatorSet createSquarePointFromBottomLeftAnimatorSet(View point, int size, int transitionDuration, float scale) {
         int pointSize = point.getLayoutParams().width;
-        AnimatorSet topBottomAnimatorSet = createTranslateAnimatorWithScaling(point, View.TRANSLATION_Y, View.SCALE_Y, -(size-pointSize), 0, scale, transitionDuration);
-        AnimatorSet leftRightAnimatorSet = createTranslateAnimatorWithScaling(point, View.TRANSLATION_X, View.SCALE_X, 0, size-pointSize, scale, transitionDuration);
-        AnimatorSet bottomTopAnimatorSet = createTranslateAnimatorWithScaling(point, View.TRANSLATION_Y, View.SCALE_Y, 0, -(size-pointSize), scale, transitionDuration);
-        AnimatorSet rightLeftAnimatorSet = createTranslateAnimatorWithScaling(point, View.TRANSLATION_X, View.SCALE_X, size-pointSize, 0, scale, transitionDuration);
+        AnimatorSet topBottomAnimatorSet = createTranslateAnimatorWithScaling(point, View.TRANSLATION_Y, View.SCALE_Y, -(size - pointSize), 0, scale, transitionDuration);
+        AnimatorSet leftRightAnimatorSet = createTranslateAnimatorWithScaling(point, View.TRANSLATION_X, View.SCALE_X, 0, size - pointSize, scale, transitionDuration);
+        AnimatorSet bottomTopAnimatorSet = createTranslateAnimatorWithScaling(point, View.TRANSLATION_Y, View.SCALE_Y, 0, -(size - pointSize), scale, transitionDuration);
+        AnimatorSet rightLeftAnimatorSet = createTranslateAnimatorWithScaling(point, View.TRANSLATION_X, View.SCALE_X, size - pointSize, 0, scale, transitionDuration);
 
         AnimatorSet[] animatorSets = new AnimatorSet[]{
                 topBottomAnimatorSet,
@@ -339,12 +344,12 @@ public class AnimatorFactory {
     public static AnimatorSet createSquarePointFromBottomRightAnimatorSet(View point, int size, int transitionDuration, float scale) {
         int pointSize = point.getLayoutParams().width;
 
-        AnimatorSet topBottomAnimatorSet = createTranslateAnimatorWithScaling(point, View.TRANSLATION_Y, View.SCALE_Y, -(size-pointSize), 0, scale, transitionDuration);
-        AnimatorSet leftRightAnimatorSet = createTranslateAnimatorWithScaling(point, View.TRANSLATION_X, View.SCALE_X, -(size-pointSize), 0, scale, transitionDuration);
-        AnimatorSet bottomTopAnimatorSet = createTranslateAnimatorWithScaling(point, View.TRANSLATION_Y, View.SCALE_Y, 0, -(size-pointSize), scale, transitionDuration);
-        AnimatorSet rightLeftAnimatorSet = createTranslateAnimatorWithScaling(point, View.TRANSLATION_X, View.SCALE_X, 0, -(size-pointSize), scale, transitionDuration);
+        AnimatorSet topBottomAnimatorSet = createTranslateAnimatorWithScaling(point, View.TRANSLATION_Y, View.SCALE_Y, -(size - pointSize), 0, scale, transitionDuration);
+        AnimatorSet leftRightAnimatorSet = createTranslateAnimatorWithScaling(point, View.TRANSLATION_X, View.SCALE_X, -(size - pointSize), 0, scale, transitionDuration);
+        AnimatorSet bottomTopAnimatorSet = createTranslateAnimatorWithScaling(point, View.TRANSLATION_Y, View.SCALE_Y, 0, -(size - pointSize), scale, transitionDuration);
+        AnimatorSet rightLeftAnimatorSet = createTranslateAnimatorWithScaling(point, View.TRANSLATION_X, View.SCALE_X, 0, -(size - pointSize), scale, transitionDuration);
 
-        AnimatorSet[] animatorSets = new AnimatorSet[] {
+        AnimatorSet[] animatorSets = new AnimatorSet[]{
                 bottomTopAnimatorSet,
                 rightLeftAnimatorSet,
                 topBottomAnimatorSet,
@@ -359,10 +364,10 @@ public class AnimatorFactory {
     public static AnimatorSet createSquarePointFromTopRightAnimatorSet(View point, int size, int transitionDuration, float scale) {
         int pointSize = point.getLayoutParams().width;
 
-        AnimatorSet topBottomAnimatorSet = createTranslateAnimatorWithScaling(point, View.TRANSLATION_Y, View.SCALE_Y, 0, size-pointSize, scale, transitionDuration);
-        AnimatorSet leftRightAnimatorSet = createTranslateAnimatorWithScaling(point, View.TRANSLATION_X, View.SCALE_X, -(size-pointSize), 0, scale, transitionDuration);
-        AnimatorSet bottomTopAnimatorSet = createTranslateAnimatorWithScaling(point, View.TRANSLATION_Y, View.SCALE_Y, size-pointSize, 0 , scale, transitionDuration);
-        AnimatorSet rightLeftAnimatorSet = createTranslateAnimatorWithScaling(point, View.TRANSLATION_X, View.SCALE_X, 0, -(size-pointSize), scale, transitionDuration);
+        AnimatorSet topBottomAnimatorSet = createTranslateAnimatorWithScaling(point, View.TRANSLATION_Y, View.SCALE_Y, 0, size - pointSize, scale, transitionDuration);
+        AnimatorSet leftRightAnimatorSet = createTranslateAnimatorWithScaling(point, View.TRANSLATION_X, View.SCALE_X, -(size - pointSize), 0, scale, transitionDuration);
+        AnimatorSet bottomTopAnimatorSet = createTranslateAnimatorWithScaling(point, View.TRANSLATION_Y, View.SCALE_Y, size - pointSize, 0, scale, transitionDuration);
+        AnimatorSet rightLeftAnimatorSet = createTranslateAnimatorWithScaling(point, View.TRANSLATION_X, View.SCALE_X, 0, -(size - pointSize), scale, transitionDuration);
 
         AnimatorSet[] animatorSets = new AnimatorSet[]{
                 rightLeftAnimatorSet,

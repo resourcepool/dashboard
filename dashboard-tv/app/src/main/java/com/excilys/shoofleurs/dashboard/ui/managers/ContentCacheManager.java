@@ -11,7 +11,7 @@ public class ContentCacheManager {
     public static void cacheContent(Context context, AbstractContent content) {
         if (content instanceof ImageContent) {
             VolleySingleton volleySingleton = VolleySingleton.getInstance(context);
-            if (!volleySingleton.getImageLoader().isCached(content.getUrl(), 0, 0)){
+            if (!volleySingleton.getImageLoader().isCached(content.getUrl(), 0, 0)) {
                 volleySingleton.putImageInCache(content.getUrl());
             }
         }

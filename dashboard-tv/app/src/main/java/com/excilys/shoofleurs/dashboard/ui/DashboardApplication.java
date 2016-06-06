@@ -2,7 +2,6 @@ package com.excilys.shoofleurs.dashboard.ui;
 
 import android.app.Application;
 
-import com.excilys.shoofleurs.dashboard.rest.ServiceGenerator;
 import com.excilys.shoofleurs.dashboard.service.SlideShowService;
 
 /**

@@ -5,10 +5,6 @@ import android.os.Handler;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.excilys.shoofleurs.dashboard.ui.displayables.Displayable;
-
-import com.excilys.shoofleurs.dashboard.ui.displayables.Displayable;
-
 import java.lang.reflect.InvocationTargetException;
 
 /**
@@ -24,26 +20,13 @@ public abstract class AbstractDisplayable implements Displayable {
     /**
      * The duration of the content display.
      */
-
-    /**
-     * The duration of the content display.
-     */
     protected int mDurationInSec;
 
     /**
      * The listener to handle the completion
      * of the content.
      */
-
-    /**
-     * The listener to handle the completion
-     * of the content.
-     */
     protected OnCompletionListener mCompletionListener;
-
-    /**
-     * To handle completion with a delay.
-     */
 
     /**
      * To handle completion with a delay.
@@ -84,6 +67,7 @@ public abstract class AbstractDisplayable implements Displayable {
     /**
      * This method check if a view of type T already exist inside the layout,
      * return it in that case, or create it in other case.
+     *
      * @param layout
      * @param context
      * @param valueType
@@ -91,7 +75,7 @@ public abstract class AbstractDisplayable implements Displayable {
      * @return
      */
     @SuppressWarnings("unchecked")
-    protected  <T extends View> T addOrReplaceViewByType(ViewGroup layout, Context context, Class<? extends T> valueType) {
+    protected <T extends View> T addOrReplaceViewByType(ViewGroup layout, Context context, Class<? extends T> valueType) {
         T t = null;
 
         /* If the layout contains more than one view, we remove all of them */
@@ -103,9 +87,7 @@ public abstract class AbstractDisplayable implements Displayable {
         if (layout.getChildCount() == 1) {
             if (layout.getChildAt(0).getClass().equals(valueType)) {
                 t = (T) layout.getChildAt(0);
-            }
-
-            else {
+            } else {
                 layout.removeViewAt(0);
                 try {
                     t = valueType.getDeclaredConstructor(Context.class).newInstance(context);
@@ -114,10 +96,8 @@ public abstract class AbstractDisplayable implements Displayable {
                     e.printStackTrace();
                 }
             }
-        }
-
+        } else {
         /* No views has been yet assigned to the layout, we create it */
-        else {
             try {
                 t = valueType.getDeclaredConstructor(Context.class).newInstance(context);
                 addViewToLayout(t, layout);
@@ -125,19 +105,18 @@ public abstract class AbstractDisplayable implements Displayable {
                 e.printStackTrace();
             }
         }
-
         return t;
     }
 
 
-
     /**
      * Add the view to the layout with the layout params for matching layout size
+     *
      * @param view
      * @param layout
      */
     private void addViewToLayout(View view, ViewGroup layout) {
-        ViewGroup.LayoutParams params =  new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+        ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         view.setLayoutParams(params);
         layout.addView(view);
     }
@@ -151,7 +130,7 @@ public abstract class AbstractDisplayable implements Displayable {
             public void run() {
                 handleCompletion();
             }
-        }, mDurationInSec*1000);
+        }, mDurationInSec * 1000);
     }
 
     /**

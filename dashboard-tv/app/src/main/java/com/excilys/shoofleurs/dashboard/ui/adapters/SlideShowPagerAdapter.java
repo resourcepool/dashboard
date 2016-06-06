@@ -37,7 +37,7 @@ public class SlideShowPagerAdapter extends FragmentStatePagerAdapter implements 
 
     @Override
     public Fragment getItem(final int position) {
-        Log.i(SlideShowPagerAdapter.class.getSimpleName(), "getItem: "+position);
+        Log.i(SlideShowPagerAdapter.class.getSimpleName(), "getItem: " + position);
         AbstractDisplayable displayable = mDisplayables.get(position);
         return DisplayableFragment.newInstance(displayable);
     }
@@ -49,7 +49,7 @@ public class SlideShowPagerAdapter extends FragmentStatePagerAdapter implements 
 
     @Override
     public void onPageSelected(int position) {
-        Log.i(SlideShowPagerAdapter.class.getSimpleName(), "onPageSelected: "+position);
+        Log.i(SlideShowPagerAdapter.class.getSimpleName(), "onPageSelected: " + position);
         mDisplayables.get(position).start();
         mCurrentPage = position;
     }
@@ -63,12 +63,11 @@ public class SlideShowPagerAdapter extends FragmentStatePagerAdapter implements 
     public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
         if (positionOffset == 0) {
             mController.getDashboardActivity().showMenu();
-        }
-
-        else {
+        } else {
             mController.getDashboardActivity().hideMenu();
         }
     }
+
     @Override
     public void onPageScrollStateChanged(int state) {
     }

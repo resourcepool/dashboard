@@ -2,8 +2,6 @@ package com.excilys.shoofleurs.dashboard.model.entities;
 
 
 import com.excilys.shoofleurs.dashboard.model.json.Views;
-import com.fasterxml.jackson.annotation.JsonAutoDetect;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonView;
@@ -19,106 +17,116 @@ import java.util.List;
  */
 public class SlideShow {
 
-	@JsonProperty("id")
-	@JsonView(Views.LightContent.class)
-	private int mId;
+    @JsonProperty("id")
+    @JsonView(Views.LightContent.class)
+    private int mId;
 
-	@JsonProperty("title")
-	@JsonView(Views.LightContent.class)
-	private String mTitle;
+    @JsonProperty("title")
+    @JsonView(Views.LightContent.class)
+    private String mTitle;
 
-	@JsonProperty("startDateTime")
-	@JsonView(Views.FullContent.class)
-	private String mStartDateTime;
+    @JsonProperty("startDateTime")
+    @JsonView(Views.FullContent.class)
+    private String mStartDateTime;
 
-	@JsonProperty("endDateTime")
-	@JsonView(Views.FullContent.class)
-	private String mEndDateTime;
+    @JsonProperty("endDateTime")
+    @JsonView(Views.FullContent.class)
+    private String mEndDateTime;
 
-	@JsonProperty("contents")
-	@JsonView(Views.TvContent.class)
-	@JsonManagedReference
-	private List<AbstractContent> mContents = new ArrayList<>();
+    @JsonProperty("contents")
+    @JsonView(Views.TvContent.class)
+    @JsonManagedReference
+    private List<AbstractContent> mContents = new ArrayList<>();
 
-	public SlideShow() {
+    public SlideShow() {
 
-	}
+    }
 
-	public SlideShow(String title, String startDateTime, String endDateTime) {
-		mTitle = title;
-		mStartDateTime = startDateTime;
-		mEndDateTime = endDateTime;
-	}
+    public SlideShow(String title, String startDateTime, String endDateTime) {
+        mTitle = title;
+        mStartDateTime = startDateTime;
+        mEndDateTime = endDateTime;
+    }
 
 
-	public int getId() {
-		return mId;
-	}
+    public int getId() {
+        return mId;
+    }
 
-	public void setId(int id) {
-		mId = id;
-	}
+    public void setId(int id) {
+        mId = id;
+    }
 
-	public String getTitle() {
-		return mTitle;
-	}
+    public String getTitle() {
+        return mTitle;
+    }
 
-	public void setTitle(String title) {
-		mTitle = title;
-	}
+    public void setTitle(String title) {
+        mTitle = title;
+    }
 
-	public String getStartDateTime() {
-		return mStartDateTime;
-	}
+    public String getStartDateTime() {
+        return mStartDateTime;
+    }
 
-	public void setStartDateTime(String startDateTime) {
-		mStartDateTime = startDateTime;
-	}
+    public void setStartDateTime(String startDateTime) {
+        mStartDateTime = startDateTime;
+    }
 
-	public String getEndDateTime() {
-		return mEndDateTime;
-	}
+    public String getEndDateTime() {
+        return mEndDateTime;
+    }
 
-	public void setEndDateTime(String endDateTime) {
-		mEndDateTime = endDateTime;
-	}
+    public void setEndDateTime(String endDateTime) {
+        mEndDateTime = endDateTime;
+    }
 
-	public List<AbstractContent> getContents() {
-		return mContents;
-	}
+    public List<AbstractContent> getContents() {
+        return mContents;
+    }
 
-	public void setContents(List<AbstractContent> contents) {
-		mContents = contents;
-	}
+    public void setContents(List<AbstractContent> contents) {
+        mContents = contents;
+    }
 
-	public void addContent(AbstractContent content) {
-		mContents.add(content);
-	}
+    public void addContent(AbstractContent content) {
+        mContents.add(content);
+    }
 
-	@Override
-	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
 
-		SlideShow slideShow = (SlideShow) o;
+        SlideShow slideShow = (SlideShow) o;
 
-		return mId == slideShow.mId;
-	}
+        if (slideShow.getContents() != null && getContents() != null) {
+            if (slideShow.getContents().size() != getContents().size()) {
+                return false;
+            }
+        }
 
-	@Override
-	public int hashCode() {
-		return mId;
-	}
+        return mId == slideShow.mId;
+    }
 
-	@Override
-	public String toString() {
-		return "SlideShow{" +
-				"mId=" + mId +
-				", mTitle='" + mTitle + '\'' +
-				", mStartDateTime='" + mStartDateTime + '\'' +
-				", mEndDateTime='" + mEndDateTime + '\'' +
-				", mContents=" + mContents +
-				'}';
-	}
+    @Override
+    public int hashCode() {
+        return mId;
+    }
+
+    @Override
+    public String toString() {
+        return "SlideShow{" +
+                "mId=" + mId +
+                ", mTitle='" + mTitle + '\'' +
+                ", mStartDateTime='" + mStartDateTime + '\'' +
+                ", mEndDateTime='" + mEndDateTime + '\'' +
+                ", mContents=" + mContents +
+                '}';
+    }
 }
 

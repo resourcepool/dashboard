@@ -13,7 +13,9 @@ public class VideoCacheProxyManager {
     private static VideoCacheProxyManager INSTANCE = null;
 
     public static VideoCacheProxyManager getInstance() {
-        if (INSTANCE == null) INSTANCE = new VideoCacheProxyManager();
+        if (INSTANCE == null) {
+            INSTANCE = new VideoCacheProxyManager();
+        }
         return INSTANCE;
     }
 

@@ -11,7 +11,6 @@ import com.excilys.shoofleurs.dashboard.rest.ISlideShowApi;
 import com.excilys.shoofleurs.dashboard.rest.JsonMapperUtils;
 import com.excilys.shoofleurs.dashboard.rest.ServiceGenerator;
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.util.List;
 
@@ -46,14 +45,14 @@ public class SlideShowService {
             public void onResponse(Call<ServerResponse> call, Response<ServerResponse> response) {
                 ServerResponse serverResponse = response.body();
                 if (serverResponse != null) {
-                    List<SlideShow> slideShows = JsonMapperUtils.getServerResponseContent(serverResponse, new TypeReference<List<SlideShow>>(){});
-                    Log.i(SlideShowService.class.getSimpleName(), "onResponse: "+ slideShows);
+                    List<SlideShow> slideShows = JsonMapperUtils.getServerResponseContent(serverResponse, new TypeReference<List<SlideShow>>() {
+                    });
+                    Log.i(SlideShowService.class.getSimpleName(), "onResponse: " + slideShows);
                     if (slideShows.size() != 0) {
                         if (mMessageServiceListener != null) {
                             mMessageServiceListener.onCheckUpdatesResponse(slideShows);
                         }
-                    }
-                    else {
+                    } else {
                         Log.i(getClass().getSimpleName(), "checkUpdate onResponse: empty");
                     }
                 }
@@ -61,13 +60,11 @@ public class SlideShowService {
 
             @Override
             public void onFailure(Call<ServerResponse> call, Throwable t) {
-                Log.e(SlideShowService.class.getSimpleName(), "checkUpdate onFailure: "+t.toString());
+                Log.e(SlideShowService.class.getSimpleName(), "checkUpdate onFailure: " + t.toString());
                 if (t instanceof TimeoutError) {
                     Log.i(SlideShowService.class.getSimpleName(), "TimoutError: trying to resend the request");
                     checkUpdates();
-                }
-
-                else if (t instanceof NoConnectionError) {
+                } else if (t instanceof NoConnectionError) {
                     if (mDebugMessageListener != null) {
                         mDebugMessageListener.onDebugMessage(R.string.debug_no_connection_error);
                     }

@@ -7,10 +7,8 @@ import android.util.Log;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
-import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
-import com.android.volley.toolbox.ImageRequest;
 import com.android.volley.toolbox.Volley;
 
 /**
@@ -56,12 +54,12 @@ public class VolleySingleton {
         mImageLoader.get(url, new ImageLoader.ImageListener() {
             @Override
             public void onResponse(ImageLoader.ImageContainer response, boolean isImmediate) {
-                Log.d(VolleySingleton.class.getSimpleName(), "VolleySingleton: image cached ("+url+")");
+                Log.d(VolleySingleton.class.getSimpleName(), "VolleySingleton: image cached (" + url + ")");
             }
 
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.e(VolleySingleton.class.getSimpleName(), "VolleySingleton: error caching image ("+url+")");
+                Log.e(VolleySingleton.class.getSimpleName(), "VolleySingleton: error caching image (" + url + ")");
             }
         });
     }

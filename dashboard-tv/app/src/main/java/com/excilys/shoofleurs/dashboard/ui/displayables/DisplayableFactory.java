@@ -13,19 +13,15 @@ public class DisplayableFactory {
         if (abstractContent instanceof ImageContent) {
             ImageContent imageContent = (ImageContent) abstractContent;
             return new ImageDisplayable(imageContent.getUrl(), imageContent.getDurationInSlideShow(), listener);
-        }
-
-        else if (abstractContent instanceof VideoContent) {
+        } else if (abstractContent instanceof VideoContent) {
             VideoContent videoContent = (VideoContent) abstractContent;
             return new VideoDisplayable(videoContent.getUrl(), listener);
-        }
-
-        else if (abstractContent instanceof WebContent) {
+        } else if (abstractContent instanceof WebContent) {
             WebContent webContent = (WebContent) abstractContent;
-                return new WebDisplayable(webContent.getUrl(), webContent.getIsAutoScroll() ? 0 : webContent.getDurationInSlideshow(), listener);
+            return new WebDisplayable(webContent.getUrl(), webContent.getIsAutoScroll() ? 0 : webContent.getDurationInSlideshow(), listener);
         }
 
-        throw new IllegalArgumentException("This AbstractContent ("+abstractContent.toString()+") has not DisplayableFactory");
+        throw new IllegalArgumentException("This AbstractContent (" + abstractContent.toString() + ") has not DisplayableFactory");
     }
 
     public static List<AbstractDisplayable> createAll(List<AbstractContent> abstractContents, AbstractDisplayable.OnCompletionListener onCompletionListener) {

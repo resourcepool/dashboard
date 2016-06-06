@@ -14,7 +14,6 @@ import com.excilys.shoofleurs.dashboard.model.entities.Message;
 import com.excilys.shoofleurs.dashboard.ui.utils.AndroidUtils;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -24,8 +23,8 @@ import java.util.List;
  */
 public class MessageController {
     private static MessageController S_INSTANCE;
-    private final static int S_DELAY_BEETWEEN_MESSAGES = 45000; // 45 seconds
-    private final static int S_DELAY_BEFORE_SCROLLING = 3000; // 3 seconds
+    private static final int S_DELAY_BEETWEEN_MESSAGES = 45000; // 45 seconds
+    private static final int S_DELAY_BEFORE_SCROLLING = 3000; // 3 seconds
 
     private DashboardActivity mDashboardActivity;
 
@@ -60,7 +59,9 @@ public class MessageController {
     private Handler mHandler;
 
     public static MessageController getInstance(DashboardActivity dashboardActivity) {
-        if (S_INSTANCE == null) S_INSTANCE = new MessageController(dashboardActivity);
+        if (S_INSTANCE == null) {
+            S_INSTANCE = new MessageController(dashboardActivity);
+        }
         return S_INSTANCE;
     }
 

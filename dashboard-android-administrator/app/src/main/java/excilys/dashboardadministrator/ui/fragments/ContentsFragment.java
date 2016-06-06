@@ -76,7 +76,6 @@ public class ContentsFragment extends Fragment {
      *
      * @return A new instance of fragment ContentsFragment.
      */
-    // TODO: Rename and change types and number of parameters
     public static ContentsFragment newInstance(SlideShow slideShow) {
         ContentsFragment fragment = new ContentsFragment();
         fragment.setSlideShow(slideShow);
@@ -155,11 +154,9 @@ public class ContentsFragment extends Fragment {
             else if (requestCode == ChooseContentDialog.PICK_VIDEO_REQUEST) {
                 String realPath = FilePathUtils.getPath(getContext(), data.getData());
                 Log.i(getClass().getSimpleName(), "onActivityResult: PICK_VIDEO " + realPath);
-
             }
         }
     }
-
 
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {
@@ -188,18 +185,7 @@ public class ContentsFragment extends Fragment {
         this.mSlideShow = mSlideShow;
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p/>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
     public interface OnContentsFragmentInteractionListener {
-        // TODO: Update argument type and name
         void onContentsFragmentInteraction(Uri uri);
     }
 }

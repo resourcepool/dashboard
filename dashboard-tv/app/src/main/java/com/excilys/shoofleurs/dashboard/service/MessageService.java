@@ -28,8 +28,10 @@ public class MessageService {
 
     private IMessageApi mMessageApi;
 
-    public static MessageService getInstance(DashboardActivity dashboardActivity){
-        if (S_INSTANCE == null) S_INSTANCE = new MessageService(dashboardActivity);
+    public static MessageService getInstance(DashboardActivity dashboardActivity) {
+        if (S_INSTANCE == null) {
+            S_INSTANCE = new MessageService(dashboardActivity);
+        }
         return S_INSTANCE;
     }
 
@@ -47,13 +49,13 @@ public class MessageService {
             public void onResponse(Call<ServerResponse> call, Response<ServerResponse> response) {
                 ServerResponse serverResponse = response.body();
                 if (serverResponse != null) {
-                    List<Message> messages = JsonMapperUtils.getServerResponseContent(serverResponse, new TypeReference<List<Message>>() {});
+                    List<Message> messages = JsonMapperUtils.getServerResponseContent(serverResponse, new TypeReference<List<Message>>() {
+                    });
 
-                    Log.i(MessageService.class.getSimpleName(), "onResponse: "+ messages);
+                    Log.i(MessageService.class.getSimpleName(), "onResponse: " + messages);
                     if (messages.size() != 0) {
                         mDashboardActivity.getMessageController().addMessages(messages);
-                    }
-                    else {
+                    } else {
                         Log.i(MessageService.class.getSimpleName(), "checkUpdate onResponse: empty");
                     }
                 }
@@ -61,7 +63,7 @@ public class MessageService {
 
             @Override
             public void onFailure(Call<ServerResponse> call, Throwable t) {
-                Log.e(MessageService.class.getSimpleName(), "checkUpdate onErrorResponse: "+t.toString());
+                Log.e(MessageService.class.getSimpleName(), "checkUpdate onErrorResponse: " + t.toString());
                 if (t instanceof TimeoutError) {
                     Log.i(MessageService.class.getSimpleName(), "TimoutError: trying to resend the request");
                     checkUpdates();
