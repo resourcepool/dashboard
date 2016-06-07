@@ -23,3 +23,5 @@ local.properties
 # generated files
 bin/
 gen/
+
+db/
