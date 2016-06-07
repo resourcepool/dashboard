@@ -1,9 +1,8 @@
 package com.excilys.shooflers.dashboard.server.dao;
 
+import com.excilys.shooflers.dashboard.server.dao.util.YamlUtils;
 import com.excilys.shooflers.dashboard.server.model.metadata.BundleMetadata;
 import com.excilys.shooflers.dashboard.server.property.DashboardProperties;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,10 +10,6 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.LinkedList;
@@ -60,29 +55,8 @@ public class BundleDaoImpl implements BundleDao {
     if (bundle.getUuid() == null) {
       bundle.setUuid(UUID.randomUUID().toString());
     }
-    
-    ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
     File dest = getBundleFile(bundle.getUuid());
-    FileOutputStream fos = null;
-    try {
-      if (!dest.exists()) {
-        dest.createNewFile();
-      }
-      fos = new FileOutputStream(dest);
-      mapper.writeValue(fos, bundle);
-    } catch (IOException e) {
-      LOGGER.warn("Error while storing file", e);
-      throw new IllegalStateException(e);
-    } finally {
-      if (fos != null) {
-        try {
-          fos.close();
-        } catch (IOException e) {
-          LOGGER.warn("Error while closing file", e);
-          throw new IllegalStateException(e);
-        }
-      }
-    }
+    YamlUtils.store(bundle, dest);
   }
   
   private File getBundleFile(String uuid) {
@@ -92,15 +66,7 @@ public class BundleDaoImpl implements BundleDao {
   
 
   private BundleMetadata readBundleFromFile(File dataFile) {
-    try {
-      ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
-      InputStream data = new FileInputStream(dataFile);
-      BundleMetadata metadata = mapper.readValue(data, BundleMetadata.class);
-      return metadata;
-    } catch (java.io.IOException e) {
-      LOGGER.warn("Error while retrieving file", e);
-      throw new IllegalStateException(e);
-    }
+    return YamlUtils.read(dataFile, BundleMetadata.class);
   }
 
 }
