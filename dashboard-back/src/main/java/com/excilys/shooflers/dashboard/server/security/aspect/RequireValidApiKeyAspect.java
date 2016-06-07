@@ -30,6 +30,24 @@ public class RequireValidApiKeyAspect {
   }
 
   /**
+   * Picks out RequireValidApiKey annotation on Bean class.
+   *
+   * @see com.excilys.shooflers.dashboard.server.security.annotation.RequireValidApiKey
+   */
+  @Pointcut("within(@com.excilys.shooflers.dashboard.server.security.annotation.RequireValidApiKey *)")
+  public void beanAnnotatedWithRequireValidApiKey() {
+  }
+
+  /**
+   * Picks out all public methods on Bean class.
+   *
+   * @see com.excilys.shooflers.dashboard.server.security.annotation.RequireValidApiKey
+   */
+  @Pointcut("execution(public * *(..))")
+  private void beanPublicMethod() {
+  }
+
+  /**
    * Check if the apiKey is valid and execute the intercepted method.
    *
    * @param joinPoint the joinPoint
@@ -41,7 +59,7 @@ public class RequireValidApiKeyAspect {
   public Object checkValidApiKey(ProceedingJoinPoint joinPoint) {
     Object returnValue = null;
     try {
-      sessionService.checkValidApiKey();
+      sessionService.assertValidApiKey();
       returnValue = joinPoint.proceed();
     } catch (RuntimeException e) {
       throw e;
@@ -49,6 +67,20 @@ public class RequireValidApiKeyAspect {
       throw new IllegalStateException(throwable);
     }
     return returnValue;
+  }
+
+  /**
+   * Check if the apiKey is valid and execute the intercepted method.
+   *
+   * @param joinPoint the joinPoint
+   * @return the return value
+   * @throws Throwable if an error occurs in the intercepted method
+   * @see #beanAnnotatedWithRequireValidApiKey()
+   * @see #beanPublicMethod()
+   */
+  @Around("beanAnnotatedWithRequireValidApiKey() && beanPublicMethod()")
+  public Object checkValidApiKey2(ProceedingJoinPoint joinPoint) {
+    return checkValidApiKey(joinPoint);
   }
 
 }

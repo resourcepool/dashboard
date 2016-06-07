@@ -16,7 +16,7 @@ import java.util.List;
  */
 @RequireValidApiKey
 @RestController
-@RequestMapping("/bundles")
+@RequestMapping("/bundle")
 public class BundleController {
 
 	@Autowired
@@ -38,7 +38,7 @@ public class BundleController {
         bundles.forEach(b -> b.setRevision(revisionDao.getLatest()));
 		return bundles;
 	}
-
+  
     /**
      * Save a new Bundle and add a new revision.
      * @param bundle Bundle to save

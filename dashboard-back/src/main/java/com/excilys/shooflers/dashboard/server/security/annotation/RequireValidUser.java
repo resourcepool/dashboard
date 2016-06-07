@@ -16,7 +16,7 @@ import java.lang.annotation.Target;
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(value = {ElementType.METHOD, ElementType.TYPE})
-@Order(value = 1)
+@Order(value = 0)
 public @interface RequireValidUser {
 
 }

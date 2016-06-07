@@ -7,7 +7,7 @@ import com.excilys.shooflers.dashboard.server.model.User;
  */
 public interface SessionService {
   
-  void checkValidApiKey();
+  void assertValidApiKey();
 
   void login();
 
