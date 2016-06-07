@@ -8,13 +8,16 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.excilys.shoofleurs.dashboard.R;
+import com.excilys.shoofleurs.dashboard.model.entities.Message;
 import com.excilys.shoofleurs.dashboard.ui.activities.DashboardActivity;
 import com.excilys.shoofleurs.dashboard.ui.factories.AnimatorFactory;
-import com.excilys.shoofleurs.dashboard.model.entities.Message;
 import com.excilys.shoofleurs.dashboard.ui.utils.AndroidUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 /**
  * This class represents the controller of the messages display.
@@ -22,11 +25,8 @@ import java.util.List;
  * go to the next.
  */
 public class MessageController {
-    private static MessageController S_INSTANCE;
     private static final int S_DELAY_BEETWEEN_MESSAGES = 45000; // 45 seconds
     private static final int S_DELAY_BEFORE_SCROLLING = 3000; // 3 seconds
-
-    private DashboardActivity mDashboardActivity;
 
     /**
      * List of messages to be display
@@ -40,8 +40,11 @@ public class MessageController {
 
     private int mCurrentMessageIndex;
 
-    private TextView mMessageTextView;
-    private TextView mMessageTitleView;
+    @BindView(R.id.text_cnn)
+    TextView mMessageTextView;
+
+    @BindView(R.id.title_cnn)
+    TextView mMessageTitleView;
 
     /**
      * Fade in animators for messages text views;
@@ -58,20 +61,11 @@ public class MessageController {
      */
     private Handler mHandler;
 
-    public static MessageController getInstance(DashboardActivity dashboardActivity) {
-        if (S_INSTANCE == null) {
-            S_INSTANCE = new MessageController(dashboardActivity);
-        }
-        return S_INSTANCE;
-    }
-
-    private MessageController(DashboardActivity dashboardActivity) {
-        this.mDashboardActivity = dashboardActivity;
+    public MessageController(DashboardActivity dashboardActivity) {
+        ButterKnife.bind(this, dashboardActivity);
         mMessages = new ArrayList<>();
         mHandler = new Handler();
         mCurrentMessageIndex = 0;
-        mMessageTextView = (TextView) mDashboardActivity.findViewById(R.id.text_cnn);
-        mMessageTitleView = (TextView) mDashboardActivity.findViewById(R.id.title_cnn);
 
         AndroidUtils.setVisibility(View.GONE, mMessageTextView, mMessageTitleView);
 

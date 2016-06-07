@@ -5,7 +5,7 @@ import excilys.dashboardadministrator.utils.Data;
 import retrofit2.Call;
 import retrofit2.http.GET;
 
-public interface IMessageApi {
+public interface MessageApi {
     @GET(Data.GET_MESSAGES_URL)
     Call<ServerResponse> getMessages();
 }

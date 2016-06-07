@@ -1,4 +1,4 @@
-package com.excilys.shoofleurs.dashboard.rest;
+package com.excilys.shoofleurs.dashboard.rest.service;
 
 import android.util.Base64;
 

@@ -6,7 +6,6 @@ import com.excilys.shoofleurs.dashboard.R;
 import com.excilys.shoofleurs.dashboard.model.entities.SlideShow;
 import com.excilys.shoofleurs.dashboard.model.json.ServerResponse;
 import com.excilys.shoofleurs.dashboard.rest.json.JsonMapperUtils;
-import com.excilys.shoofleurs.dashboard.rest.ServiceGenerator;
 import com.fasterxml.jackson.core.type.TypeReference;
 
 import java.util.List;
@@ -20,13 +19,13 @@ import retrofit2.Response;
  */
 public class SlideShowService {
     private static final String TAG = "SlideShowService";
-    private SlideShowServiceInterface mSlideShowApi;
+    private SlideShowApi mSlideShowApi;
 
     private OnMessageServiceListener mMessageServiceListener;
     private OnDebugMessageListener mDebugMessageListener;
 
     public SlideShowService() {
-        mSlideShowApi = ServiceGenerator.createService(SlideShowServiceInterface.class);
+        mSlideShowApi = ServiceGenerator.createService(SlideShowApi.class);
     }
 
     /**
@@ -37,7 +36,7 @@ public class SlideShowService {
             mDebugMessageListener.onDebugMessage(R.string.debug_check_updates);
         }
 
-        Call<ServerResponse> call = mSlideShowApi.getSlideShows(SlideShowServiceInterface.TYPE_TV);
+        Call<ServerResponse> call = mSlideShowApi.getSlideShows(SlideShowApi.TYPE_TV);
         call.enqueue(new Callback<ServerResponse>() {
             @Override
             public void onResponse(Call<ServerResponse> call, Response<ServerResponse> response) {

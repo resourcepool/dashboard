@@ -1,4 +1,4 @@
-package excilys.dashboardadministrator.service;
+package excilys.dashboardadministrator.rest.service;
 
 import android.util.Log;
 
@@ -10,7 +10,7 @@ import java.util.List;
 
 import excilys.dashboardadministrator.model.entities.Message;
 import excilys.dashboardadministrator.model.json.ServerResponse;
-import excilys.dashboardadministrator.rest.IMessageApi;
+import excilys.dashboardadministrator.rest.MessageApi;
 import excilys.dashboardadministrator.utils.JsonMapperUtils;
 import excilys.dashboardadministrator.rest.ServiceGenerator;
 import retrofit2.Call;
@@ -24,7 +24,7 @@ public class MessageService {
 
     private OnMessageServiceResponse mListener;
 
-    private IMessageApi mMessageApi;
+    private MessageApi mMessageApi;
 
     public static MessageService getInstance(OnMessageServiceResponse listener){
         if (S_INSTANCE == null) S_INSTANCE = new MessageService(listener);
@@ -33,7 +33,7 @@ public class MessageService {
 
     private MessageService(OnMessageServiceResponse listener) {
         this.mListener = listener;
-        mMessageApi = ServiceGenerator.createService(IMessageApi.class);
+        mMessageApi = ServiceGenerator.createService(MessageApi.class);
     }
 
 

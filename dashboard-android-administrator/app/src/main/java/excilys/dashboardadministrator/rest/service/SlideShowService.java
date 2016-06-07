@@ -1,4 +1,4 @@
-package excilys.dashboardadministrator.service;
+package excilys.dashboardadministrator.rest.service;
 
 import android.content.Context;
 import android.util.Log;
@@ -11,7 +11,7 @@ import java.util.List;
 
 import excilys.dashboardadministrator.model.entities.SlideShow;
 import excilys.dashboardadministrator.model.json.ServerResponse;
-import excilys.dashboardadministrator.rest.ISlideShowApi;
+import excilys.dashboardadministrator.rest.SlideShowApi;
 import excilys.dashboardadministrator.utils.JsonMapperUtils;
 import excilys.dashboardadministrator.rest.ServiceGenerator;
 import retrofit2.Call;
@@ -25,7 +25,7 @@ public class SlideShowService {
 
     private Context mContext;
 
-    private ISlideShowApi mSlideShowApi;
+    private SlideShowApi mSlideShowApi;
 
     public static SlideShowService getInstance(Context context){
         if (S_INSTANCE == null) S_INSTANCE = new SlideShowService(context);
@@ -34,7 +34,7 @@ public class SlideShowService {
 
     private SlideShowService(Context context) {
         this.mContext = context;
-        mSlideShowApi = ServiceGenerator.createService(ISlideShowApi.class);
+        mSlideShowApi = ServiceGenerator.createService(SlideShowApi.class);
     }
 
     /**
@@ -42,7 +42,7 @@ public class SlideShowService {
      */
     public void checkUpdates(final OnSlideShowServiceResponse listener) {
 
-        Call<ServerResponse> call = mSlideShowApi.getSlideShows(ISlideShowApi.TYPE_TV);
+        Call<ServerResponse> call = mSlideShowApi.getSlideShows(SlideShowApi.TYPE_TV);
 
         call.enqueue(new Callback<ServerResponse>() {
             @Override
