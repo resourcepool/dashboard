@@ -1,11 +1,15 @@
 package com.excilys.shooflers.dashboard.server;
 
 
+import com.excilys.shooflers.dashboard.server.security.interceptor.CorsInterceptor;
 import com.google.common.base.Predicates;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.EnableAspectJAutoProxy;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
@@ -19,8 +23,9 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
  */
 @SpringBootApplication
 @EnableSwagger2
+@EnableAspectJAutoProxy
 @EnableConfigurationProperties
-public class SpringConfiguration {
+public class SpringConfiguration extends WebMvcConfigurerAdapter {
 
     public static void main(String[] args) {
         SpringApplication.run(SpringConfiguration.class, args);
@@ -36,6 +41,21 @@ public class SpringConfiguration {
                 .apiInfo(apiInfo());
     }
 
+    /**
+     * CorsInterceptor factory.
+     * 
+     * @return CorsInterceptor
+     */
+    @Bean
+    public CorsInterceptor corsInterceptor() {
+        return new CorsInterceptor();
+    }
+
+    @Override
+    public void addInterceptors(InterceptorRegistry registry) {
+        registry.addInterceptor(corsInterceptor());
+    }
+
     private ApiInfo apiInfo() {
         return new ApiInfoBuilder()
                 .title("Dashboard REST Api Documentations with Swagger")
@@ -44,4 +64,5 @@ public class SpringConfiguration {
                 .version("1.0")
                 .build();
     }
+    
 }
