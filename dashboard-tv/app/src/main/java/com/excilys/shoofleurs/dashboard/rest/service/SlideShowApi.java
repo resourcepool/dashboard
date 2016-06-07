@@ -5,8 +5,10 @@ import com.excilys.shoofleurs.dashboard.utils.Data;
 
 import retrofit2.Call;
 import retrofit2.http.GET;
+import retrofit2.http.Query;
 
-public interface MessageServiceInterface {
-    @GET(Data.GET_MESSAGES_URL)
-    Call<ServerResponse> getMessages();
+public interface SlideShowApi {
+    public static final String TYPE_TV = "tv";
+    @GET(Data.GET_SLIDESHOWS_URL)
+    Call<ServerResponse> getSlideShows(@Query("json") String type);
 }

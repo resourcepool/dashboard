@@ -48,9 +48,9 @@ public class SlideShowPagerAdapter extends LoopingPagerAdapter<AbstractDisplayab
     @Override
     public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
         if (positionOffset == 0) {
-            mController.getDashboardActivity().showMenu();
+            mController.getDashboardActivity().showBackground();
         } else {
-            mController.getDashboardActivity().hideMenu();
+            mController.getDashboardActivity().hideBackground();
         }
     }
 

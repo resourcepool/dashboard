@@ -9,7 +9,7 @@ import retrofit2.http.Multipart;
 import retrofit2.http.POST;
 import retrofit2.http.Part;
 
-public interface IContentApi {
+public interface ContentApi {
 
     @POST(Data.POST_CONTENT_URL)
     @Multipart

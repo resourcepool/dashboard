@@ -8,6 +8,7 @@ import android.support.v4.view.ViewPager;
 import java.util.List;
 
 /**
+ * This class allow circular view pager
  * Created by excilys on 06/06/16.
  */
 public abstract class LoopingPagerAdapter<T> extends FragmentPagerAdapter implements ViewPager.OnPageChangeListener {

@@ -18,15 +18,17 @@ import java.util.List;
 import java.util.PriorityQueue;
 import java.util.Queue;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 /**
  * This class represents the controller of the slideshows display.
  */
 public class SlideShowController {
-    private static SlideShowController S_INSTANCE;
-
     private DashboardActivity mDashboardActivity;
 
-    private ViewPagerCustomDuration mViewPager;
+    @BindView(R.id.view_pager)
+    ViewPagerCustomDuration mViewPager;
 
     private SlideShowPagerAdapter mAdapter;
 
@@ -45,20 +47,16 @@ public class SlideShowController {
      */
     private int mCurrentContentIndex;
 
-    public static SlideShowController getInstance(DashboardActivity dashboardActivity) {
-        if (S_INSTANCE == null) {
-            S_INSTANCE = new SlideShowController(dashboardActivity);
-        }
-        return S_INSTANCE;
+    public SlideShowController(DashboardActivity dashboardActivity) {
+        this.mDashboardActivity = dashboardActivity;
+        ButterKnife.bind(this, dashboardActivity);
+        mSlideShowQueue = new PriorityQueue<>(10, new SlideShowComparator());
+        setUpViewPager();
     }
 
-    private SlideShowController(DashboardActivity dashboardActivity) {
-        this.mDashboardActivity = dashboardActivity;
-        mSlideShowQueue = new PriorityQueue<>(10, new SlideShowComparator());
-
+    private void setUpViewPager() {
         mAdapter = new SlideShowPagerAdapter(mDashboardActivity.getSupportFragmentManager(), this, new ArrayList<AbstractDisplayable>());
 
-        mViewPager = (ViewPagerCustomDuration) mDashboardActivity.findViewById(R.id.view_pager);
         mViewPager.addOnPageChangeListener(mAdapter);
         mViewPager.setAdapter(mAdapter);
         mViewPager.setPageTransformer(true, new ZoomOutPageTransformer());
