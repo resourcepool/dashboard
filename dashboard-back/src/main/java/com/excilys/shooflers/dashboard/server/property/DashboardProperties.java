@@ -9,14 +9,13 @@ import org.springframework.stereotype.Component;
 @Component
 @ConfigurationProperties
 public class DashboardProperties {
-  private String basePath;
+    private String basePath = System.getProperty("user.dir") + "/db";
 
-  public String getBasePath() {
-    return basePath;
-  }
+    public String getBasePath() {
+        return basePath;
+    }
 
-  public void setBasePath(String basePath) {
-    this.basePath = basePath;
-  }
+    public void setBasePath(String basePath) {
+        this.basePath = basePath;
+    }
 }
-

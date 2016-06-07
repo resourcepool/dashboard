@@ -1,7 +1,7 @@
 package com.excilys.shooflers.dashboard.server.rest;
 
 import com.excilys.shooflers.dashboard.server.dto.BundleMetadataDto;
-import com.excilys.shooflers.dashboard.server.dto.mapper.BundleMapperImpl;
+import com.excilys.shooflers.dashboard.server.dto.mapper.BundleDtoMapperImpl;
 import com.excilys.shooflers.dashboard.server.model.metadata.BundleMetadata;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class UpdateController {
 
     @Autowired
-    private BundleMapperImpl bundleMapper;
+    private BundleDtoMapperImpl bundleMapper;
 
     @RequestMapping(method = RequestMethod.POST)
     public BundleMetadataDto saveSlideshow(@RequestBody BundleMetadataDto bundleMetadataDto) {

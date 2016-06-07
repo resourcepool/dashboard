@@ -22,27 +22,26 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @EnableConfigurationProperties
 public class SpringConfiguration {
 
-  public static void main(String[] args) {
-    SpringApplication.run(SpringConfiguration.class, args);
-  }
+    public static void main(String[] args) {
+        SpringApplication.run(SpringConfiguration.class, args);
+    }
 
-  @Bean
-  public Docket newsApi() {
-    return new Docket(DocumentationType.SWAGGER_2)
-      .select()
-      .apis(RequestHandlerSelectors.basePackage("com.excilys.shooflers.dashboard.server.rest"))
-      .paths(Predicates.not(PathSelectors.regex("/")))
-      .build()
-      .apiInfo(apiInfo())
-      ;
-  }
+    @Bean
+    public Docket newsApi() {
+        return new Docket(DocumentationType.SWAGGER_2)
+                .select()
+                .apis(RequestHandlerSelectors.basePackage("com.excilys.shooflers.dashboard.server.rest"))
+                .paths(Predicates.not(PathSelectors.regex("/")))
+                .build()
+                .apiInfo(apiInfo());
+    }
 
-  private ApiInfo apiInfo() {
-    return new ApiInfoBuilder()
-      .title("Dashboard REST Api Documentations with Swagger")
-      .description("Dashboard REST Api Documentations with Swagger")
-      .contact("Groupe Excilys")
-      .version("1.0")
-      .build();
-  }
+    private ApiInfo apiInfo() {
+        return new ApiInfoBuilder()
+                .title("Dashboard REST Api Documentations with Swagger")
+                .description("Dashboard REST Api Documentations with Swagger")
+                .contact("Groupe Excilys")
+                .version("1.0")
+                .build();
+    }
 }
