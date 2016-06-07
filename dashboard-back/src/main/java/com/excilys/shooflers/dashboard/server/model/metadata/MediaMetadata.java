@@ -22,13 +22,16 @@ public class MediaMetadata {
 
     private String url;
 
-    private MediaMetadata(String uuid, String name, int duration, MediaType mediaType, Validity validity, String url) {
+    private String uuidBundle;
+
+    private MediaMetadata(String uuid, String name, int duration, MediaType mediaType, Validity validity, String url, String uuidBundle) {
         this.uuid = uuid;
         this.name = name;
         this.duration = duration;
         this.mediaType = mediaType;
         this.validity = validity;
         this.url = url;
+        this.uuidBundle = uuidBundle;
     }
 
     public static class Builder {
@@ -44,6 +47,8 @@ public class MediaMetadata {
         private String uuid;
 
         private String url;
+
+        private String uuidBundle;
 
         public Builder uuid(String uuid) {
             this.uuid = uuid;
@@ -75,6 +80,11 @@ public class MediaMetadata {
             return this;
         }
 
+        public Builder uuidBundle(String uuidBundle) {
+            this.uuidBundle = uuidBundle;
+            return this;
+        }
+
         public MediaMetadata build() {
             if (uuid == null) {
                 uuid = UUID.randomUUID().toString();
@@ -83,7 +93,7 @@ public class MediaMetadata {
             if (validity == null) {
                 validity = new Validity.Builder().build();
             }
-            return new MediaMetadata(uuid, name, duration, mediaType, validity, url);
+            return new MediaMetadata(uuid, name, duration, mediaType, validity, url, uuidBundle);
         }
     }
 
@@ -129,5 +139,13 @@ public class MediaMetadata {
 
     public void setUrl(String url) {
         this.url = url;
+    }
+
+    public String getUuidBundle() {
+        return uuidBundle;
+    }
+
+    public void setUuidBundle(String uuidBundle) {
+        this.uuidBundle = uuidBundle;
     }
 }

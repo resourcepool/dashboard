@@ -1,37 +1,34 @@
 package com.excilys.shooflers.dashboard.server.dto.mapper;
 
-import com.excilys.shooflers.dashboard.server.dto.SlideshowMetadataDto;
-import com.excilys.shooflers.dashboard.server.dto.ValidityDto;
-import com.excilys.shooflers.dashboard.server.model.metadata.SlideshowMetadata;
+import com.excilys.shooflers.dashboard.server.dto.BundleMetadataDto;
+import com.excilys.shooflers.dashboard.server.model.metadata.BundleMetadata;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class SlideshowDtoMapperImpl implements MapperDto<SlideshowMetadata, SlideshowMetadataDto> {
+public class SlideshowDtoMapperImpl implements MapperDto<BundleMetadata, BundleMetadataDto> {
 
     @Autowired
-    private ValidityDtoMapperImpl validityDtoMapper;
+    private BundleDtoMapperImpl validityDtoMapper;
 
     @Autowired
     private MediaDtoMapperImpl mediaDtoMapper;
 
     @Override
-    public SlideshowMetadataDto toDto(SlideshowMetadata model) {
-        return new SlideshowMetadataDto.Builder()
+    public BundleMetadataDto toDto(BundleMetadata model) {
+        return new BundleMetadataDto.Builder()
                 .uuid(model.getUuid())
                 .name(model.getName())
                 .validity(validityDtoMapper.toDto(model.getValidity()))
-                .medias(mediaDtoMapper.toListDto(model.getMedias()))
                 .build();
     }
 
     @Override
-    public SlideshowMetadata fromDto(SlideshowMetadataDto dto) {
-        return new SlideshowMetadata.Builder()
+    public BundleMetadata fromDto(BundleMetadataDto dto) {
+        return new BundleMetadata.Builder()
                 .uuid(dto.getUuid())
                 .name(dto.getName())
-                .validity(validityDtoMapper.fromDto(dto.getValidityDto()))
-                .medias(mediaDtoMapper.fromListDto(dto.getMedias()))
+                .validity(validityDtoMapper.fromDto(dto.getValidity()))
                 .build();
     }
 }
