@@ -22,6 +22,7 @@
         <java.version>1.8</java.version>
         <junit.version>4.12</junit.version>
         <checkstyle.version>2.17</checkstyle.version>
+        <springfox-swagger2>2.2.2</springfox-swagger2>
     </properties>
 
     <dependencies>
@@ -35,6 +36,19 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-swagger-ui</artifactId>
+            <version>${springfox-swagger2}</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-swagger2</artifactId>
+            <version>${springfox-swagger2}</version>
+            <scope>compile</scope>
         </dependency>
     </dependencies>
 
