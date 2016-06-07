@@ -35,6 +35,7 @@ public class DaoInitializer {
     
     createEntityDbs(dbPath, BundleDao.ENTITY_NAME);
     createEntityDbs(dbPath, MediaDao.ENTITY_NAME);
+    createEntityDbs(dbPath, RevisionDao.ENTITY_NAME);
   }
   
   private void createEntityDbs(Path basePath, String entity) {
