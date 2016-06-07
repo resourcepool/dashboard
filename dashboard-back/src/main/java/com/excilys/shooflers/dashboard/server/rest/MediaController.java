@@ -3,6 +3,7 @@ package com.excilys.shooflers.dashboard.server.rest;
 import com.excilys.shooflers.dashboard.server.dao.MediaDao;
 import com.excilys.shooflers.dashboard.server.dto.MediaMetadataDto;
 import com.excilys.shooflers.dashboard.server.dto.mapper.MediaDtoMapperImpl;
+import com.excilys.shooflers.dashboard.server.security.annotation.RequireValidApiKey;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -15,6 +16,7 @@ import java.util.stream.Collectors;
 /**
  * @author Loïc Ortola on 07/06/2016.
  */
+@RequireValidApiKey
 @RestController
 @RequestMapping("/media")
 public class MediaController {
