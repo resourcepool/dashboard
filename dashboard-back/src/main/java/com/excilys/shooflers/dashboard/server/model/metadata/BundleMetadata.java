@@ -16,6 +16,8 @@ public class BundleMetadata {
 
     private Validity validity;
 
+    public BundleMetadata() { }
+
     private BundleMetadata(String uuid, String name, Validity validity) {
         this.uuid = uuid;
         this.name = name;

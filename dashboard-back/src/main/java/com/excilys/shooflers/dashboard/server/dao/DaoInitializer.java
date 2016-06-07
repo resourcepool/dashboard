@@ -19,36 +19,36 @@ import java.nio.file.Paths;
 public class DaoInitializer {
 
 
-  private static final Logger LOGGER = LoggerFactory.getLogger(DaoInitializer.class);
-  
-  @Autowired
-  private DashboardProperties props;
-  
-  @PostConstruct
-  public void init() {
-    Path dbPath = Paths.get(props.getBasePath());
-    if (!Files.exists(dbPath)) {
-      String err = "The bundle database path does not exist. Please check your application properties";
-      LOGGER.error(err);
-      throw new IllegalStateException(err);
+    private static final Logger LOGGER = LoggerFactory.getLogger(DaoInitializer.class);
+
+    @Autowired
+    private DashboardProperties props;
+
+    @PostConstruct
+    public void init() {
+        Path dbPath = Paths.get(props.getBasePath());
+        if (!Files.exists(dbPath)) {
+            String err = "The bundle database path does not exist. Please check your application properties";
+            LOGGER.error(err);
+            throw new IllegalStateException(err);
+        }
+
+        createEntityDbs(dbPath, BundleDao.ENTITY_NAME);
+        createEntityDbs(dbPath, MediaDao.ENTITY_NAME);
+        createEntityDbs(dbPath, RevisionDao.ENTITY_NAME);
     }
-    
-    createEntityDbs(dbPath, BundleDao.ENTITY_NAME);
-    createEntityDbs(dbPath, MediaDao.ENTITY_NAME);
-    createEntityDbs(dbPath, RevisionDao.ENTITY_NAME);
-  }
-  
-  private void createEntityDbs(Path basePath, String entity) {
-    Path p = basePath.resolve(entity);
-    if (!Files.exists(p)) {
-      try {
-        Files.createDirectory(p);
-      } catch (IOException e) {
-        String err = "The database failed to create a directory. Please check you have the right permissions";
-        LOGGER.error(err);
-        throw new IllegalStateException(err);
-      }
+
+    private void createEntityDbs(Path basePath, String entity) {
+        Path p = basePath.resolve(entity);
+        if (!Files.exists(p)) {
+            try {
+                Files.createDirectory(p);
+            } catch (IOException e) {
+                String err = "The database failed to create a directory. Please check you have the right permissions";
+                LOGGER.error(err);
+                throw new IllegalStateException(err);
+            }
+        }
+
     }
-    
-  }
 }

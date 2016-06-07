@@ -1,5 +1,10 @@
 package com.excilys.shooflers.dashboard.server.model;
 
+import com.excilys.shooflers.dashboard.server.dao.serialization.LocalDateTimeDeserializer;
+import com.excilys.shooflers.dashboard.server.dao.serialization.LocalDateTimeSerializer;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
 import java.time.LocalDateTime;
 
 /**
@@ -8,9 +13,15 @@ import java.time.LocalDateTime;
  */
 public class Validity {
 
+    @JsonSerialize(using = LocalDateTimeSerializer.class)
+    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     private LocalDateTime start;
 
+    @JsonSerialize(using = LocalDateTimeSerializer.class)
+    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     private LocalDateTime end;
+
+    public Validity() { }
 
     private Validity(LocalDateTime start, LocalDateTime end) {
         this.start = start;
