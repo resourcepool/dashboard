@@ -31,6 +31,7 @@ import static com.excilys.shooflers.dashboard.server.security.interceptor.CorsIn
 @Service
 public class SessionServiceImpl implements SessionService {
 
+  public static final String REALM = "Dashboard";
   private static final Logger LOGGER = LoggerFactory.getLogger(SessionServiceImpl.class);
 
   @Autowired
@@ -44,10 +45,18 @@ public class SessionServiceImpl implements SessionService {
     apiKey = props.getApiKey();
   }
 
+  public void assertValidUser() {
+    if (isLoginAttempt()) {
+      login();
+    } else {
+      assertValidToken();
+    }
+  }
+  
   /**
    * Checks user's validity.
    */
-  public void checkValidToken() {
+  public void assertValidToken() {
     HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
     HttpServletResponse response = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getResponse();
     
@@ -82,7 +91,7 @@ public class SessionServiceImpl implements SessionService {
   }
 
   @Override
-  public void checkValidApiKey() {
+  public void assertValidApiKey() {
     // Check Token
     // Retrieve Servlet Response
     HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
@@ -182,6 +191,17 @@ public class SessionServiceImpl implements SessionService {
     String token = TokenUtils.buildToken(user.getLogin(), props.getSessionTimeout());
     response.setHeader("Authorization", "Token " + token);
     return token;
+  }
+
+
+  /**
+   * Checks whether we are attempting to login or already have done so
+   * @return true if login attempt, false otherwise
+   */
+  private boolean isLoginAttempt() {
+    HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
+    String tokenHeader = request.getHeader("Authorization");
+    return (tokenHeader != null && tokenHeader.startsWith("Basic"));
   }
 
 

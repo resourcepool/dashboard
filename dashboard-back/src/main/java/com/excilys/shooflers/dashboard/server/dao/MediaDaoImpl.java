@@ -1,6 +1,5 @@
 package com.excilys.shooflers.dashboard.server.dao;
 
-
 import com.excilys.shooflers.dashboard.server.dao.util.YamlUtils;
 import com.excilys.shooflers.dashboard.server.model.metadata.MediaMetadata;
 import com.excilys.shooflers.dashboard.server.property.DashboardProperties;
