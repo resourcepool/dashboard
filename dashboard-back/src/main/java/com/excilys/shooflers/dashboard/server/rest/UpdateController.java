@@ -21,7 +21,7 @@ public class UpdateController {
         return bundleMetadataDto;
     }
 
-    @RequestMapping
+    @RequestMapping(method = RequestMethod.GET)
     public BundleMetadataDto getSlideshow() {
         return slideshowDtoMapper.toDto(new BundleMetadata.Builder().name("test").build());
     }
