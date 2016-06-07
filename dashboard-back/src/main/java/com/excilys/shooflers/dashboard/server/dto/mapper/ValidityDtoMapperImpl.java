@@ -14,6 +14,9 @@ public class ValidityDtoMapperImpl implements MapperDto<Validity, ValidityDto> {
 
     @Override
     public ValidityDto toDto(Validity model) {
+        if (model == null) {
+            return null;
+        }
         return new ValidityDto(model.getStart().format(FORMATTER), model.getEnd().format(FORMATTER));
     }
 
