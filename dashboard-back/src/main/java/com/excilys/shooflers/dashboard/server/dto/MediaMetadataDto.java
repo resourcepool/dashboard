@@ -14,17 +14,22 @@ public class MediaMetadataDto {
 
     private String mediaType;
 
-    private ValidityDto validityDto;
+    private ValidityDto validity;
 
     private String url;
 
-    private MediaMetadataDto(String uuid, String name, int duration, MediaType mediaType, ValidityDto validityDto, String url) {
+    private String uuidBundle;
+
+    public MediaMetadataDto() { }
+
+    private MediaMetadataDto(String uuid, String name, int duration, MediaType mediaType, ValidityDto validity, String url, String uuidBundle) {
         this.uuid = uuid;
         this.name = name;
         this.duration = duration;
         this.mediaType = mediaType.toString();
-        this.validityDto = validityDto;
+        this.validity = validity;
         this.url = url;
+        this.uuidBundle = uuidBundle;
     }
 
     public static class Builder {
@@ -40,6 +45,8 @@ public class MediaMetadataDto {
         private String uuid;
 
         private String url;
+
+        private String uuidBundle;
 
         public Builder uuid(String uuid) {
             this.uuid = uuid;
@@ -71,8 +78,13 @@ public class MediaMetadataDto {
             return this;
         }
 
+        public Builder uuidBundle(String uuidBundle) {
+            this.uuidBundle = uuidBundle;
+            return this;
+        }
+
         public MediaMetadataDto build() {
-            return new MediaMetadataDto(uuid, name, duration, mediaType, validityDto, url);
+            return new MediaMetadataDto(uuid, name, duration, mediaType, validityDto, url, uuidBundle);
         }
     }
 
@@ -108,12 +120,12 @@ public class MediaMetadataDto {
         this.mediaType = mediaType;
     }
 
-    public ValidityDto getValidityDto() {
-        return validityDto;
+    public ValidityDto getValidity() {
+        return validity;
     }
 
-    public void setValidityDto(ValidityDto validityDto) {
-        this.validityDto = validityDto;
+    public void setValidity(ValidityDto validity) {
+        this.validity = validity;
     }
 
     public String getUrl() {
@@ -122,5 +134,9 @@ public class MediaMetadataDto {
 
     public void setUrl(String url) {
         this.url = url;
+    }
+
+    public String getUuidBundle() {
+        return uuidBundle;
     }
 }

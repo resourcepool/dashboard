@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 @Component
-public class ValidityDtoMapperImpl implements MapperDto<Validity, ValidityDto> {
+public class BundleDtoMapperImpl implements MapperDto<Validity, ValidityDto> {
 
 
 

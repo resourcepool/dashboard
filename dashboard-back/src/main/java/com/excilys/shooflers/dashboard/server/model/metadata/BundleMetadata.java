@@ -3,14 +3,12 @@ package com.excilys.shooflers.dashboard.server.model.metadata;
 
 import com.excilys.shooflers.dashboard.server.model.Validity;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
 /**
  * Slideshow contains a list of media to display.
  */
-public class SlideshowMetadata {
+public class BundleMetadata {
 
     private String uuid;
 
@@ -18,21 +16,16 @@ public class SlideshowMetadata {
 
     private Validity validity;
 
-    private List<MediaMetadata> medias;
-
-    private SlideshowMetadata(String uuid, String name, Validity validity, List<MediaMetadata> medias) {
+    private BundleMetadata(String uuid, String name, Validity validity) {
         this.uuid = uuid;
         this.name = name;
         this.validity = validity;
-        this.medias = medias;
     }
 
     public static class Builder {
         private String name;
 
         private Validity validity;
-
-        private List<MediaMetadata> medias;
 
         private String uuid;
 
@@ -51,16 +44,7 @@ public class SlideshowMetadata {
             return this;
         }
 
-        public Builder medias(List<MediaMetadata> medias) {
-            this.medias = medias;
-            return this;
-        }
-
-        public SlideshowMetadata build() {
-            if (medias == null) {
-                medias = new ArrayList<>();
-            }
-
+        public BundleMetadata build() {
             if (uuid == null) {
                 uuid = UUID.randomUUID().toString();
             }
@@ -68,7 +52,7 @@ public class SlideshowMetadata {
             if (validity == null) {
                 validity = new Validity.Builder().build();
             }
-            return new SlideshowMetadata(uuid, name, validity, medias);
+            return new BundleMetadata(uuid, name, validity);
         }
     }
 
@@ -90,13 +74,5 @@ public class SlideshowMetadata {
 
     public void setValidity(Validity validity) {
         this.validity = validity;
-    }
-
-    public List<MediaMetadata> getMedias() {
-        return medias;
-    }
-
-    public void setMedias(List<MediaMetadata> medias) {
-        this.medias = medias;
     }
 }

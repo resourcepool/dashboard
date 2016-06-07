@@ -1,7 +1,6 @@
 package com.excilys.shooflers.dashboard.server.dto.mapper;
 
 import com.excilys.shooflers.dashboard.server.dto.MediaMetadataDto;
-import com.excilys.shooflers.dashboard.server.dto.ValidityDto;
 import com.excilys.shooflers.dashboard.server.model.metadata.MediaMetadata;
 import com.excilys.shooflers.dashboard.server.model.type.MediaType;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +10,7 @@ import org.springframework.stereotype.Component;
 public class MediaDtoMapperImpl implements MapperDto<MediaMetadata, MediaMetadataDto> {
 
     @Autowired
-    private ValidityDtoMapperImpl validityDtoMapper;
+    private BundleDtoMapperImpl validityDtoMapper;
 
     @Override
     public MediaMetadataDto toDto(MediaMetadata model) {
@@ -22,6 +21,7 @@ public class MediaDtoMapperImpl implements MapperDto<MediaMetadata, MediaMetadat
                 .mediaType(model.getMediaType())
                 .validity(validityDtoMapper.toDto(model.getValidity()))
                 .url(model.getUrl())
+                .uuidBundle(model.getUuidBundle())
                 .build();
     }
 
@@ -32,8 +32,9 @@ public class MediaDtoMapperImpl implements MapperDto<MediaMetadata, MediaMetadat
                 .name(dto.getName())
                 .duration(dto.getDuration())
                 .mediaType(MediaType.valueOf(dto.getMediaType()))
-                .validity(validityDtoMapper.fromDto(dto.getValidityDto()))
+                .validity(validityDtoMapper.fromDto(dto.getValidity()))
                 .url(dto.getUrl())
+                .uuidBundle(dto.getUuidBundle())
                 .build();
     }
 }

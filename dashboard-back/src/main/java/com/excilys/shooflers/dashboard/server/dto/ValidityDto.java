@@ -7,6 +7,8 @@ public class ValidityDto {
 
     private String end;
 
+    public ValidityDto() { }
+
     public ValidityDto(String start, String end) {
         this.start = start;
         this.end = end;
