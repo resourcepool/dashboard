@@ -22,16 +22,16 @@ public class MediaMetadata {
 
     private String url;
 
-    private String uuidBundle;
+    private String bundleTag;
 
-    private MediaMetadata(String uuid, String name, int duration, MediaType mediaType, Validity validity, String url, String uuidBundle) {
+    private MediaMetadata(String uuid, String name, int duration, MediaType mediaType, Validity validity, String url, String bundleTag) {
         this.uuid = uuid;
         this.name = name;
         this.duration = duration;
         this.mediaType = mediaType;
         this.validity = validity;
         this.url = url;
-        this.uuidBundle = uuidBundle;
+        this.bundleTag = bundleTag;
     }
 
     public static class Builder {
@@ -48,7 +48,7 @@ public class MediaMetadata {
 
         private String url;
 
-        private String uuidBundle;
+        private String bundleTag;
 
         public Builder uuid(String uuid) {
             this.uuid = uuid;
@@ -80,8 +80,8 @@ public class MediaMetadata {
             return this;
         }
 
-        public Builder uuidBundle(String uuidBundle) {
-            this.uuidBundle = uuidBundle;
+        public Builder bundleTag(String bundleTag) {
+            this.bundleTag = bundleTag;
             return this;
         }
 
@@ -93,7 +93,7 @@ public class MediaMetadata {
             if (validity == null) {
                 validity = new Validity.Builder().build();
             }
-            return new MediaMetadata(uuid, name, duration, mediaType, validity, url, uuidBundle);
+            return new MediaMetadata(uuid, name, duration, mediaType, validity, url, bundleTag);
         }
     }
 
@@ -141,11 +141,11 @@ public class MediaMetadata {
         this.url = url;
     }
 
-    public String getUuidBundle() {
-        return uuidBundle;
+    public String getBundleTag() {
+        return bundleTag;
     }
 
-    public void setUuidBundle(String uuidBundle) {
-        this.uuidBundle = uuidBundle;
+    public void setBundleTag(String bundleTag) {
+        this.bundleTag = bundleTag;
     }
 }
