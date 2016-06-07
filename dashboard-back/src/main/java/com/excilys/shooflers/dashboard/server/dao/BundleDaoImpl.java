@@ -21,52 +21,58 @@ import java.util.UUID;
  */
 @Component
 public class BundleDaoImpl implements BundleDao {
-  
-  
-  private static final Logger LOGGER = LoggerFactory.getLogger(BundleDaoImpl.class);
-  
-  @Autowired
-  private DashboardProperties props;
-  
-  private Path bundleDatabasePath;
-  
-  @PostConstruct
-  public void init() {
-    bundleDatabasePath = Paths.get(props.getBasePath(), ENTITY_NAME);
-  }
-  
-  @Override
-  public BundleMetadata get(String uuid) {
-    File dataFile = getBundleFile(uuid);
-    return readBundleFromFile(dataFile);
-  }
 
-  @Override
-  public List<BundleMetadata> getAll() {
-    List<BundleMetadata> bundles = new LinkedList<>();
-    for (File b : bundleDatabasePath.toFile().listFiles(File::isFile)) {
-      bundles.add(readBundleFromFile(b));
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(BundleDaoImpl.class);
+
+    @Autowired
+    private DashboardProperties props;
+
+    private Path bundleDatabasePath;
+
+    @PostConstruct
+    public void init() {
+        bundleDatabasePath = Paths.get(props.getBasePath(), ENTITY_NAME);
     }
-    return bundles;
-  }
 
-  @Override
-  public void save(BundleMetadata bundle) {
-    if (bundle.getUuid() == null) {
-      bundle.setUuid(UUID.randomUUID().toString());
+    @Override
+    public BundleMetadata get(String uuid) {
+        File dataFile = getBundleFile(uuid);
+        return readBundleFromFile(dataFile);
     }
-    File dest = getBundleFile(bundle.getUuid());
-    YamlUtils.store(bundle, dest);
-  }
-  
-  private File getBundleFile(String uuid) {
-    String dataFileName = uuid + ".yaml";
-    return bundleDatabasePath.resolve(dataFileName).toFile();
-  }
-  
 
-  private BundleMetadata readBundleFromFile(File dataFile) {
-    return YamlUtils.read(dataFile, BundleMetadata.class);
-  }
+    @Override
+    public List<BundleMetadata> getAll() {
+        List<BundleMetadata> bundles = new LinkedList<>();
+        for (File b : bundleDatabasePath.toFile().listFiles(File::isFile)) {
+            bundles.add(readBundleFromFile(b));
+        }
+        return bundles;
+    }
+
+    @Override
+    public BundleMetadata save(BundleMetadata bundle) {
+        if (bundle.getUuid() == null) {
+            bundle.setUuid(UUID.randomUUID().toString());
+        }
+        File dest = getBundleFile(bundle.getUuid());
+        YamlUtils.store(bundle, dest);
+        return bundle;
+    }
+
+    @Override
+    public boolean delete(String uuid) {
+        return YamlUtils.delete(bundleDatabasePath.resolve(uuid + ".yaml").toFile());
+    }
+
+    private File getBundleFile(String uuid) {
+        String dataFileName = uuid + ".yaml";
+        return bundleDatabasePath.resolve(dataFileName).toFile();
+    }
+
+
+    private BundleMetadata readBundleFromFile(File dataFile) {
+        return YamlUtils.read(dataFile, BundleMetadata.class);
+    }
 
 }

@@ -21,71 +21,75 @@ import java.util.List;
 @Component
 public class RevisionDaoImpl implements RevisionDao {
 
-  private static final String REVISION_LATEST_FILE = "latest";
+    private static final String REVISION_LATEST_FILE = "latest";
 
-  private static final Logger LOGGER = LoggerFactory.getLogger(RevisionDaoImpl.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(RevisionDaoImpl.class);
 
-  @Autowired
-  private DashboardProperties props;
+    @Autowired
+    private DashboardProperties props;
 
-  private Path revDatabasePath;
+    private Path revDatabasePath;
 
-  @PostConstruct
-  public void init() {
-    revDatabasePath = Paths.get(props.getBasePath(), ENTITY_NAME);
-  }
-
-  @Override
-  public Revision get(Long rev) {
-    File dataFile = getRevFile(rev.toString());
-    return readRevFromFile(dataFile);
-  }
-
-  @Override
-  public List<Revision> get(Long minRev, Long maxRev) {
-    List<Revision> revisions = new LinkedList<>();
-    for (Long i = minRev; i <= maxRev; i++) {
-      revisions.add(readRevFromFile(getRevFile(i.toString())));
+    @PostConstruct
+    public void init() {
+        revDatabasePath = Paths.get(props.getBasePath(), ENTITY_NAME);
     }
-    return revisions;
-  }
 
-  @Override
-  public List<Revision> getAll() {
-    List<Revision> revisions = new LinkedList<>();
-    for (File b : revDatabasePath.toFile().listFiles(File::isFile)) {
-      // Skip latest
-      if (!b.getName().equals(REVISION_LATEST_FILE + ".yaml")) {
-        revisions.add(readRevFromFile(b));
-      }
+    @Override
+    public Revision get(Long rev) {
+        File dataFile = getRevFile(rev.toString());
+        return readRevFromFile(dataFile);
     }
-    return revisions;
-  }
 
-  @Override
-  public void save(Revision rev) {
-    if (rev.getRevision() == null) {
-      rev.setRevision(getLatest());
+    @Override
+    public List<Revision> get(Long minRev, Long maxRev) {
+        List<Revision> revisions = new LinkedList<>();
+        for (Long i = minRev; i <= maxRev; i++) {
+            revisions.add(readRevFromFile(getRevFile(i.toString())));
+        }
+        return revisions;
     }
-    File dest = getRevFile(rev.getRevision().toString());
-    YamlUtils.store(rev, dest);
-  }
 
-  @Override
-  public Long getLatest() {
-    File dataFile = getRevFile(REVISION_LATEST_FILE);
-    Revision rev = readRevFromFile(dataFile);
-    return rev == null ? null : rev.getRevision();
-  }
+    @Override
+    public List<Revision> getAll() {
+        List<Revision> revisions = new LinkedList<>();
+        for (File b : revDatabasePath.toFile().listFiles(File::isFile)) {
+            // Skip latest
+            if (!b.getName().equals(REVISION_LATEST_FILE + ".yaml")) {
+                revisions.add(readRevFromFile(b));
+            }
+        }
+        return revisions;
+    }
 
-  private File getRevFile(String rev) {
-    String dataFileName = rev + ".yaml";
-    return revDatabasePath.resolve(dataFileName).toFile();
-  }
+    @Override
+    public void save(Revision rev) {
+        if (rev.getRevision() == null) {
+            rev.setRevision(getLatest());
+        }
+        File dest = getRevFile(rev.getRevision().toString());
+        YamlUtils.store(rev, dest);
+
+        Revision latest = new Revision();
+        latest.setRevision(getLatest() + 1);
+        YamlUtils.store(latest, getRevFile(REVISION_LATEST_FILE));
+    }
+
+    @Override
+    public Long getLatest() {
+        File dataFile = getRevFile(REVISION_LATEST_FILE);
+        Revision rev = readRevFromFile(dataFile);
+        return rev == null ? null : rev.getRevision();
+    }
+
+    private File getRevFile(String rev) {
+        String dataFileName = rev + ".yaml";
+        return revDatabasePath.resolve(dataFileName).toFile();
+    }
 
 
-  private Revision readRevFromFile(File dataFile) {
-    return YamlUtils.read(dataFile, Revision.class);
-  }
+    private Revision readRevFromFile(File dataFile) {
+        return YamlUtils.read(dataFile, Revision.class);
+    }
 
 }

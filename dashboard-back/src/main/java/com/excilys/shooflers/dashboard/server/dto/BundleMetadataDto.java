@@ -12,6 +12,8 @@ public class BundleMetadataDto {
 
     private ValidityDto validity;
 
+    private Long revision;
+
 
     public BundleMetadataDto() { }
 
@@ -70,5 +72,13 @@ public class BundleMetadataDto {
 
     public void setValidity(ValidityDto validity) {
         this.validity = validity;
+    }
+
+    public Long getRevision() {
+        return revision;
+    }
+
+    public void setRevision(Long revision) {
+        this.revision = revision;
     }
 }

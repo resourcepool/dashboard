@@ -24,6 +24,8 @@ public class MediaMetadata {
 
     private String bundleTag;
 
+    public MediaMetadata() { }
+
     private MediaMetadata(String uuid, String name, int duration, MediaType mediaType, Validity validity, String url, String bundleTag) {
         this.uuid = uuid;
         this.name = name;
@@ -95,6 +97,10 @@ public class MediaMetadata {
 
     public String getUuid() {
         return uuid;
+    }
+
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
     }
 
     public String getName() {
