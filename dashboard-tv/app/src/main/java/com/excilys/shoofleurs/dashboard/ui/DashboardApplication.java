@@ -7,7 +7,6 @@ import com.excilys.shoofleurs.dashboard.rest.service.SlideShowService;
 import com.facebook.drawee.backends.pipeline.Fresco;
 
 import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.EventBusBuilder;
 
 /**
  * Created by tommy on 10/05/16.
@@ -20,9 +19,9 @@ public class DashboardApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        mSlideShowService = new SlideShowService();
-        mMessageService = new MessageService();
         mEventBus = EventBus.getDefault();
+        mSlideShowService = new SlideShowService(mEventBus);
+        mMessageService = new MessageService(mEventBus);
         Fresco.initialize(getApplicationContext());
     }
 

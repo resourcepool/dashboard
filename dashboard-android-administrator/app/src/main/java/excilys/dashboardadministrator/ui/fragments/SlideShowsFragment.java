@@ -5,11 +5,9 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -18,7 +16,7 @@ import java.util.List;
 
 import excilys.dashboardadministrator.R;
 import excilys.dashboardadministrator.model.entities.SlideShow;
-import excilys.dashboardadministrator.service.SlideShowService;
+import excilys.dashboardadministrator.rest.service.SlideShowService;
 import excilys.dashboardadministrator.ui.activities.MainActivity;
 import excilys.dashboardadministrator.ui.adapters.SlideShowsAdapter;
 import excilys.dashboardadministrator.ui.listener.RecyclerItemClickListener;

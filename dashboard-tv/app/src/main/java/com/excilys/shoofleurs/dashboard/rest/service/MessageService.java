@@ -4,9 +4,15 @@ import android.util.Log;
 
 import com.excilys.shoofleurs.dashboard.model.entities.Message;
 import com.excilys.shoofleurs.dashboard.model.json.ServerResponse;
+import com.excilys.shoofleurs.dashboard.rest.events.MessageUpdatesEvent;
+import com.excilys.shoofleurs.dashboard.rest.events.MessageUpdatesResponseEvent;
 import com.excilys.shoofleurs.dashboard.rest.json.JsonMapperUtils;
 import com.fasterxml.jackson.core.type.TypeReference;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+
+import java.util.Arrays;
 import java.util.List;
 
 import retrofit2.Call;
@@ -18,13 +24,17 @@ import retrofit2.Response;
  */
 public class MessageService {
     private MessageApi mMessageApi;
+    private EventBus mEventBus;
 
-    public MessageService() {
+    public MessageService(EventBus eventBus) {
+        this.mEventBus = eventBus;
+        mEventBus.register(this);
         mMessageApi = ServiceGenerator.createService(MessageApi.class);
     }
 
 
-    public void checkUpdates() {
+    @Subscribe
+    public void onMessageUpdatesEvent(MessageUpdatesEvent messageUpdatesEvent) {
         Call<ServerResponse> call = mMessageApi.getMessages();
 
         call.enqueue(new Callback<ServerResponse>() {
@@ -37,8 +47,7 @@ public class MessageService {
 
                     Log.i(MessageService.class.getSimpleName(), "onResponse: " + messages);
                     if (messages.size() != 0) {
-                        /**TODO EVENT BUS **/
-                        //mDashboardActivity.getMessageController().addMessages(messages);
+                        mEventBus.post(new MessageUpdatesResponseEvent(messages));
                     } else {
                         Log.i(MessageService.class.getSimpleName(), "checkUpdate onResponse: empty");
                     }
@@ -56,7 +65,6 @@ public class MessageService {
         Message message1 = new Message("Java News", "Oracle is seeking as much as US $9.3 billion in damages in a long-running copyright lawsuit against Google over its use of Java in Android, court filings show.");
         Message message2 = new Message("Google News", "Google’s powerful Cloud Vision API now available");
         Message message3 = new Message("Microsoft News", "Microsoft and Canonical partner to bring Ubuntu to Windows 10 \"You'll soon be able to run Ubuntu on Windows 10.\"");
-        /**TODO EVENT BUS **/
-        //mDashboardActivity.getMessageController().addMessages(Arrays.asList(message1, message2, message3));
+        mEventBus.post(new MessageUpdatesResponseEvent(Arrays.asList(message1, message2, message3)));
     }
 }

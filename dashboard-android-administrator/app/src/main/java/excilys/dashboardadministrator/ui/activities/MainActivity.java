@@ -3,10 +3,10 @@ package excilys.dashboardadministrator.ui.activities;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -24,7 +24,7 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
         ScreensFragment.OnScreensFragmentInteractionListener,
         ContentsFragment.OnContentsFragmentInteractionListener,
-        SlideShowsFragment.OnSlideShowsFragmentInteractionListener{
+        SlideShowsFragment.OnSlideShowsFragmentInteractionListener {
 
     private FragmentManager mFragmentManager;
     private Toolbar mToolbar;
@@ -36,7 +36,6 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
 
         setUpToolbar();
-        setUpFloatingActionButton();
         setUpNavigationDrawer();
         setUpFragmentManager();
     }
@@ -44,17 +43,6 @@ public class MainActivity extends AppCompatActivity
     private void setUpToolbar() {
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
-    }
-
-    private void setUpFloatingActionButton() {
-        /*FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.add_fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });*/
     }
 
     private void setUpNavigationDrawer() {
@@ -69,7 +57,6 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void setUpFragmentManager() {
-
         if (findViewById(R.id.fragment_container) != null) {
             mFragmentManager = getSupportFragmentManager();
 
@@ -78,7 +65,6 @@ public class MainActivity extends AppCompatActivity
             mCurrentFragment = screensFragment;
 
             fragmentTransaction.add(R.id.fragment_container, screensFragment).commit();
-
         }
     }
 
