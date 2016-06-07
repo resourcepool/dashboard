@@ -8,26 +8,21 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.transition.Slide;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import excilys.dashboardadministrator.R;
 import excilys.dashboardadministrator.model.entities.ImageContent;
 import excilys.dashboardadministrator.model.entities.SlideShow;
 import excilys.dashboardadministrator.model.json.ServerResponse;
-import excilys.dashboardadministrator.rest.IContentApi;
+import excilys.dashboardadministrator.rest.ContentApi;
 import excilys.dashboardadministrator.rest.ServiceGenerator;
 import excilys.dashboardadministrator.ui.adapters.ContentsAdapter;
 import excilys.dashboardadministrator.ui.dialogs.ChooseContentDialog;
@@ -64,10 +59,10 @@ public class ContentsFragment extends Fragment {
 
     private SlideShow mSlideShow;
 
-    private IContentApi mContentApi;
+    private ContentApi mContentApi;
 
     public ContentsFragment() {
-        mContentApi = ServiceGenerator.createService(IContentApi.class);
+        mContentApi = ServiceGenerator.createService(ContentApi.class);
     }
 
     /**

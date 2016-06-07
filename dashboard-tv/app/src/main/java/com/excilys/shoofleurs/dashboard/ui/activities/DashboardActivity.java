@@ -9,16 +9,19 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.excilys.shoofleurs.dashboard.R;
-import com.excilys.shoofleurs.dashboard.model.entities.SlideShow;
-import com.excilys.shoofleurs.dashboard.rest.service.MessageService;
-import com.excilys.shoofleurs.dashboard.rest.service.SlideShowService;
+import com.excilys.shoofleurs.dashboard.rest.events.MessageUpdatesEvent;
+import com.excilys.shoofleurs.dashboard.rest.events.MessageUpdatesResponseEvent;
+import com.excilys.shoofleurs.dashboard.rest.events.SlideShowUpdatesEvent;
+import com.excilys.shoofleurs.dashboard.rest.events.SlideShowUpdatesResponseEvent;
 import com.excilys.shoofleurs.dashboard.ui.DashboardApplication;
 import com.excilys.shoofleurs.dashboard.ui.controllers.MessageController;
 import com.excilys.shoofleurs.dashboard.ui.controllers.SlideShowController;
+import com.excilys.shoofleurs.dashboard.ui.event.SetDebugMessageEvent;
 import com.excilys.shoofleurs.dashboard.ui.factories.AnimatorFactory;
 import com.excilys.shoofleurs.dashboard.ui.utils.AndroidUtils;
 
-import java.util.List;
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 import butterknife.BindView;
 import butterknife.BindViews;
@@ -29,8 +32,7 @@ import butterknife.ButterKnife;
  * It asks the server for slideshows updates via the SlideShowService and
  * displays them.
  */
-public class DashboardActivity extends FragmentActivity implements
-        SlideShowService.OnDebugMessageListener, SlideShowService.OnMessageServiceListener {
+public class DashboardActivity extends FragmentActivity {
     private AnimatorSet[] mProgressAnimators = new AnimatorSet[4];
     /**
      * The waiting view points
@@ -49,20 +51,12 @@ public class DashboardActivity extends FragmentActivity implements
 
     private DashboardApplication mDashboardApplication;
 
-    /**
-     * The service for the slideshows
-     */
-    private SlideShowService mSlideShowService;
+    private EventBus mEventBus;
 
     /**
      * The controller of slideshows to displaying them
      */
     private SlideShowController mSlideShowController;
-
-    /**
-     * The service for the cnn messages to displaying them
-     */
-    private MessageService mMessageService;
 
     /**
      * The controller of cnn messages
@@ -75,25 +69,22 @@ public class DashboardActivity extends FragmentActivity implements
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         mDashboardApplication = (DashboardApplication) getApplication();
+        mEventBus = mDashboardApplication.getEventBus();
+        mEventBus.register(this);
 
         startWaitingAnimation();
         if (mSlideShowController == null) {
             mSlideShowController = new SlideShowController(this);
         }
 
-        mSlideShowService = mDashboardApplication.getSlideShowService();
-        mSlideShowService.setDebugMessageListener(this);
-        mSlideShowService.setMessageServiceListener(this);
-
         mMessageController = new MessageController(this);
-        mMessageService = mDashboardApplication.getMessageService();
 
         checkUpdates();
     }
 
     private void checkUpdates() {
-        mSlideShowService.checkUpdates();
-        mMessageService.checkUpdates();
+        mEventBus.post(new SlideShowUpdatesEvent());
+        mEventBus.post(new MessageUpdatesEvent());
     }
 
     /**
@@ -139,17 +130,36 @@ public class DashboardActivity extends FragmentActivity implements
     }
 
     @Override
+    protected void onPause() {
+        super.onPause();
+        mEventBus.unregister(this);
+    }
+
+    @Override
     protected void onResume() {
         super.onResume();
+        if (mEventBus.isRegistered(this)) {
+            return;
+        }
+        mEventBus.register(this);
     }
 
-    @Override
-    public void onDebugMessage(int messageId) {
-        setDebugMessage(messageId);
+    /****************************************************
+    * EVENTS
+    ****************************************************/
+
+    @Subscribe
+    public void onSetDebugMessageEvent(SetDebugMessageEvent setDebugMessageEvent) {
+        setDebugMessage(setDebugMessageEvent.getMessageId());
     }
 
-    @Override
-    public void onCheckUpdatesResponse(List<SlideShow> slideShows) {
-        mSlideShowController.addSlideShows(slideShows);
+    @Subscribe
+    public void onSlideShowUpdatesResponseEvent(SlideShowUpdatesResponseEvent slideShowUpdatesResponseEvent) {
+        mSlideShowController.addSlideShows(slideShowUpdatesResponseEvent.getSlideShows());
+    }
+
+    @Subscribe
+    public void onMessageUpdatesResponseEvent(MessageUpdatesResponseEvent messageUpdatesResponseEvent) {
+        mMessageController.addMessages(messageUpdatesResponseEvent.getMessages());
     }
 }

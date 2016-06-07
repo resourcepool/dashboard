@@ -5,8 +5,14 @@ import android.util.Log;
 import com.excilys.shoofleurs.dashboard.R;
 import com.excilys.shoofleurs.dashboard.model.entities.SlideShow;
 import com.excilys.shoofleurs.dashboard.model.json.ServerResponse;
+import com.excilys.shoofleurs.dashboard.rest.events.SlideShowUpdatesEvent;
+import com.excilys.shoofleurs.dashboard.rest.events.SlideShowUpdatesResponseEvent;
 import com.excilys.shoofleurs.dashboard.rest.json.JsonMapperUtils;
+import com.excilys.shoofleurs.dashboard.ui.event.SetDebugMessageEvent;
 import com.fasterxml.jackson.core.type.TypeReference;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 import java.util.List;
 
@@ -20,21 +26,20 @@ import retrofit2.Response;
 public class SlideShowService {
     private static final String TAG = "SlideShowService";
     private SlideShowApi mSlideShowApi;
+    private EventBus mEventBus;
 
-    private OnMessageServiceListener mMessageServiceListener;
-    private OnDebugMessageListener mDebugMessageListener;
-
-    public SlideShowService() {
+    public SlideShowService(EventBus eventBus) {
+        this.mEventBus = eventBus;
+        mEventBus.register(this);
         mSlideShowApi = ServiceGenerator.createService(SlideShowApi.class);
     }
 
     /**
      * This method checks if new slideshows are available to the server
      */
-    public void checkUpdates() {
-        if (mDebugMessageListener != null) {
-            mDebugMessageListener.onDebugMessage(R.string.debug_check_updates);
-        }
+    @Subscribe
+    public void onSlideShowUpdatesEvent(SlideShowUpdatesEvent slideShowUpdatesEvent) {
+        mEventBus.post(new SetDebugMessageEvent(R.string.debug_check_updates));
 
         Call<ServerResponse> call = mSlideShowApi.getSlideShows(SlideShowApi.TYPE_TV);
         call.enqueue(new Callback<ServerResponse>() {
@@ -46,9 +51,7 @@ public class SlideShowService {
                     });
                     Log.i(TAG, "onResponse: " + slideShows);
                     if (slideShows.size() != 0) {
-                        if (mMessageServiceListener != null) {
-                            mMessageServiceListener.onCheckUpdatesResponse(slideShows);
-                        }
+                        mEventBus.post(new SlideShowUpdatesResponseEvent(slideShows));
                     } else {
                         Log.i(getClass().getSimpleName(), "checkUpdate onResponse: empty");
                     }
@@ -71,19 +74,5 @@ public class SlideShowService {
         });
     }
 
-    public void setMessageServiceListener(OnMessageServiceListener mMessageServiceListener) {
-        this.mMessageServiceListener = mMessageServiceListener;
-    }
 
-    public void setDebugMessageListener(OnDebugMessageListener mDebugMessageListener) {
-        this.mDebugMessageListener = mDebugMessageListener;
-    }
-
-    public interface OnMessageServiceListener {
-        void onCheckUpdatesResponse(List<SlideShow> slideShows);
-    }
-
-    public interface OnDebugMessageListener {
-        void onDebugMessage(int messageId);
-    }
 }
