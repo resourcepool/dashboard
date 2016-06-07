@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 public class MediaDtoMapperImpl implements MapperDto<MediaMetadata, MediaMetadataDto> {
 
     @Autowired
-    private BundleDtoMapperImpl validityDtoMapper;
+    private ValidityDtoMapperImpl validityDtoMapper;
 
     @Override
     public MediaMetadataDto toDto(MediaMetadata model) {

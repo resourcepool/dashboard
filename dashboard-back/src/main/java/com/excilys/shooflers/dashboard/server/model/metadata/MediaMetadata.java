@@ -89,10 +89,6 @@ public class MediaMetadata {
             if (uuid == null) {
                 uuid = UUID.randomUUID().toString();
             }
-
-            if (validity == null) {
-                validity = new Validity.Builder().build();
-            }
             return new MediaMetadata(uuid, name, duration, mediaType, validity, url, bundleTag);
         }
     }

@@ -1,32 +1,31 @@
 package com.excilys.shooflers.dashboard.server.dto.mapper;
 
-import com.excilys.shooflers.dashboard.server.dto.ValidityDto;
-import com.excilys.shooflers.dashboard.server.model.Validity;
+import com.excilys.shooflers.dashboard.server.dto.BundleMetadataDto;
+import com.excilys.shooflers.dashboard.server.model.metadata.BundleMetadata;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-
 @Component
-public class BundleDtoMapperImpl implements MapperDto<Validity, ValidityDto> {
+public class BundleDtoMapperImpl implements MapperDto<BundleMetadata, BundleMetadataDto> {
 
-
-
-    private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ISO_DATE_TIME;
+    @Autowired
+    private ValidityDtoMapperImpl validityDtoMapper;
 
     @Override
-    public ValidityDto toDto(Validity model) {
-        return new ValidityDto(model.getStart().format(FORMATTER), model.getEnd().format(FORMATTER));
+    public BundleMetadataDto toDto(BundleMetadata model) {
+        return new BundleMetadataDto.Builder()
+                .uuid(model.getUuid())
+                .name(model.getName())
+                .validity(validityDtoMapper.toDto(model.getValidity()))
+                .build();
     }
 
     @Override
-    public Validity fromDto(ValidityDto dto) {
-        if (dto == null) {
-            return null;
-        }
-        return new Validity.Builder()
-                .start(LocalDateTime.parse(dto.getStart(), FORMATTER))
-                .end(LocalDateTime.parse(dto.getEnd(), FORMATTER))
+    public BundleMetadata fromDto(BundleMetadataDto dto) {
+        return new BundleMetadata.Builder()
+                .uuid(dto.getUuid())
+                .name(dto.getName())
+                .validity(validityDtoMapper.fromDto(dto.getValidity()))
                 .build();
     }
 }
