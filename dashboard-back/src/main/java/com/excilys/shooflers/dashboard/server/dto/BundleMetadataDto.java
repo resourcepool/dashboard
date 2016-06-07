@@ -1,6 +1,9 @@
 package com.excilys.shooflers.dashboard.server.dto;
 
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
+@JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class BundleMetadataDto {
 
     private String uuid;

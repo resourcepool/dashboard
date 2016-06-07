@@ -21,6 +21,9 @@ public class BundleDtoMapperImpl implements MapperDto<Validity, ValidityDto> {
 
     @Override
     public Validity fromDto(ValidityDto dto) {
+        if (dto == null) {
+            return null;
+        }
         return new Validity.Builder()
                 .start(LocalDateTime.parse(dto.getStart(), FORMATTER))
                 .end(LocalDateTime.parse(dto.getEnd(), FORMATTER))

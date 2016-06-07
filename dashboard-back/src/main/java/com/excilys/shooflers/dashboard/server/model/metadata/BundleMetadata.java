@@ -48,10 +48,6 @@ public class BundleMetadata {
             if (uuid == null) {
                 uuid = UUID.randomUUID().toString();
             }
-
-            if (validity == null) {
-                validity = new Validity.Builder().build();
-            }
             return new BundleMetadata(uuid, name, validity);
         }
     }
@@ -62,6 +58,10 @@ public class BundleMetadata {
 
     public String getName() {
         return name;
+    }
+
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
     }
 
     public void setName(String name) {

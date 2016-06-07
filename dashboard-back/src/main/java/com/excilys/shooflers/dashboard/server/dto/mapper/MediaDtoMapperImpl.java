@@ -21,7 +21,7 @@ public class MediaDtoMapperImpl implements MapperDto<MediaMetadata, MediaMetadat
                 .mediaType(model.getMediaType())
                 .validity(validityDtoMapper.toDto(model.getValidity()))
                 .url(model.getUrl())
-                .uuidBundle(model.getUuidBundle())
+                .uuidBundle(model.getBundleTag())
                 .build();
     }
 
@@ -34,7 +34,7 @@ public class MediaDtoMapperImpl implements MapperDto<MediaMetadata, MediaMetadat
                 .mediaType(MediaType.valueOf(dto.getMediaType()))
                 .validity(validityDtoMapper.fromDto(dto.getValidity()))
                 .url(dto.getUrl())
-                .uuidBundle(dto.getUuidBundle())
+                .bundleTag(dto.getUuidBundle())
                 .build();
     }
 }
