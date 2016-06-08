@@ -1,6 +1,7 @@
 package com.excilys.shooflers.dashboard.server.rest;
 
 import com.excilys.shooflers.dashboard.server.model.Revision;
+import com.excilys.shooflers.dashboard.server.security.annotation.RequireValidApiKey;
 import com.excilys.shooflers.dashboard.server.service.impl.RevisionServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -12,6 +13,7 @@ import java.util.List;
 
 
 @RestController
+@RequireValidApiKey
 @RequestMapping(value = "dashboard")
 public class DashboardController {
 
@@ -31,6 +33,5 @@ public class DashboardController {
     public List<Revision> getDiffs(@PathVariable("revision") long revision) {
         return revisionService.getDiffs(revision);
     }
-
 
 }

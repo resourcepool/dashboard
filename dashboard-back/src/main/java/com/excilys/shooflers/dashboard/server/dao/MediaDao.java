@@ -31,7 +31,7 @@ public interface MediaDao {
      *
      * @param media the media meta data
      */
-    void save(MediaMetadata media);
+    MediaMetadata save(MediaMetadata media);
 
     /**
      * Delete a media from DB.

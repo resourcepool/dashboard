@@ -20,13 +20,15 @@ public class MediaMetadataDto {
 
     private String uuidBundle;
 
+    private long revision;
+
     public MediaMetadataDto() { }
 
     private MediaMetadataDto(String uuid, String name, int duration, MediaType mediaType, ValidityDto validity, String url, String uuidBundle) {
         this.uuid = uuid;
         this.name = name;
         this.duration = duration;
-        this.mediaType = mediaType.toString();
+        this.mediaType = mediaType.getMimeType();
         this.validity = validity;
         this.url = url;
         this.uuidBundle = uuidBundle;
@@ -138,5 +140,13 @@ public class MediaMetadataDto {
 
     public String getUuidBundle() {
         return uuidBundle;
+    }
+
+    public long getRevision() {
+        return revision;
+    }
+
+    public void setRevision(long revision) {
+        this.revision = revision;
     }
 }

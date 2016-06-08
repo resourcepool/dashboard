@@ -9,49 +9,54 @@ import org.springframework.stereotype.Component;
 @Component
 @ConfigurationProperties
 public class DashboardProperties {
-  private String basePath = System.getProperty("user.dir") + "/db";
-  private String apiKey = "default";
-  private String adminLogin = "admin";
-  private String adminPassword = "admin";
-  private long sessionTimeout = 10;
+    private String basePath = System.getProperty("user.dir") + "/db";
+    private String apiKey = "default";
+    private String adminLogin = "admin";
+    private String adminPassword = "admin";
+    private long sessionTimeout = 10;
+    private String baseUrl = "http://localhost:8080/";
 
-  public String getApiKey() {
-    return apiKey;
-  }
+    public String getApiKey() {
+        return apiKey;
+    }
 
-  public void setApiKey(String apiKey) {
-    this.apiKey = apiKey;
-  }
+    public void setApiKey(String apiKey) {
+        this.apiKey = apiKey;
+    }
 
-  public String getBasePath() {
-    return basePath;
-  }
+    public String getBasePath() {
+        return basePath;
+    }
 
-  public void setBasePath(String basePath) {
-    this.basePath = basePath;
-  }
+    public void setBasePath(String basePath) {
+        this.basePath = basePath;
+    }
 
-  public String getAdminLogin() {
-    return adminLogin;
-  }
+    public String getAdminLogin() {
+        return adminLogin;
+    }
 
-  public String getAdminPassword() {
-    return adminPassword;
-  }
+    public String getAdminPassword() {
+        return adminPassword;
+    }
 
-  public long getSessionTimeout() {
-    return sessionTimeout;
-  }
+    public long getSessionTimeout() {
+        return sessionTimeout;
+    }
 
-  public void setAdminLogin(String adminLogin) {
-    this.adminLogin = adminLogin;
-  }
+    public void setAdminLogin(String adminLogin) {
+        this.adminLogin = adminLogin;
+    }
 
-  public void setAdminPassword(String adminPassword) {
-    this.adminPassword = adminPassword;
-  }
+    public void setAdminPassword(String adminPassword) {
+        this.adminPassword = adminPassword;
+    }
 
-  public void setSessionTimeout(long sessionTimeout) {
-    this.sessionTimeout = sessionTimeout;
-  }
+    public void setSessionTimeout(long sessionTimeout) {
+        this.sessionTimeout = sessionTimeout;
+    }
+
+    public String getBaseUrl() {
+        return baseUrl;
+    }
 }

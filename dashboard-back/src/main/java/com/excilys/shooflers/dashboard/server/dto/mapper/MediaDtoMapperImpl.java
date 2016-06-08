@@ -31,7 +31,7 @@ public class MediaDtoMapperImpl implements MapperDto<MediaMetadata, MediaMetadat
                 .uuid(dto.getUuid())
                 .name(dto.getName())
                 .duration(dto.getDuration())
-                .mediaType(MediaType.valueOf(dto.getMediaType()))
+                .mediaType(MediaType.getMediaType(dto.getMediaType()))
                 .validity(validityDtoMapper.fromDto(dto.getValidity()))
                 .url(dto.getUrl())
                 .bundleTag(dto.getUuidBundle())
