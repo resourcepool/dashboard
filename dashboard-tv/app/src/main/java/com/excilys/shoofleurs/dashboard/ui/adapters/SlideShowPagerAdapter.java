@@ -2,7 +2,6 @@ package com.excilys.shoofleurs.dashboard.ui.adapters;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.util.Log;
 
 import com.excilys.shoofleurs.dashboard.ui.controllers.SlideShowController;
 import com.excilys.shoofleurs.dashboard.ui.displayables.AbstractDisplayable;
@@ -25,14 +24,12 @@ public class SlideShowPagerAdapter extends LoopingPagerAdapter<AbstractDisplayab
 
     @Override
     public Fragment getRealItem(int position) {
-        Log.i(SlideShowPagerAdapter.class.getSimpleName(), "getItem: " + position);
         AbstractDisplayable displayable = mDisplayables.get(position);
         return DisplayableFragment.newInstance(displayable);
     }
 
     @Override
     public void onRealPageSelected(int position) {
-        Log.i(SlideShowPagerAdapter.class.getSimpleName(), "onPageSelected: " + position);
         if (mDisplayables.isEmpty()) {
             return;
         }
@@ -47,11 +44,11 @@ public class SlideShowPagerAdapter extends LoopingPagerAdapter<AbstractDisplayab
 
     @Override
     public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-        if (positionOffset == 0) {
-            mController.getDashboardActivity().showBackground();
-        } else {
-            mController.getDashboardActivity().hideBackground();
-        }
+//        if (positionOffset == 0) {
+//            mController.getDashboardActivity().showBackground();
+//        } else {
+//            mController.getDashboardActivity().hideBackground();
+//        }
     }
 
     @Override

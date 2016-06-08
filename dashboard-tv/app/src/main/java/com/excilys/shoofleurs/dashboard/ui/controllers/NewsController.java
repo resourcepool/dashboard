@@ -9,7 +9,6 @@ import android.widget.TextView;
 
 import com.excilys.shoofleurs.dashboard.R;
 import com.excilys.shoofleurs.dashboard.model.entities.Message;
-import com.excilys.shoofleurs.dashboard.ui.activities.DashboardActivity;
 import com.excilys.shoofleurs.dashboard.ui.factories.AnimatorFactory;
 import com.excilys.shoofleurs.dashboard.ui.utils.AndroidUtils;
 
@@ -24,7 +23,7 @@ import butterknife.ButterKnife;
  * It scroll automatically the current message during 1 min and
  * go to the next.
  */
-public class MessageController {
+public class NewsController {
     private static final int S_DELAY_BEETWEEN_MESSAGES = 45000; // 45 seconds
     private static final int S_DELAY_BEFORE_SCROLLING = 3000; // 3 seconds
 
@@ -61,8 +60,8 @@ public class MessageController {
      */
     private Handler mHandler;
 
-    public MessageController(DashboardActivity dashboardActivity) {
-        ButterKnife.bind(this, dashboardActivity);
+    public NewsController(View view) {
+        ButterKnife.bind(this, view);
         mMessages = new ArrayList<>();
         mHandler = new Handler();
         mCurrentMessageIndex = 0;
@@ -78,7 +77,7 @@ public class MessageController {
 
 
     public void addMessages(List<Message> messages) {
-        Log.i(MessageController.class.getSimpleName(), "addMessages: " + messages);
+        Log.i(NewsController.class.getSimpleName(), "addMessages: " + messages);
         mMessages.addAll(messages);
         refresh();
     }
@@ -98,7 +97,7 @@ public class MessageController {
             mCurrentMessage = mMessages.get(mCurrentMessageIndex);
             displayMessage(mCurrentMessage);
         } else {
-            Log.i(MessageController.class.getSimpleName(), "startMessages: The messages are empty!");
+            Log.i(NewsController.class.getSimpleName(), "startMessages: The messages are empty!");
         }
     }
 
@@ -109,7 +108,7 @@ public class MessageController {
      * @param message
      */
     private void displayMessage(Message message) {
-        Log.i(MessageController.class.getSimpleName(), "displayMessage: " + message);
+        Log.i(NewsController.class.getSimpleName(), "displayMessage: " + message);
 
         mMessageTextFadeInAnimator.start();
         mMessageTitleFadeInAnimator.start();
@@ -160,7 +159,7 @@ public class MessageController {
         Message nextMessage = mCurrentMessageIndex < mMessages.size() ?
                 mMessages.get(mCurrentMessageIndex) :
                 mMessages.get((mCurrentMessageIndex = 0));
-        Log.d(MessageController.class.getSimpleName(), "nextMessage: " + nextMessage);
+        Log.d(NewsController.class.getSimpleName(), "nextMessage: " + nextMessage);
 
         return nextMessage;
     }
