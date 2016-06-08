@@ -25,12 +25,20 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @EnableSwagger2
 @EnableAspectJAutoProxy
 @EnableConfigurationProperties
-public class SpringConfiguration extends WebMvcConfigurerAdapter {
+public class DashboardApplication extends WebMvcConfigurerAdapter {
 
+    /**
+     * Entry point.
+     *
+     * @param args the command args
+     */
     public static void main(String[] args) {
-        SpringApplication.run(SpringConfiguration.class, args);
+        SpringApplication.run(DashboardApplication.class, args);
     }
 
+    /**
+     * @return Swagger configuration class.
+     */
     @Bean
     public Docket newsApi() {
         return new Docket(DocumentationType.SWAGGER_2)
@@ -43,7 +51,7 @@ public class SpringConfiguration extends WebMvcConfigurerAdapter {
 
     /**
      * CorsInterceptor factory.
-     * 
+     *
      * @return CorsInterceptor
      */
     @Bean
@@ -56,6 +64,11 @@ public class SpringConfiguration extends WebMvcConfigurerAdapter {
         registry.addInterceptor(corsInterceptor());
     }
 
+
+    /**
+     * Builds the API information for the Swagger library.
+     * @return the API Information
+     */
     private ApiInfo apiInfo() {
         return new ApiInfoBuilder()
                 .title("Dashboard REST Api Documentations with Swagger")
@@ -64,5 +77,5 @@ public class SpringConfiguration extends WebMvcConfigurerAdapter {
                 .version("1.0")
                 .build();
     }
-    
+
 }

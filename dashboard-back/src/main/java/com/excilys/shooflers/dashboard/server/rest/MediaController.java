@@ -21,19 +21,19 @@ import java.util.stream.Collectors;
 @RequestMapping("/media")
 public class MediaController {
 
-	@Autowired
-	private MediaDao mediaDao;
+    @Autowired
+    private MediaDao mediaDao;
 
-	@Autowired
-	private MediaDtoMapperImpl mediaDtoMapper;
+    @Autowired
+    private MediaDtoMapperImpl mediaDtoMapper;
 
-	@RequestMapping(method = RequestMethod.GET)
-	public List<MediaMetadataDto> getAll() {
-		return mediaDao.getAll().stream().map(mediaDtoMapper::toDto).collect(Collectors.toList());
-	}
+    @RequestMapping(method = RequestMethod.GET)
+    public List<MediaMetadataDto> getAll() {
+        return mediaDao.getAll().stream().map(mediaDtoMapper::toDto).collect(Collectors.toList());
+    }
 
-	@RequestMapping(value = "{uuid}", method = RequestMethod.GET)
-	public MediaMetadataDto get(@RequestParam("uuid") String uuid) {
-		return mediaDtoMapper.toDto(mediaDao.get(uuid));
-	}
+    @RequestMapping(value = "{uuid}", method = RequestMethod.GET)
+    public MediaMetadataDto get(@RequestParam("uuid") String uuid) {
+        return mediaDtoMapper.toDto(mediaDao.get(uuid));
+    }
 }
