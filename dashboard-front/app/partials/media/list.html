@@ -1,0 +1,40 @@
+<div class="container">
+  <div class="row">
+    <div class="pull-left">
+      <h4 id="tables"><a href="#/home">Dashboard</a> > {{ bundle.name }} <span aria-hidden="true" class="glyphicon glyphicon-folder-open"></span> </h4>
+    </div>
+
+    <div class="pull-right">
+      <h4>
+        <a href="#/bundle/:bundleId/media/add"> Add Media <span aria-hidden="true" class="glyphicon glyphicon-upload"></span></a>
+      </h4>
+    </div>
+  </div>
+  <div ng-if="scope.error" class="alert alert-danger">{{ scope.error }}</div>
+  <hr>
+  <div class="row">
+    <table class="table table-striped table-hover ">
+      <thead>
+      <tr>
+        <th>Name</th>
+        <th>Start DateTime</th>
+        <th>End DateTime</th>
+        <th></th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr ng-repeat="media in medias">
+        <td><a href="#/bundle/:bundleId/media/edit/{{ media.uuid }}"><span aria-hidden="true" class="glyphicon glyphicon-file"></span> {{ media.name }} </a></td>
+
+        <td>{{ media.validity.start }}</td>
+        <td>{{ media.validity.start }}</td>
+        <td>
+          <button class="btn-default btn btn-sm" ng-click="remove(media.uuid);" ><span aria-hidden="true" class="glyphicon glyphicon-remove"></span></button>
+          <a class="btn-default btn btn-sm" href="#/bundle/:bundleId/media/edit/{{ media.uuid }}" ><span aria-hidden="true" class="glyphicon glyphicon-edit"></span></a>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+

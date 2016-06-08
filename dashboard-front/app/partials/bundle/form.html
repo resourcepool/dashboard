@@ -1,0 +1,45 @@
+<div class="container">
+  <div class="row">
+    <div class="col-sm-3">
+      <h4 id="tables"><a href="#/home">Dashboard</a> > {{ nav }} </h4>
+    </div>
+  </div>
+  <div ng-if="scope.error" class="alert alert-danger">{{ scope.error }}</div>
+  <hr>
+  <div class="row">
+    <div class="col-xs-8 col-xs-offset-1 box">
+      <form name="form" ng-submit="submit(form.$valid)" novalidate>
+        <fieldset>
+
+          <legend>{{ title }}</legend>
+          <p ng-show="loading">Sending ... <img src="images/loader.gif"></p>
+          <label for="title">Name</label>
+          <p ng-show="form.$pending">Sending ... <img src="images/loader.gif"></p>
+          <div ng-if="error" class="alert alert-danger">{{ error }}</div>
+
+          <div class="form-group">
+            <input name="title" type="text" placeholder="Enter a title" class="form-control" minlength="2" maxlength="30" required ng-model="bundle.name">
+            <div class="alert-danger alert" ng-show="form.$submitted && form.title.$error.required" class="help-block">The field must not be empty</div>
+            <div class="alert-danger alert" ng-show="form.$submitted && form.title.$error.minlength" class="help-block">The value must have at least 2 characters</div>
+            <div class="alert-danger alert" ng-show="form.title.$error.maxlength" class="help-block">The value must have no more than characters</div>
+          </div>
+
+          <div class="form-group">
+            <label for="bundleStartDateTime">Start Datetime</label>
+            <input id="bundleStartDateTime" name="bundleStartDateTime" ng-pattern="regexDate" required type="text" date-picker="start" class="datetimepicker form-control" placeholder="bundle start datetime"  ng-model="bundle.validity.start">
+            <div class="alert-danger alert" ng-show="form.$submitted && form.bundleStartDateTime.$error.required" class="help-block">The field must not be empty</div>
+          </div>
+          <div class="form-group">
+            <label for="bundleValidityEnd">End Datetime</label>
+            <input id="bundleValidityEnd" name="bundleValidityEnd" required type="text" class="datetimepicker form-control" placeholder="bundle end datetime" date-picker="end" ng-model="bundle.validity.end">
+            <div class="alert-danger alert" ng-show="form.$submitted && form.bundleValidityEnd.$error.required" class="help-block">The field must not be empty</div>
+          </div>
+        </fieldset>
+        <div class="actions pull-right">
+          <input type="submit" class="btn btn-primary" value="Send">
+          or <a href="#/home" class="btn btn-default"  ng-click="reset()">Cancel</a>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
