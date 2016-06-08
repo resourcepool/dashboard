@@ -77,15 +77,27 @@ public class Revision {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
 
         Revision revision1 = (Revision) o;
 
-        if (revision != null ? !revision.equals(revision1.revision) : revision1.revision != null) return false;
-        if (action != revision1.action) return false;
-        if (type != revision1.type) return false;
-        if (target != null ? !target.equals(revision1.target) : revision1.target != null) return false;
+        if (revision != null ? !revision.equals(revision1.revision) : revision1.revision != null) {
+            return false;
+        }
+        if (action != revision1.action) {
+            return false;
+        }
+        if (type != revision1.type) {
+            return false;
+        }
+        if (target != null ? !target.equals(revision1.target) : revision1.target != null) {
+            return false;
+        }
         return result != null ? result.equals(revision1.result) : revision1.result == null;
 
     }

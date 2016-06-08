@@ -11,8 +11,8 @@ import java.io.IOException;
  */
 @RestController
 public class RootController {
-	@RequestMapping("/")
-	void handleFoo(HttpServletResponse response) throws IOException {
-		response.sendRedirect("swagger-ui.html");
-	}
+    @RequestMapping("/")
+    void handleFoo(HttpServletResponse response) throws IOException {
+        response.sendRedirect("swagger-ui.html");
+    }
 }

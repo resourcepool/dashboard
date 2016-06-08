@@ -23,33 +23,35 @@ import java.util.List;
 @RequestMapping("/bundle")
 public class BundleController {
 
-	@Autowired
-	private BundleDao bundleDao;
+    @Autowired
+    private BundleDao bundleDao;
 
-	@Autowired
-	private BundleDtoMapperImpl mapper;
+    @Autowired
+    private BundleDtoMapperImpl mapper;
 
     @Autowired
     private RevisionDao revisionDao;
 
     /**
      * Get all Bundle.
+     *
      * @return List of BundleDto
      */
-  @RequestMapping(method = RequestMethod.GET)
-	public List<BundleMetadataDto> getAll() {
+    @RequestMapping(method = RequestMethod.GET)
+    public List<BundleMetadataDto> getAll() {
         List<BundleMetadataDto> bundles = mapper.toListDto(bundleDao.getAll());
         bundles.forEach(b -> b.setRevision(revisionDao.getLatest()));
-		return bundles;
-	}
-  
+        return bundles;
+    }
+
     /**
      * Save a new Bundle and add a new revision.
+     *
      * @param bundle Bundle to save
      */
-	@RequestMapping(method = RequestMethod.POST)
-	public BundleMetadataDto save(@RequestBody BundleMetadataDto bundle) {
-		bundle = mapper.toDto(bundleDao.save(mapper.fromDto(bundle)));
+    @RequestMapping(method = RequestMethod.POST)
+    public BundleMetadataDto save(@RequestBody BundleMetadataDto bundle) {
+        bundle = mapper.toDto(bundleDao.save(mapper.fromDto(bundle)));
         // Create a new revision
         Revision revision = new Revision();
         revision.setRevision(revisionDao.getLatest() + 1);
@@ -58,20 +60,22 @@ public class BundleController {
         revision.setType(Revision.Type.BUNDLE);
         revisionDao.save(revision);
         return bundle;
-	}
+    }
 
     /**
      * Get a particular Bundle by its uuid.
+     *
      * @param uuid uuid to find
      * @return Bundle found if bundle exists
      */
-	@RequestMapping(value = "{uuid}", method = RequestMethod.GET)
-	public BundleMetadataDto get(@PathVariable("uuid") String uuid) {
+    @RequestMapping(value = "{uuid}", method = RequestMethod.GET)
+    public BundleMetadataDto get(@PathVariable("uuid") String uuid) {
         return mapper.toDto(bundleDao.get(uuid));
-	}
+    }
 
     /**
      * Update a bundle
+     *
      * @param bundle Bundle to update
      * @return
      */
@@ -96,6 +100,7 @@ public class BundleController {
 
     /**
      * Delete a bundle by its uuid.
+     *
      * @param uuid uuid to delete
      */
     @RequestMapping(value = "{uuid}", method = RequestMethod.DELETE)

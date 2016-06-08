@@ -1,7 +1,7 @@
 package com.excilys.shooflers.dashboard.server.rest;
 
 import com.excilys.shooflers.dashboard.server.model.Revision;
-import com.excilys.shooflers.dashboard.server.service.RevisionService;
+import com.excilys.shooflers.dashboard.server.service.impl.RevisionServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,7 +16,7 @@ import java.util.List;
 public class DashboardController {
 
     @Autowired
-    private RevisionService revisionService;
+    private RevisionServiceImpl revisionService;
 
     /**
      * Get the number of the latest revision

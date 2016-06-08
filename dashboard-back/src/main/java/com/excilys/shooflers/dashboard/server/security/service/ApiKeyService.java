@@ -1,4 +1,4 @@
-package com.excilys.shooflers.dashboard.server.service;
+package com.excilys.shooflers.dashboard.server.security.service;
 
 /**
  * @author Loïc Ortola on 08/06/2016.
