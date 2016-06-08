@@ -1,70 +1,67 @@
 package com.excilys.shooflers.dashboard.server.service.impl;
 
 import com.excilys.shooflers.dashboard.server.dao.BundleDao;
-import com.excilys.shooflers.dashboard.server.dao.RevisionDao;
+import com.excilys.shooflers.dashboard.server.dto.BundleMetadataDto;
 import com.excilys.shooflers.dashboard.server.dto.mapper.BundleDtoMapperImpl;
 import com.excilys.shooflers.dashboard.server.model.Revision;
-import com.excilys.shooflers.dashboard.server.model.metadata.BundleMetadata;
+import com.excilys.shooflers.dashboard.server.property.DashboardProperties;
 import com.excilys.shooflers.dashboard.server.service.BundleService;
+import com.excilys.shooflers.dashboard.server.service.RevisionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.File;
+import java.util.Arrays;
 import java.util.List;
 
-/**
- * Created by Mickael on 08/06/2016.
- */
+
 @Service
 public class BundleServiceImpl implements BundleService {
+
     @Autowired
     private BundleDao bundleDao;
 
     @Autowired
-    private RevisionDao revisionDao;
+    private RevisionService revisionService;
 
     @Autowired
     private BundleDtoMapperImpl mapper;
 
+    @Autowired
+    private DashboardProperties props;
+
     @Override
-    public BundleMetadata get(String uuid) {
-        return bundleDao.get(uuid);
+    public BundleMetadataDto get(String uuid) {
+        return mapper.toDto(bundleDao.get(uuid));
     }
 
     @Override
-    public List<BundleMetadata> getAll() {
-        return bundleDao.getAll();
+    public List<BundleMetadataDto> getAll() {
+        return mapper.toListDto(bundleDao.getAll());
     }
 
     @Override
-    public BundleMetadata create(BundleMetadata bundle) {
-        BundleMetadata result = bundleDao.save(bundle);
-        if (bundleDao.save(bundle) != null) {
+    public BundleMetadataDto create(BundleMetadataDto bundle) {
+        bundle = mapper.toDto(bundleDao.save(mapper.fromDto(bundle)));
+        if (bundle != null) {
             // Create a new revision
-            Revision revision = new Revision();
-            revision.setRevision(revisionDao.getLatest() + 1);
-            revision.setAction(Revision.Action.ADD);
-            revision.setTarget(bundle.getUuid());
-            revision.setType(Revision.Type.BUNDLE);
-            revisionDao.save(revision);
+            bundle.setRevision(revisionService.add(Revision.Action.ADD, bundle.getUuid(), Revision.Type.BUNDLE, null).getRevision());
         }
 
-        return result;
+        return bundle;
     }
 
     @Override
-    public BundleMetadata update(BundleMetadata bundle) {
+    public BundleMetadataDto update(BundleMetadataDto bundle) {
         String oldUuid = bundle.getUuid();
         if (bundleDao.delete(bundle.getUuid())) {
             bundle.setUuid(null);
-            bundle = bundleDao.save(bundle);
+            bundle = mapper.toDto(bundleDao.save(mapper.fromDto(bundle)));
+            // Rename media foler
+            new File(props.getBasePath() + "/media/" + oldUuid).renameTo(new File(props.getBasePath() + "/media/" + bundle.getUuid()));
+            new File(props.getBaseResources() + "/" + oldUuid).renameTo(new File(props.getBaseResources() + "/" + bundle.getUuid()));
             // Create a new revision
-            Revision revision = new Revision();
-            revision.setRevision(revisionDao.getLatest() + 1);
-            revision.setType(Revision.Type.BUNDLE);
-            revision.setTarget(oldUuid);
-            revision.setResult(bundle.getUuid());
-            revision.setAction(Revision.Action.UPDATE);
-            revisionDao.save(revision);
+            bundle.setRevision(revisionService.add(Revision.Action.UPDATE, oldUuid, Revision.Type.BUNDLE, bundle.getUuid()).getRevision());
             return bundle;
         }
         return null;
@@ -75,12 +72,23 @@ public class BundleServiceImpl implements BundleService {
         boolean result = bundleDao.delete(uuid);
         if (result) {
             // Create a new revision
-            Revision revision = new Revision();
-            revision.setRevision(revisionDao.getLatest() + 1);
-            revision.setAction(Revision.Action.DELETE);
-            revision.setTarget(uuid);
-            revision.setType(Revision.Type.BUNDLE);
-            revisionDao.save(revision);
+            revisionService.add(Revision.Action.DELETE, uuid, Revision.Type.BUNDLE, null);
+
+            // Delete all medias associated with bundle
+            File dir = new File(props.getBasePath() + "/media/" + uuid);
+            File[] dirFiles = dir.listFiles();
+            if (dirFiles != null) {
+                Arrays.asList(dirFiles).forEach(File::delete);
+            }
+            dir.delete();
+
+            // Delete all files associated with bundle
+            dir = new File(props.getBaseResources() + "/" + uuid);
+            dirFiles = dir.listFiles();
+            if (dirFiles != null) {
+                Arrays.asList(dirFiles).forEach(File::delete);
+            }
+            dir.delete();
         }
         return result;
     }

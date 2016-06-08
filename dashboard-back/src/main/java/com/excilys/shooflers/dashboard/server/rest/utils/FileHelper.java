@@ -1,7 +1,9 @@
 package com.excilys.shooflers.dashboard.server.rest.utils;
 
 
+import com.excilys.shooflers.dashboard.server.dto.MediaMetadataDto;
 import com.excilys.shooflers.dashboard.server.model.type.MediaType;
+import com.excilys.shooflers.dashboard.server.service.exception.UploadingFileException;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.BufferedOutputStream;
@@ -11,23 +13,41 @@ import java.io.IOException;
 
 public class FileHelper {
 
-    private static final String FOLDER_MEDIA = System.getProperty("user.dir") + "/public/";
+    // Path where media file are stored
+    private static final String FOLDER_MEDIA = System.getProperty("user.dir") + "/public";
 
     /**
      * Save a file.
      * @param file file to save
      * @return Result of the operation
      */
-    public static String saveFile(MultipartFile file, String mediaUuid) {
+    public static boolean saveFile(MultipartFile file, MediaMetadataDto mediaMetadataDto, String baseUrl) {
+        // If extension are invalid, abort
+        if (MediaType.getMediaType(file.getContentType()) == MediaType.NONE ||
+                MediaType.getMediaType(mediaMetadataDto.getMediaType()) == MediaType.NONE) {
+            throw new UploadingFileException("Unrecognized extension");
+        }
+
         try {
             byte[] bytes = file.getBytes();
-            String fileName = mediaUuid + MediaType.getExtension(file.getContentType());
-            BufferedOutputStream stream = new BufferedOutputStream(new FileOutputStream(new File(FOLDER_MEDIA + fileName)));
+
+            // File name for the media : uuid + extension
+            String fileName = mediaMetadataDto.getUuid() + MediaType.getExtension(file.getContentType());
+
+            // File is stored in media folder. Media contains bundle folder
+            String dirBundleDest = FOLDER_MEDIA + "/" + mediaMetadataDto.getUuidBundle() + "/" + fileName;
+            File dirBundle = new File(dirBundleDest);
+            dirBundle.getParentFile().mkdirs();
+
+            BufferedOutputStream stream = new BufferedOutputStream(new FileOutputStream(dirBundle));
             stream.write(bytes);
             stream.close();
-            return fileName;
+
+            // Url to access the file
+            mediaMetadataDto.setUrl(baseUrl + "/" + mediaMetadataDto.getUuidBundle() + "/" + fileName);
+            return true;
         } catch (IOException e) {
-            return null;
+            throw new UploadingFileException("Error uploading file");
         }
     }
 }

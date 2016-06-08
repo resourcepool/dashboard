@@ -1,17 +1,12 @@
 package com.excilys.shooflers.dashboard.server.rest;
 
-import com.excilys.shooflers.dashboard.server.dao.RevisionDao;
 import com.excilys.shooflers.dashboard.server.dto.BundleMetadataDto;
-import com.excilys.shooflers.dashboard.server.dto.mapper.BundleDtoMapperImpl;
 import com.excilys.shooflers.dashboard.server.security.annotation.RequireValidApiKey;
 import com.excilys.shooflers.dashboard.server.security.annotation.RequireValidUser;
 import com.excilys.shooflers.dashboard.server.service.BundleService;
+import com.excilys.shooflers.dashboard.server.service.RevisionService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -26,10 +21,7 @@ public class BundleController {
     private BundleService bundleService;
 
     @Autowired
-    private BundleDtoMapperImpl mapper;
-
-    @Autowired
-    private RevisionDao revisionDao;
+    private RevisionService revisionService;
 
     /**
      * Get all Bundle.
@@ -39,8 +31,8 @@ public class BundleController {
     @RequestMapping(method = RequestMethod.GET)
     @RequireValidApiKey
     public List<BundleMetadataDto> getAll() {
-        List<BundleMetadataDto> bundles = mapper.toListDto(bundleService.getAll());
-        bundles.forEach(b -> b.setRevision(revisionDao.getLatest()));
+        List<BundleMetadataDto> bundles = bundleService.getAll();
+        bundles.forEach(b -> b.setRevision(revisionService.getLatest()));
         return bundles;
     }
 
@@ -52,7 +44,7 @@ public class BundleController {
     @RequireValidUser
     @RequestMapping(method = RequestMethod.POST)
     public BundleMetadataDto save(@RequestBody BundleMetadataDto bundleMetadataDto) {
-        return mapper.toDto(bundleService.create(mapper.fromDto(bundleMetadataDto)));
+        return bundleService.create(bundleMetadataDto);
     }
 
     /**
@@ -64,7 +56,7 @@ public class BundleController {
     @RequestMapping(value = "{uuid}", method = RequestMethod.GET)
     @RequireValidApiKey
     public BundleMetadataDto get(@PathVariable("uuid") String uuid) {
-        return mapper.toDto(bundleService.get(uuid));
+        return bundleService.get(uuid);
     }
 
     /**
@@ -76,7 +68,7 @@ public class BundleController {
     @RequestMapping(method = RequestMethod.PUT)
     @RequireValidUser
     public BundleMetadataDto update(@RequestBody BundleMetadataDto bundle) {
-        return mapper.toDto(bundleService.update(mapper.fromDto(bundle)));
+        return bundleService.update(bundle);
     }
 
     /**

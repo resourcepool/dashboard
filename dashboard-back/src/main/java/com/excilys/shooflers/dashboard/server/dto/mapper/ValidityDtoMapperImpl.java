@@ -14,20 +14,14 @@ public class ValidityDtoMapperImpl implements MapperDto<Validity, ValidityDto> {
 
     @Override
     public ValidityDto toDto(Validity model) {
-        if (model == null) {
-            return null;
-        }
-        return new ValidityDto(model.getStart().format(FORMATTER), model.getEnd().format(FORMATTER));
+        return model != null ? new ValidityDto(model.getStart().format(FORMATTER), model.getEnd().format(FORMATTER)) : null;
     }
 
     @Override
     public Validity fromDto(ValidityDto dto) {
-        if (dto == null) {
-            return null;
-        }
-        return new Validity.Builder()
+        return dto != null ? new Validity.Builder()
                 .start(LocalDateTime.parse(dto.getStart(), FORMATTER))
                 .end(LocalDateTime.parse(dto.getEnd(), FORMATTER))
-                .build();
+                .build() : null;
     }
 }

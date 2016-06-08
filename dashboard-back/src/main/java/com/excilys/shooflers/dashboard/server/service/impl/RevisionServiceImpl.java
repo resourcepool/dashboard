@@ -127,4 +127,16 @@ public class RevisionServiceImpl implements RevisionService {
     public long getLatest() {
         return revisionDao.getLatest();
     }
+
+    @Override
+    public Revision add(Revision.Action action, String target, Revision.Type type, String result) {
+        Revision revision = new Revision();
+        revision.setRevision(getLatest() + 1);
+        revision.setAction(action);
+        revision.setTarget(target);
+        revision.setResult(result);
+        revision.setType(type);
+        revisionDao.save(revision);
+        return revision;
+    }
 }

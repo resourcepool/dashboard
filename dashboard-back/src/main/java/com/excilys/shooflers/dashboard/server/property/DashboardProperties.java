@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 @ConfigurationProperties
 public class DashboardProperties {
     private String basePath = System.getProperty("user.dir") + "/db";
+    private String baseResources = System.getProperty("user.dir") + "/public";
     private String apiKey = "default";
     private String adminLogin = "admin";
     private String adminPassword = "admin";
@@ -59,6 +60,10 @@ public class DashboardProperties {
 
     public String getBaseUrl() {
         return baseUrl;
+    }
+
+    public String getBaseResources() {
+        return baseResources;
     }
 
     public void setBaseUrl(String baseUrl) {

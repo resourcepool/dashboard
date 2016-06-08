@@ -14,7 +14,7 @@ public class MediaDtoMapperImpl implements MapperDto<MediaMetadata, MediaMetadat
 
     @Override
     public MediaMetadataDto toDto(MediaMetadata model) {
-        return new MediaMetadataDto.Builder()
+        return model != null ? new MediaMetadataDto.Builder()
                 .uuid(model.getUuid())
                 .name(model.getName())
                 .duration(model.getDuration())
@@ -22,12 +22,12 @@ public class MediaDtoMapperImpl implements MapperDto<MediaMetadata, MediaMetadat
                 .validity(validityDtoMapper.toDto(model.getValidity()))
                 .url(model.getUrl())
                 .uuidBundle(model.getBundleTag())
-                .build();
+                .build() : null;
     }
 
     @Override
     public MediaMetadata fromDto(MediaMetadataDto dto) {
-        return new MediaMetadata.Builder()
+        return dto != null ? new MediaMetadata.Builder()
                 .uuid(dto.getUuid())
                 .name(dto.getName())
                 .duration(dto.getDuration())
@@ -35,6 +35,6 @@ public class MediaDtoMapperImpl implements MapperDto<MediaMetadata, MediaMetadat
                 .validity(validityDtoMapper.fromDto(dto.getValidity()))
                 .url(dto.getUrl())
                 .bundleTag(dto.getUuidBundle())
-                .build();
+                .build() : null;
     }
 }
