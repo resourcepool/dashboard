@@ -15,6 +15,7 @@ public class DashboardProperties {
     private String adminPassword = "admin";
     private long sessionTimeout = 10;
     private String baseUrl = "http://localhost:8080";
+    private boolean serviceDiscoveryEnabled = true;
 
     public String getApiKey() {
         return apiKey;
@@ -66,5 +67,13 @@ public class DashboardProperties {
             baseUrl = baseUrl.substring(0, baseUrl.length() - 1);
         }
         this.baseUrl = baseUrl;
+    }
+
+    public boolean isServiceDiscoveryEnabled() {
+        return serviceDiscoveryEnabled;
+    }
+
+    public void setServiceDiscoveryEnabled(boolean serviceDiscoveryEnabled) {
+        this.serviceDiscoveryEnabled = serviceDiscoveryEnabled;
     }
 }
