@@ -1,11 +1,10 @@
 package com.excilys.shooflers.dashboard.server.rest;
 
-import com.excilys.shooflers.dashboard.server.dao.BundleDao;
 import com.excilys.shooflers.dashboard.server.dao.RevisionDao;
 import com.excilys.shooflers.dashboard.server.dto.BundleMetadataDto;
 import com.excilys.shooflers.dashboard.server.dto.mapper.BundleDtoMapperImpl;
-import com.excilys.shooflers.dashboard.server.model.Revision;
 import com.excilys.shooflers.dashboard.server.security.annotation.RequireValidUser;
+import com.excilys.shooflers.dashboard.server.service.BundleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -24,7 +23,7 @@ import java.util.List;
 public class BundleController {
 
     @Autowired
-    private BundleDao bundleDao;
+    private BundleService bundleService;
 
     @Autowired
     private BundleDtoMapperImpl mapper;
@@ -39,7 +38,7 @@ public class BundleController {
      */
     @RequestMapping(method = RequestMethod.GET)
     public List<BundleMetadataDto> getAll() {
-        List<BundleMetadataDto> bundles = mapper.toListDto(bundleDao.getAll());
+        List<BundleMetadataDto> bundles = mapper.toListDto(bundleService.getAll());
         bundles.forEach(b -> b.setRevision(revisionDao.getLatest()));
         return bundles;
     }
@@ -47,19 +46,11 @@ public class BundleController {
     /**
      * Save a new Bundle and add a new revision.
      *
-     * @param bundle Bundle to save
+     * @param bundleMetadataDto Bundle to save
      */
     @RequestMapping(method = RequestMethod.POST)
-    public BundleMetadataDto save(@RequestBody BundleMetadataDto bundle) {
-        bundle = mapper.toDto(bundleDao.save(mapper.fromDto(bundle)));
-        // Create a new revision
-        Revision revision = new Revision();
-        revision.setRevision(revisionDao.getLatest() + 1);
-        revision.setAction(Revision.Action.ADD);
-        revision.setTarget(bundle.getUuid());
-        revision.setType(Revision.Type.BUNDLE);
-        revisionDao.save(revision);
-        return bundle;
+    public BundleMetadataDto save(@RequestBody BundleMetadataDto bundleMetadataDto) {
+        return mapper.toDto(bundleService.create(mapper.fromDto(bundleMetadataDto)));
     }
 
     /**
@@ -70,7 +61,7 @@ public class BundleController {
      */
     @RequestMapping(value = "{uuid}", method = RequestMethod.GET)
     public BundleMetadataDto get(@PathVariable("uuid") String uuid) {
-        return mapper.toDto(bundleDao.get(uuid));
+        return mapper.toDto(bundleService.get(uuid));
     }
 
     /**
@@ -81,21 +72,7 @@ public class BundleController {
      */
     @RequestMapping(method = RequestMethod.PUT)
     public BundleMetadataDto update(@RequestBody BundleMetadataDto bundle) {
-        String oldUuid = bundle.getUuid();
-        if (bundleDao.delete(bundle.getUuid())) {
-            bundle.setUuid(null);
-            bundle = mapper.toDto(bundleDao.save(mapper.fromDto(bundle)));
-            // Create a new revision
-            Revision revision = new Revision();
-            revision.setRevision(revisionDao.getLatest() + 1);
-            revision.setType(Revision.Type.BUNDLE);
-            revision.setTarget(oldUuid);
-            revision.setResult(bundle.getUuid());
-            revision.setAction(Revision.Action.UPDATE);
-            revisionDao.save(revision);
-            return bundle;
-        }
-        return null;
+        return mapper.toDto(bundleService.update(mapper.fromDto(bundle)));
     }
 
     /**
@@ -105,14 +82,6 @@ public class BundleController {
      */
     @RequestMapping(value = "{uuid}", method = RequestMethod.DELETE)
     public void delete(@PathVariable("uuid") String uuid) {
-        if (bundleDao.delete(uuid)) {
-            // Create a new revision
-            Revision revision = new Revision();
-            revision.setRevision(revisionDao.getLatest() + 1);
-            revision.setAction(Revision.Action.DELETE);
-            revision.setTarget(uuid);
-            revision.setType(Revision.Type.BUNDLE);
-            revisionDao.save(revision);
-        }
+        bundleService.delete(uuid);
     }
 }
