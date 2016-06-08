@@ -79,7 +79,7 @@ public class RevisionDaoImpl implements RevisionDao {
     public Long getLatest() {
         File dataFile = getRevFile(REVISION_LATEST_FILE);
         Revision rev = readRevFromFile(dataFile);
-        return rev == null ? null : rev.getRevision();
+        return rev == null ? 0 : rev.getRevision();
     }
 
     private File getRevFile(String rev) {

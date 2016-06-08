@@ -9,7 +9,9 @@ public class User {
 
   private String login;
 
-  private String password;
+  private byte[] password;
+  
+  private byte[] salt;
 
   /**
    * Default constructor.
@@ -29,12 +31,20 @@ public class User {
     this.login = login;
   }
 
-  public String getPassword() {
+  public byte[] getPassword() {
     return password;
   }
 
-  public void setPassword(String password) {
+  public void setPassword(byte[] password) {
     this.password = password;
+  }
+
+  public byte[] getSalt() {
+    return salt;
+  }
+
+  public void setSalt(byte[] salt) {
+    this.salt = salt;
   }
 
   @Override
@@ -57,8 +67,9 @@ public class User {
   @Override
   public String toString() {
     final StringBuilder sb = new StringBuilder("User{");
-    sb.append(", login='").append(login);
+    sb.append(", attemptLogin='").append(login);
     sb.append(", password='").append(password);
+    sb.append(", salt='").append(salt);
     sb.append('}');
     return sb.toString();
   }
@@ -85,8 +96,13 @@ public class User {
       return this;
     }
 
-    public Builder password(String password) {
+    public Builder password(byte[] password) {
       user.setPassword(password);
+      return this;
+    }
+
+    public Builder salt(byte[] salt) {
+      user.setSalt(salt);
       return this;
     }
 

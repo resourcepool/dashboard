@@ -35,29 +35,7 @@ public class BasicAuthUtils {
     String password = loginAndPassword[1];
     return User.builder()
       .login(login)
-      .password(password)
+      .password(password.getBytes())
       .build();
-  }
-  
-  public static boolean isValidPassword(String password) {
-    return password != null && !password.trim().isEmpty() && noHtmlText(password);
-  }
-
-  /**
-   * Check whether a string contains html tags.
-   *
-   * @param value the string to test
-   * @return true if the value is valid, false otherwise
-   */
-  private static boolean noHtmlText(String value) {
-    if (value == null) {
-      return true;
-    } else if (value.contains("<") | value.contains(">") | value.contains("=") | value.matches(".*\\\".*")) {
-      return false;
-    } else if (value.contains("&gt") | value.contains("&lt") | value.contains("&quot")) {
-      return false;
-    }
-
-    return true;
   }
 }

@@ -1,7 +1,7 @@
 package com.excilys.shooflers.dashboard.server.security.aspect;
 
 import com.excilys.shooflers.dashboard.server.security.annotation.RequireValidUser;
-import com.excilys.shooflers.dashboard.server.service.SessionServiceImpl;
+import com.excilys.shooflers.dashboard.server.service.SessionService;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -27,7 +27,7 @@ public class RequireValidUserAspect {
   private static final Logger LOGGER = LoggerFactory.getLogger(RequireValidUserAspect.class);
 
   @Autowired
-  private SessionServiceImpl sessionService;
+  private SessionService sessionService;
 
   /**
    * Picks out RequireValidUser annotation on Method.
@@ -68,7 +68,7 @@ public class RequireValidUserAspect {
     Object returnValue = null;
     try {
       LOGGER.debug("In assertValidToken aspect");
-      sessionService.assertValidUser();
+      sessionService.validateUser();
       returnValue = joinPoint.proceed();
     } catch (RuntimeException e) {
       HttpServletResponse response = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getResponse();
@@ -76,8 +76,6 @@ public class RequireValidUserAspect {
       throw e;
     } catch (Throwable throwable) {
       throw new IllegalStateException(throwable);
-    } finally {
-      sessionService.clearThreadLocal();
     }
     return returnValue;
   }

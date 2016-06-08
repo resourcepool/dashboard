@@ -8,6 +8,12 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
+
+import javax.servlet.http.HttpServletResponse;
+
+import static com.excilys.shooflers.dashboard.server.service.SessionServiceImpl.REALM;
 
 /**
  * @author Loïc Ortola on 07/06/2016.
@@ -59,9 +65,11 @@ public class RequireValidApiKeyAspect {
   public Object checkValidApiKey(ProceedingJoinPoint joinPoint) {
     Object returnValue = null;
     try {
-      sessionService.assertValidApiKey();
+      sessionService.validateApiKey();
       returnValue = joinPoint.proceed();
     } catch (RuntimeException e) {
+      HttpServletResponse response = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getResponse();
+      response.setHeader("WWW-Authenticate", "Basic realm=\"" + REALM + "\"");
       throw e;
     } catch (Throwable throwable) {
       throw new IllegalStateException(throwable);
