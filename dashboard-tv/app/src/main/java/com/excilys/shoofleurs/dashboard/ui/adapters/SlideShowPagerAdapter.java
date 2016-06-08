@@ -3,23 +3,23 @@ package com.excilys.shoofleurs.dashboard.ui.adapters;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 
-import com.excilys.shoofleurs.dashboard.ui.controllers.SlideShowController;
 import com.excilys.shoofleurs.dashboard.ui.displayables.AbstractDisplayable;
 import com.excilys.shoofleurs.dashboard.ui.displayables.Displayable;
 import com.excilys.shoofleurs.dashboard.ui.fragments.DisplayableFragment;
 import com.excilys.shoofleurs.dashboard.ui.utils.LoopingPagerAdapter;
+import com.excilys.shoofleurs.dashboard.ui.views.DashboardView;
 
 import java.util.List;
 
 public class SlideShowPagerAdapter extends LoopingPagerAdapter<AbstractDisplayable> implements AbstractDisplayable.OnCompletionListener {
     private List<AbstractDisplayable> mDisplayables;
-    private SlideShowController mController;
+    private DashboardView mDashboardView;
     private int mCurrentPage;
 
-    public SlideShowPagerAdapter(FragmentManager fragmentManager, SlideShowController controller, List<AbstractDisplayable> displayables) {
+    public SlideShowPagerAdapter(FragmentManager fragmentManager, DashboardView dashboardView, List<AbstractDisplayable> displayables) {
         super(fragmentManager, displayables);
         this.mDisplayables = displayables;
-        this.mController = controller;
+        this.mDashboardView = dashboardView;
     }
 
     @Override
@@ -39,15 +39,15 @@ public class SlideShowPagerAdapter extends LoopingPagerAdapter<AbstractDisplayab
 
     @Override
     public void onDisplayableCompletion() {
-        mController.nextPage();
+        mDashboardView.nextMedia();
     }
 
     @Override
     public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 //        if (positionOffset == 0) {
-//            mController.getDashboardActivity().showBackground();
+//            mDashboardView.getDashboardActivity().showBackground();
 //        } else {
-//            mController.getDashboardActivity().hideBackground();
+//            mDashboardView.getDashboardActivity().hideBackground();
 //        }
     }
 
