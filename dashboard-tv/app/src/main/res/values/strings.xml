@@ -8,4 +8,7 @@
     <string name="debug_no_connection_error">No internet connection…</string>
     <string name="debug_download_content">Downloading content…</string>
     <string name="debug_no_slideshows_to_display">No slideshows to display…</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

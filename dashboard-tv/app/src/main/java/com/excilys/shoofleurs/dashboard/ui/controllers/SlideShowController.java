@@ -25,6 +25,7 @@ import butterknife.ButterKnife;
  * This class represents the controller of the slideshows display.
  */
 public class SlideShowController {
+    private static final String TAG = "SlideShowController";
     private DashboardActivity mDashboardActivity;
 
     @BindView(R.id.view_pager)
@@ -63,7 +64,7 @@ public class SlideShowController {
     }
 
     public void addSlideShows(List<SlideShow> slideShows) {
-        Log.d(getClass().getSimpleName(), "addSlideShows: " + slideShows);
+        Log.d(TAG, "addSlideShows: " + slideShows);
         for (SlideShow d : slideShows) {
             if (!mSlideShowQueue.contains(d)) {
                 mSlideShowQueue.add(d);
@@ -93,7 +94,7 @@ public class SlideShowController {
     public void replaceSlideShow(SlideShow newSlideShow) {
         stopSlideShow();
         mCurrentSlideShow = newSlideShow;
-        Log.i(DashboardActivity.class.getSimpleName(), "replaceSlideShow: " + mCurrentSlideShow);
+        Log.i(TAG, "replaceSlideShow: " + mCurrentSlideShow);
         startSlideShow();
     }
 
@@ -108,7 +109,7 @@ public class SlideShowController {
      * Start the display of the current slideshow
      */
     public void startSlideShow() {
-        Log.i(getClass().getSimpleName(), "startSlideShow " + mCurrentSlideShow);
+        Log.i(TAG, "startSlideShow " + mCurrentSlideShow);
         mCurrentContentIndex = 0;
 
         if (mCurrentSlideShow != null) {
@@ -149,9 +150,5 @@ public class SlideShowController {
         if (mViewPager != null) {
             mViewPager.setCurrentItem(previousPage, true);
         }
-    }
-
-    public DashboardActivity getDashboardActivity() {
-        return mDashboardActivity;
     }
 }

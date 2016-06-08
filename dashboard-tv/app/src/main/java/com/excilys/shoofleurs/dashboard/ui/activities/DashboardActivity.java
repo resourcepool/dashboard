@@ -9,12 +9,9 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.excilys.shoofleurs.dashboard.R;
-import com.excilys.shoofleurs.dashboard.rest.events.MessageUpdatesEvent;
-import com.excilys.shoofleurs.dashboard.rest.events.MessageUpdatesResponseEvent;
 import com.excilys.shoofleurs.dashboard.rest.events.SlideShowUpdatesEvent;
 import com.excilys.shoofleurs.dashboard.rest.events.SlideShowUpdatesResponseEvent;
 import com.excilys.shoofleurs.dashboard.ui.DashboardApplication;
-import com.excilys.shoofleurs.dashboard.ui.controllers.MessageController;
 import com.excilys.shoofleurs.dashboard.ui.controllers.SlideShowController;
 import com.excilys.shoofleurs.dashboard.ui.event.SetDebugMessageEvent;
 import com.excilys.shoofleurs.dashboard.ui.factories.AnimatorFactory;
@@ -33,6 +30,7 @@ import butterknife.ButterKnife;
  * displays them.
  */
 public class DashboardActivity extends FragmentActivity {
+    private static final String TAG = "DashboardActivity";
     private AnimatorSet[] mProgressAnimators = new AnimatorSet[4];
     /**
      * The waiting view points
@@ -58,10 +56,6 @@ public class DashboardActivity extends FragmentActivity {
      */
     private SlideShowController mSlideShowController;
 
-    /**
-     * The controller of cnn messages
-     */
-    private MessageController mMessageController;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -77,14 +71,8 @@ public class DashboardActivity extends FragmentActivity {
             mSlideShowController = new SlideShowController(this);
         }
 
-        mMessageController = new MessageController(this);
-
-        checkUpdates();
-    }
-
-    private void checkUpdates() {
+        /*Check slideshows updates*/
         mEventBus.post(new SlideShowUpdatesEvent());
-        mEventBus.post(new MessageUpdatesEvent());
     }
 
     /**
@@ -113,7 +101,7 @@ public class DashboardActivity extends FragmentActivity {
         if (mBackgroundLayout.getVisibility() == View.INVISIBLE) {
             return;
         }
-        Log.v(DashboardActivity.class.getSimpleName(), "hideBackground");
+        Log.v(TAG, "hideBackground");
         mBackgroundLayout.setVisibility(View.INVISIBLE);
     }
 
@@ -121,7 +109,7 @@ public class DashboardActivity extends FragmentActivity {
         if (mBackgroundLayout.getVisibility() == View.VISIBLE) {
             return;
         }
-        Log.v(DashboardActivity.class.getSimpleName(), "showBackground");
+        Log.v(TAG, "showBackground");
         mBackgroundLayout.setVisibility(View.VISIBLE);
     }
 
@@ -156,10 +144,5 @@ public class DashboardActivity extends FragmentActivity {
     @Subscribe
     public void onSlideShowUpdatesResponseEvent(SlideShowUpdatesResponseEvent slideShowUpdatesResponseEvent) {
         mSlideShowController.addSlideShows(slideShowUpdatesResponseEvent.getSlideShows());
-    }
-
-    @Subscribe
-    public void onMessageUpdatesResponseEvent(MessageUpdatesResponseEvent messageUpdatesResponseEvent) {
-        mMessageController.addMessages(messageUpdatesResponseEvent.getMessages());
     }
 }

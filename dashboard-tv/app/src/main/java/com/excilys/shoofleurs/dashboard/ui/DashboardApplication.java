@@ -2,7 +2,7 @@ package com.excilys.shoofleurs.dashboard.ui;
 
 import android.app.Application;
 
-import com.excilys.shoofleurs.dashboard.rest.service.MessageService;
+import com.excilys.shoofleurs.dashboard.rest.service.NewsService;
 import com.excilys.shoofleurs.dashboard.rest.service.SlideShowService;
 import com.facebook.drawee.backends.pipeline.Fresco;
 
@@ -13,7 +13,7 @@ import org.greenrobot.eventbus.EventBus;
  */
 public class DashboardApplication extends Application {
     private SlideShowService mSlideShowService;
-    private MessageService mMessageService;
+    private NewsService mNewsService;
     private EventBus mEventBus;
 
     @Override
@@ -21,7 +21,7 @@ public class DashboardApplication extends Application {
         super.onCreate();
         mEventBus = EventBus.getDefault();
         mSlideShowService = new SlideShowService(mEventBus);
-        mMessageService = new MessageService(mEventBus);
+        mNewsService = new NewsService(mEventBus);
         Fresco.initialize(getApplicationContext());
     }
 
@@ -29,8 +29,8 @@ public class DashboardApplication extends Application {
         return mSlideShowService;
     }
 
-    public MessageService getMessageService() {
-        return mMessageService;
+    public NewsService getNewsService() {
+        return mNewsService;
     }
 
     public EventBus getEventBus() {

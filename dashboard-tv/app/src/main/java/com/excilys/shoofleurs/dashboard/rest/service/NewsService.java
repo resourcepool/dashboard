@@ -22,16 +22,15 @@ import retrofit2.Response;
 /**
  * This class performs all messages requests to the server.W
  */
-public class MessageService {
+public class NewsService {
     private MessageApi mMessageApi;
     private EventBus mEventBus;
 
-    public MessageService(EventBus eventBus) {
+    public NewsService(EventBus eventBus) {
         this.mEventBus = eventBus;
         mEventBus.register(this);
         mMessageApi = ServiceGenerator.createService(MessageApi.class);
     }
-
 
     @Subscribe
     public void onMessageUpdatesEvent(MessageUpdatesEvent messageUpdatesEvent) {
@@ -45,18 +44,18 @@ public class MessageService {
                     List<Message> messages = JsonMapperUtils.getServerResponseContent(serverResponse, new TypeReference<List<Message>>() {
                     });
 
-                    Log.i(MessageService.class.getSimpleName(), "onResponse: " + messages);
+                    Log.i(NewsService.class.getSimpleName(), "onResponse: " + messages);
                     if (messages.size() != 0) {
                         mEventBus.post(new MessageUpdatesResponseEvent(messages));
                     } else {
-                        Log.i(MessageService.class.getSimpleName(), "checkUpdate onResponse: empty");
+                        Log.i(NewsService.class.getSimpleName(), "checkUpdate onResponse: empty");
                     }
                 }
             }
 
             @Override
             public void onFailure(Call<ServerResponse> call, Throwable t) {
-                Log.e(MessageService.class.getSimpleName(), "checkUpdate onErrorResponse: " + t.toString());
+                Log.e(NewsService.class.getSimpleName(), "checkUpdate onErrorResponse: " + t.toString());
                 /**TODO renvoyer la requete si le réseau est disponible à nouveau **/
             }
         });

@@ -88,55 +88,13 @@
         android:id="@+id/view_pager"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-
-
     </com.excilys.shoofleurs.dashboard.ui.utils.ViewPagerCustomDuration>
 
-    <LinearLayout
+    <fragment
+        android:id="@+id/news_fragment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:background="#a0000000"
-        android:gravity="top"
-        android:orientation="vertical">
-
-        <com.excilys.shoofleurs.dashboard.ui.utils.TypeFaceTextView
-            android:id="@+id/title_cnn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:layout_marginTop="10dp"
-            android:ellipsize="marquee"
-            android:focusable="true"
-            android:focusableInTouchMode="true"
-            android:marqueeRepeatLimit="marquee_forever"
-            android:paddingLeft="5dp"
-            android:paddingRight="5dp"
-            android:scrollHorizontally="true"
-            android:singleLine="true"
-            android:text="@string/title"
-            android:textColor="#FFFFFF"
-            android:textSize="17sp"
-            text:typeface="RobotoCondensed-Regular.ttf" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_margin="10dp">
-
-            <com.excilys.shoofleurs.dashboard.ui.utils.TypeFaceTextView
-                android:id="@+id/text_cnn"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:ellipsize="marquee"
-                android:focusable="false"
-                android:marqueeRepeatLimit="marquee_forever"
-                android:scrollHorizontally="true"
-                android:singleLine="true"
-                android:text="@string/title"
-                android:textColor="#FFFFFF"
-                android:textSize="20sp"
-                text:typeface="Roboto-LightItalic.ttf" />
-        </LinearLayout>
-    </LinearLayout>
+        android:name="com.excilys.shoofleurs.dashboard.ui.fragments.NewsFragment"
+        tools:layout="@layout/fragment_news_bar"/>
 </RelativeLayout>
