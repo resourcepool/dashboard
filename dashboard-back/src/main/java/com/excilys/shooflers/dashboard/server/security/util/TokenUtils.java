@@ -1,6 +1,6 @@
 package com.excilys.shooflers.dashboard.server.security.util;
 
-import com.excilys.shooflers.dashboard.server.model.User;
+import com.excilys.shooflers.dashboard.server.security.model.TokenMetaData;
 import org.apache.commons.codec.binary.Base64;
 
 import javax.servlet.http.HttpServletRequest;
@@ -8,22 +8,29 @@ import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 
 /**
+ * The Session token contains the following information:
+ * attemptLogin:passwordhash:expirationdate
+ * the passwordhash is computed using
+ *
  * @author Loïc Ortola on 07/06/2016.
  */
 public class TokenUtils {
 
   private static StringEncryptor stringEncryptor = new StringEncryptor();
-
+  
   /**
    * Builds an unencrypted token with the user id and the timeout timestamp.
    *
-   * @param login            the User login
+   * @param login            the User attemptLogin
+   * @param hash             a salted-password hash
    * @param timeoutInMinutes the timeout in minutes
    * @return unencrypted token with the user id and the timeout timestamp
    */
-  public static String buildClearToken(String login, long timeoutInMinutes) {
+  public static String buildClearToken(String login, String hash, long timeoutInMinutes) {
     StringBuilder sb = new StringBuilder();
     sb.append(login)
+      .append(":")
+      .append(hash)
       .append(":")
       .append(LocalDateTime.now().plusMinutes(timeoutInMinutes).toInstant(ZoneOffset.UTC).toEpochMilli());
     return sb.toString();
@@ -32,12 +39,12 @@ public class TokenUtils {
   /**
    * Builds an unencrypted token with the user id and the timeout timestamp.
    *
-   * @param login            the User login
+   * @param login            the User attemptLogin
    * @param timeoutInMinutes the timeout in minutes
    * @return unencrypted token with the user id and the timeout timestamp
    */
-  public static String buildToken(String login, long timeoutInMinutes) {
-    String unencrypted = buildClearToken(login, timeoutInMinutes);
+  public static String buildToken(String login, String hash, long timeoutInMinutes) {
+    String unencrypted = buildClearToken(login, hash, timeoutInMinutes);
     return stringEncryptor.encrypt(unencrypted);
   }
 
@@ -64,12 +71,12 @@ public class TokenUtils {
 
   /**
    * Retrieve user meta-data from decrypted token.
+   *
    * @param decryptedToken the decrypted token
-   * @return the user (login only)
+   * @return the user (attemptLogin only)
    */
-  public static User parse(String decryptedToken) {
-    return User.builder()
-      .login(decryptedToken.split(":")[0])
-      .build();
+  public static TokenMetaData parse(String decryptedToken) {
+    String[] explodedToken = decryptedToken.split(":");
+    return new TokenMetaData(explodedToken[0], explodedToken[1]);
   }
 }

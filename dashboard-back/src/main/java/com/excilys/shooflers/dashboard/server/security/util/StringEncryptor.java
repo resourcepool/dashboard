@@ -13,6 +13,8 @@ import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.SecretKeySpec;
+import java.math.BigInteger;
+import java.security.SecureRandom;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -28,11 +30,24 @@ public class StringEncryptor {
 
   // Those variables are arbitrary. It is the passphrase and salt that will
   // allow the application id generation
-  private static final String PASSWORD = ":*y%F%VF=%k7K*_vQd+Kgr_|N_~feMcSrS+^mYtAc%||M~%-!x|:_UuC^i.puJqIaV|r=7%-b+clrDaHizlktvYJC!CYw+tx=p7sGU*-%ZLWQ%i+9%FXZt=ZPyX%aN_s";
-  private static final byte[] SALT = {(byte) 0xac, (byte) 0xa2, (byte) 0x8f, (byte) 0xaa, (byte) 0x3b, (byte) 0xa3, (byte) 0x25, (byte) 0x2e};
+  public static final SessionIdentifierGenerator SIG = new SessionIdentifierGenerator();
+  private static final String PASSWORD = SIG.nextPassword();
+  private static final byte[] SALT = SIG.nextSalt();
 
   private SecretKey key;
 
+  public static final class SessionIdentifierGenerator {
+    private SecureRandom random = new SecureRandom();
+
+    public String nextPassword() {
+      return new BigInteger(130, random).toString(32);
+    }
+    
+    public byte[] nextSalt() {
+      return new BigInteger(64, random).toByteArray(); 
+    }
+  }
+  
   /**
    * Default constructor.
    *

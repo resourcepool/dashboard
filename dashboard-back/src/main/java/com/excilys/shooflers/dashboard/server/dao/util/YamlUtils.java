@@ -40,6 +40,9 @@ public class YamlUtils {
 
     public static <T> T read(File dataFile, Class<T> clazz) {
         try {
+            if (!dataFile.exists()) {
+                return null;
+            }
             ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
             InputStream data = new FileInputStream(dataFile);
             return mapper.readValue(data, clazz);
