@@ -13,19 +13,19 @@ public class BundleDtoMapperImpl implements MapperDto<BundleMetadata, BundleMeta
 
     @Override
     public BundleMetadataDto toDto(BundleMetadata model) {
-        return new BundleMetadataDto.Builder()
+        return model != null ? new BundleMetadataDto.Builder()
                 .uuid(model.getUuid())
                 .name(model.getName())
                 .validity(validityDtoMapper.toDto(model.getValidity()))
-                .build();
+                .build() : null;
     }
 
     @Override
     public BundleMetadata fromDto(BundleMetadataDto dto) {
-        return new BundleMetadata.Builder()
+        return dto != null ? new BundleMetadata.Builder()
                 .uuid(dto.getUuid())
                 .name(dto.getName())
                 .validity(validityDtoMapper.fromDto(dto.getValidity()))
-                .build();
+                .build() : null;
     }
 }

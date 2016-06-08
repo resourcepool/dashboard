@@ -23,6 +23,7 @@ public class YamlUtils {
         FileOutputStream fos = null;
         try {
             if (!dest.exists()) {
+                dest.getParentFile().mkdirs();
                 dest.createNewFile();
             }
             fos = new FileOutputStream(dest);

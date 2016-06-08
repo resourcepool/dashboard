@@ -25,4 +25,6 @@ public interface RevisionService {
      * @return the latest revision
      */
     long getLatest();
+
+    Revision add(Revision.Action action, String target, Revision.Type type, String result);
 }

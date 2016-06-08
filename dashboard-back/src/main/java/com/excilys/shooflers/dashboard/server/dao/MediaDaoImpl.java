@@ -32,8 +32,8 @@ public class MediaDaoImpl implements MediaDao {
     }
 
     @Override
-    public MediaMetadata get(String uuid) {
-        File dataFile = getBundleFile(uuid);
+    public MediaMetadata get(String uuid, String uuidBundle) {
+        File dataFile = getMediaFile(uuidBundle + "/" + uuid);
         return readBundleFromFile(dataFile);
     }
 
@@ -51,17 +51,17 @@ public class MediaDaoImpl implements MediaDao {
         if (mediaMetadata.getUuid() == null) {
             mediaMetadata.setUuid(UUID.randomUUID().toString());
         }
-        File dest = getBundleFile(mediaMetadata.getUuid());
+        File dest = getMediaFile(mediaMetadata.getBundleTag() + "/" + mediaMetadata.getUuid());
         YamlUtils.store(mediaMetadata, dest);
         return mediaMetadata;
     }
 
     @Override
-    public boolean delete(String uuid) {
-        return YamlUtils.delete(mediaDatabasePath.resolve(uuid + ".yaml").toFile());
+    public boolean delete(String uuid, String uuidBundle) {
+        return YamlUtils.delete(mediaDatabasePath.resolve(uuidBundle + "/" + uuid + ".yaml").toFile());
     }
 
-    private File getBundleFile(String uuid) {
+    private File getMediaFile(String uuid) {
         String dataFileName = uuid + ".yaml";
         return mediaDatabasePath.resolve(dataFileName).toFile();
     }

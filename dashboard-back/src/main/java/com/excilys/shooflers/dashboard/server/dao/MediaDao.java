@@ -17,7 +17,7 @@ public interface MediaDao {
      * @param uuid the media uuid
      * @return the retrieved media or null if no match
      */
-    MediaMetadata get(String uuid);
+    MediaMetadata get(String uuid, String uuidBundle);
 
     /**
      * Retrieve all medias from DB.
@@ -38,5 +38,5 @@ public interface MediaDao {
      *
      * @param uuid The bundle uuid
      */
-    boolean delete(String uuid);
+    boolean delete(String uuid, String uuidBundle);
 }

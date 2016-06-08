@@ -1,6 +1,6 @@
 package com.excilys.shooflers.dashboard.server.service;
 
-import com.excilys.shooflers.dashboard.server.model.metadata.BundleMetadata;
+import com.excilys.shooflers.dashboard.server.dto.BundleMetadataDto;
 
 import java.util.List;
 
@@ -15,21 +15,21 @@ public interface BundleService {
      * @param uuid the bundle uuid
      * @return the retrieved bundle or null if no match
      */
-    BundleMetadata get(String uuid);
+    BundleMetadataDto get(String uuid);
 
     /**
      * Retrieve all bundles from DB.
      *
      * @return the retrieved bundles or empty
      */
-    List<BundleMetadata> getAll();
+    List<BundleMetadataDto> getAll();
 
     /**
      * Create a bundle into DB.
      *
      * @param bundle the bundle meta data
      */
-    BundleMetadata create(BundleMetadata bundle);
+    BundleMetadataDto create(BundleMetadataDto bundle);
 
     /**
      * Update a bundle into DB.
@@ -37,7 +37,7 @@ public interface BundleService {
      * @param bundle the bundle metadata to update
      * @return the new BundleMetadata or null, if failed
      */
-    BundleMetadata update(BundleMetadata bundle);
+    BundleMetadataDto update(BundleMetadataDto bundle);
 
     /**
      * Delete bundle from DB.
