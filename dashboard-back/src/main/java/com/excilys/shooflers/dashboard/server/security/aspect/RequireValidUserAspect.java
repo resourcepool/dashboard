@@ -31,7 +31,7 @@ public class RequireValidUserAspect {
     /**
      * Picks out RequireValidUser annotation on Method.
      *
-     * @see RequireValidUser
+     * @see com.excilys.shooflers.dashboard.server.security.annotation.RequireValidUser
      */
     @Pointcut("@annotation(com.excilys.shooflers.dashboard.server.security.annotation.RequireValidUser)")
     private void methodAnnotatedWithRequireValidUser() {

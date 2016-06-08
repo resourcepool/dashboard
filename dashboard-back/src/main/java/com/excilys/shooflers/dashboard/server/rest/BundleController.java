@@ -3,6 +3,7 @@ package com.excilys.shooflers.dashboard.server.rest;
 import com.excilys.shooflers.dashboard.server.dao.RevisionDao;
 import com.excilys.shooflers.dashboard.server.dto.BundleMetadataDto;
 import com.excilys.shooflers.dashboard.server.dto.mapper.BundleDtoMapperImpl;
+import com.excilys.shooflers.dashboard.server.security.annotation.RequireValidApiKey;
 import com.excilys.shooflers.dashboard.server.security.annotation.RequireValidUser;
 import com.excilys.shooflers.dashboard.server.service.BundleService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +19,6 @@ import java.util.List;
  * @author Loïc Ortola on 07/06/2016.
  */
 @RestController
-@RequireValidUser
 @RequestMapping("/bundle")
 public class BundleController {
 
@@ -37,6 +37,7 @@ public class BundleController {
      * @return List of BundleDto
      */
     @RequestMapping(method = RequestMethod.GET)
+    @RequireValidApiKey
     public List<BundleMetadataDto> getAll() {
         List<BundleMetadataDto> bundles = mapper.toListDto(bundleService.getAll());
         bundles.forEach(b -> b.setRevision(revisionDao.getLatest()));
@@ -48,6 +49,7 @@ public class BundleController {
      *
      * @param bundleMetadataDto Bundle to save
      */
+    @RequireValidUser
     @RequestMapping(method = RequestMethod.POST)
     public BundleMetadataDto save(@RequestBody BundleMetadataDto bundleMetadataDto) {
         return mapper.toDto(bundleService.create(mapper.fromDto(bundleMetadataDto)));
@@ -60,6 +62,7 @@ public class BundleController {
      * @return Bundle found if bundle exists
      */
     @RequestMapping(value = "{uuid}", method = RequestMethod.GET)
+    @RequireValidApiKey
     public BundleMetadataDto get(@PathVariable("uuid") String uuid) {
         return mapper.toDto(bundleService.get(uuid));
     }
@@ -71,6 +74,7 @@ public class BundleController {
      * @return
      */
     @RequestMapping(method = RequestMethod.PUT)
+    @RequireValidUser
     public BundleMetadataDto update(@RequestBody BundleMetadataDto bundle) {
         return mapper.toDto(bundleService.update(mapper.fromDto(bundle)));
     }
@@ -81,6 +85,7 @@ public class BundleController {
      * @param uuid uuid to delete
      */
     @RequestMapping(value = "{uuid}", method = RequestMethod.DELETE)
+    @RequireValidUser
     public void delete(@PathVariable("uuid") String uuid) {
         bundleService.delete(uuid);
     }

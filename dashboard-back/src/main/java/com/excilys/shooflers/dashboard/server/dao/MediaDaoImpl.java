@@ -47,12 +47,13 @@ public class MediaDaoImpl implements MediaDao {
     }
 
     @Override
-    public void save(MediaMetadata mediaMetadata) {
+    public MediaMetadata save(MediaMetadata mediaMetadata) {
         if (mediaMetadata.getUuid() == null) {
             mediaMetadata.setUuid(UUID.randomUUID().toString());
         }
         File dest = getBundleFile(mediaMetadata.getUuid());
         YamlUtils.store(mediaMetadata, dest);
+        return mediaMetadata;
     }
 
     @Override

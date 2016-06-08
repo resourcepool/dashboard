@@ -1,6 +1,7 @@
 package com.excilys.shooflers.dashboard.server;
 
 
+import com.excilys.shooflers.dashboard.server.rest.utils.FileHelper;
 import com.excilys.shooflers.dashboard.server.security.interceptor.CorsInterceptor;
 import com.google.common.base.Predicates;
 import org.springframework.boot.SpringApplication;
@@ -9,6 +10,7 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.PathSelectors;
@@ -76,6 +78,15 @@ public class DashboardApplication extends WebMvcConfigurerAdapter {
                 .contact("Groupe Excilys")
                 .version("1.0")
                 .build();
+    }
+
+    /**
+     * Set resource directory for media file
+     * @param registry registry
+     */
+    @Override
+    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        registry.addResourceHandler("/public/**").addResourceLocations("file:public/");
     }
 
 }

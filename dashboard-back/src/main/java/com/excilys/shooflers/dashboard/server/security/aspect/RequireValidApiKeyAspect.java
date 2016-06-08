@@ -28,7 +28,7 @@ public class RequireValidApiKeyAspect {
     /**
      * Picks out RequireValidApiKey annotation on Method.
      *
-     * @see RequireValidApiKey
+     * @see com.excilys.shooflers.dashboard.server.security.annotation.RequireValidApiKey
      */
     @Pointcut("@annotation(com.excilys.shooflers.dashboard.server.security.annotation.RequireValidApiKey)")
     private void methodAnnotatedWithRequireValidApiKey() {
