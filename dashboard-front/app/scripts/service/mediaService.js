@@ -10,10 +10,11 @@ angular
     this.getAllByBundle = getAllByBundle;
     this.getById = getById;
     this.removeById = removeById;
+    this.uploadMedia = uploadMedia;
+    this.addWebContent = addWebContent;
 
     /*
     this.update = update;
-    this.create = create;
     this.formatDateTime = formatDateTime;
     */
 
@@ -27,7 +28,7 @@ angular
     function getById(mediaId) {
       return $http.get(API.BASE_URL + "/media/media.js")
         .then(function(success) {
-          return formatDateTime(success.data);
+          return success.data;
         });
     }
 
@@ -38,6 +39,30 @@ angular
         })
     }
 
+    function addWebContent(media) {
+      return $http.post(API.BASE_URL + "medias", media, {
+          headers : {
+           'Content-Type': 'application/json',
+           'Accept': 'application/json',
+          }
+        }).then(function(response) {
+          return response;
+        });
+    }
+
+    function uploadMedia(media, file) {
+      var fileForm = new FormData();
+      fileForm.append('file', file);
+
+      return $http.post(API.BASE_URL + "medias", fileForm, {
+          headers: {
+                'Content-Type': undefined,
+                'Content': JSON.stringify($scope.content)
+          }
+        }).then(function(response) {
+          return response;
+        });
+    }
 
     function formatDateTime(medias) {
       for (var media of medias) {

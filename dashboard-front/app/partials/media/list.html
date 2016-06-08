@@ -24,13 +24,19 @@
       </thead>
       <tbody>
       <tr ng-repeat="media in medias">
-        <td><a href="#/bundle/:bundleId/media/edit/{{ media.uuid }}"><span aria-hidden="true" class="glyphicon glyphicon-file"></span> {{ media.name }} </a></td>
-
+      	<td >
+      		<a href="{{ media.url }}">
+      			<span ng-if="media['@type'] == 'ImageContent'" class="glyphicon glyphicon-picture"></span> 
+      			<span ng-if="media['@type'] == 'WebContent'" class="glyphicon glyphicon-link"></span>
+      			<span ng-if="media['@type'] == 'VideoContent'" class="glyphicon glyphicon-film"></span>  
+      			{{ media.name }}
+      		</a>
+      	</td>
         <td>{{ media.validity.start }}</td>
         <td>{{ media.validity.start }}</td>
         <td>
           <button class="btn-default btn btn-sm" ng-click="remove(media.uuid);" ><span aria-hidden="true" class="glyphicon glyphicon-remove"></span></button>
-          <a class="btn-default btn btn-sm" href="#/bundle/:bundleId/media/edit/{{ media.uuid }}" ><span aria-hidden="true" class="glyphicon glyphicon-edit"></span></a>
+          <a class="btn-default btn btn-sm" href="#/bundle/{{ bundle.uuid }}/media/edit/{{ media.uuid }}" ><span aria-hidden="true" class="glyphicon glyphicon-edit"></span></a>
         </td>
       </tr>
       </tbody>

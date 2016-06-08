@@ -12,7 +12,7 @@
   {
     "uuid": "idmedia01",
     "uuidBundle": "idbundle01",
-    "@type": "ImageContent",
+    "@type": "VideoContent",
     "duration":5,
     "name": "Titre1",
     "duration": 3000,
@@ -22,7 +22,7 @@
   {
     "uuid": "idmedia01",
     "uuidBundle": "idbundle01",
-    "@type": "ImageContent",
+    "@type": "WebContent",
     "duration":5,
     "name": "Titre1",
     "duration": 3000,

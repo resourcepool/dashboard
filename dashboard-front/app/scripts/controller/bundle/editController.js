@@ -5,7 +5,9 @@
 
 angular
   .module('dashboardFrontApp')
-  .controller('BundleEditController', ['$scope', '$http', '$routeParams', '$window', 'DATE', 'bundleService', 'dateService', function ($scope, $http, $routeParams, $window, DATE, bundleService, dateService) {
+  .controller('BundleEditController', 
+    ['$scope', '$http', '$routeParams', '$window', 'DATE', 'bundleService', 'dateService', 
+    function ($scope, $http, $routeParams, $window, DATE, bundleService, dateService) {
 
     var id = $routeParams.bundleId;
 

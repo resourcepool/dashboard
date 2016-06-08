@@ -19,7 +19,8 @@ angular
       "GET_MEDIA": "Cannot get media",
       "GET_MEDIAS": "Cannot get metdas",
       "DELETE_BUNDLE": "Cannot delete bundle",
-      "DELETE_MEDIA": "Cannot delete media"
+      "DELETE_MEDIA": "Cannot delete media",
+      "UPLOAD_MEDIA": "Error when trying to upload media"
     },
     "SUCC" : {
       "ADD_BUNDLE" : "Bundle created with success",
