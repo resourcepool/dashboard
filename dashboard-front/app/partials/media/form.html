@@ -10,8 +10,12 @@
     <div class="col-xs-8 col-xs-offset-1 box">
       <form name="form" ng-submit="submit(form.$valid)" novalidate>
         <fieldset>
-
-          <legend>{{ title }}</legend>
+          <legend>{{ title }} 
+            <span ng-if="media['@type'] == 'ImageContent'" class="glyphicon glyphicon-picture"></span> 
+            <span ng-if="media['@type'] == 'WebContent'" class="glyphicon glyphicon-link"></span>
+            <span ng-if="media['@type'] == 'VideoContent'" class="glyphicon glyphicon-film"></span>
+            {{  media.name }}  
+          </legend>
           <p ng-show="loading">Sending ... <img src="images/loader.gif"></p>
 
           <div class="form-group">

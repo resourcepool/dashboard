@@ -5,102 +5,58 @@
 
 angular
   .module('dashboardFrontApp')
-  .controller('ContentEditCtrl', ['$scope', '$http', '$routeParams', '$window', 'API', function ($scope, $http, $routeParams, $window, API) {
-    var idContent = $routeParams.contentId;
-    var idSlideShow = $routeParams.slideshowId;
+  .controller('MediaEditController', ['$scope', '$http', '$routeParams', '$window', 'API', 'MSG', 'bundleService', 'mediaService',
+    function ($scope, $http, $routeParams, $window, API, MSG, bundleService, mediaService ) {
 
-    $scope.content = {};
-    $scope.title = "Edit Content";
+      var bundleId = $routeParams.bundleId;
+      var mediaId = $routeParams.mediaId;
 
-    // On récupère le slideshow correspond
-    $http({
-      method: 'GET',
-      url: API.BASE_URL + "slideshows/" + idSlideShow + "?json=light"
-    }).then(function(success) {
-      $scope.content.bundle = angular.fromJson(success.data.objectAsJson);
-      console.log($scope.bundle);
-      console.log(success);
-      $scope.title = "Edit content from " + $scope.content.bundle.title;
-    }, function(error) {
-      console.log(error);
-    });
+      $scope.bundle = {};
+      $scope.media = {};
+      $scope.file = {};
+      $scope.title = "Edit";
+      $scope.loading = false;
 
-    // On récupère le content
-    $http({
-      method: 'GET',
-      url: API.BASE_URL + "contents/" + idContent
-    }).then(function(success) {
-      console.log(success);
-      $scope.content = angular.fromJson(success.data.objectAsJson);
-      console.log($scope.content);
-      //$scope.title = "Edit content from " + $scope
+      // On récupère le bundle correspondant
+      bundleService.getById(bundleId).then(function(data) {
+        console.log(data);
+        $scope.bundle = data;
+        $scope.nav = "Edit " + $scope.bundle.name;
+      }, function(error) {
+        $scope.error = MSG.ERR.GET_BUNDLE;
+      });
 
-    }, function(error) {
-      console.log(error);
-      // traitement
-      // $location.path : redirection
-    });
 
-    $scope.remove = function(id) {
-      if (confirm("Do you want to delete selected content ?")) {
-        $http.delete(API.BASE_URL + "contents/" + id)
-          .success(function (success) {
-            console.log(success);
-            $window.location.href = '#/dashboard';
-          })
-          .error(function (error) {
-            console.log(error);
-          });
-      }
-    };
+      // On récupère le bundle correspondant
+      mediaService.getById(bundleId).then(function(data) {
+        console.log(data);
+        $scope.media = data;
+      }, function(error) {
+        $scope.error = MSG.ERR.GET_MEDIA;
+      });
 
-    $scope.submit = function (isValid) {
-      console.log(isValid);
 
+      // on définit la fonction de submit
+      $scope.submit = function (isValid) {
       if (isValid) {
+        $scope.loading = true;
 
-        $("#status").show();
-        // si upload de type Web Content
         if ($scope.content['@type'] == 'WebContent') {
-          $http(uploadWebContentRequest).then(
-            function success(response) {
-              console.log(response);
-              $window.location.href = '#/dashboard';
-            },
-            function error(response) {
-              console.log(response);
-            }
-          )
+          mediaService.addWebContent($scope.media).then(function(response) {
+            console.log(response);
+            $window.location.href = '#/bundle/' + bundleId;
+          }, function(error){
+            $scope.error = MSG.ERR.UPLOAD_MEDIA;
+          });
         }
-
-        // sinon upload d'une image ou video
         else {
-
-          var file = $scope.file;
-          console.log($scope.content);
-          console.log('file is ' );
-          console.dir(file);
-          //$scope.content.file = file;
-
-          var fileForm = new FormData();
-          fileForm.append('file', file);
-
-          $http.post(API.BASE_URL + "contents", fileForm, {
-            //transformRequest: angular.identity,
-            headers: {
-              'Content-Type': undefined,
-              'Content': JSON.stringify($scope.content)
-            }
-          })
-            .success(function(success) {
-              console.log(success);
-              $window.location.href = '#/dashboard';
-            })
-            .error(function(error) {
-              console.log(error);
+            mediaService.uploadMedia($scope.media, $scope.file).then(function(response) {
+              console.log(response);
+              $window.location.href = '#/bundle/' + bundleId;
+            }, function(error){
+              $scope.error = MSG.ERR.UPLOAD_MEDIA;
             });
+          }
         }
       }
-    }
-
   }]);
