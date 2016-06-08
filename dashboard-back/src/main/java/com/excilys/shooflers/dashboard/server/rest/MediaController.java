@@ -74,7 +74,7 @@ public class MediaController {
             mediaMetadataDto.setUuid(UUID.randomUUID().toString());
             String fileName = FileHelper.saveFile(multipartFile, mediaMetadataDto.getUuid());
             if (fileName != null) {
-                mediaMetadataDto.setUrl(props.getBaseUrl() + fileName);
+                mediaMetadataDto.setUrl(props.getBaseUrl() + "/" + fileName);
                 mediaMetadataDto = mapper.toDto(mediaDao.save(mapper.fromDto(mediaMetadataDto)));
             }
         }

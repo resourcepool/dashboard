@@ -14,7 +14,7 @@ public class DashboardProperties {
     private String adminLogin = "admin";
     private String adminPassword = "admin";
     private long sessionTimeout = 10;
-    private String baseUrl = "http://localhost:8080/";
+    private String baseUrl = "http://localhost:8080";
 
     public String getApiKey() {
         return apiKey;
@@ -58,5 +58,13 @@ public class DashboardProperties {
 
     public String getBaseUrl() {
         return baseUrl;
+    }
+
+    public void setBaseUrl(String baseUrl) {
+        // Strip last slash if provided to avoid mapping issues.
+        if (baseUrl.endsWith("/")) {
+            baseUrl = baseUrl.substring(0, baseUrl.length() - 1);
+        }
+        this.baseUrl = baseUrl;
     }
 }
