@@ -1,7 +1,6 @@
 package com.excilys.shooflers.dashboard.server;
 
 
-import com.excilys.shooflers.dashboard.server.rest.utils.FileHelper;
 import com.excilys.shooflers.dashboard.server.security.interceptor.CorsInterceptor;
 import com.google.common.base.Predicates;
 import org.springframework.boot.SpringApplication;
@@ -69,6 +68,7 @@ public class DashboardApplication extends WebMvcConfigurerAdapter {
 
     /**
      * Builds the API information for the Swagger library.
+     *
      * @return the API Information
      */
     private ApiInfo apiInfo() {
@@ -82,6 +82,7 @@ public class DashboardApplication extends WebMvcConfigurerAdapter {
 
     /**
      * Set resource directory for media file
+     *
      * @param registry registry
      */
     @Override

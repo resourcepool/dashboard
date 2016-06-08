@@ -112,4 +112,59 @@ public class Revision {
         return result1;
     }
 
+
+    public static Builder builder() {
+        return new Builder();
+    }
+
+    public static final class Builder {
+        private Long revision;
+        private Action action;
+        private Type type;
+        // Target represents the target uuid
+        private String target;
+        // The result is used only when action = update.
+        // As content is immutable, updates actually wrap a content deletion, and a new content.
+        // The result represents the "resulting" uuid (the new one which was added)
+        private String result;
+
+        private Builder() {
+        }
+
+
+        public Builder revision(Long revision) {
+            this.revision = revision;
+            return this;
+        }
+
+        public Builder action(Action action) {
+            this.action = action;
+            return this;
+        }
+
+        public Builder type(Type type) {
+            this.type = type;
+            return this;
+        }
+
+        public Builder target(String target) {
+            this.target = target;
+            return this;
+        }
+
+        public Builder result(String result) {
+            this.result = result;
+            return this;
+        }
+
+        public Revision build() {
+            Revision rev = new Revision();
+            rev.setRevision(revision);
+            rev.setAction(action);
+            rev.setType(type);
+            rev.setTarget(target);
+            rev.setResult(result);
+            return rev;
+        }
+    }
 }
