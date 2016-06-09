@@ -6,7 +6,7 @@ import com.excilys.shoofleurs.dashboard.R;
 import com.excilys.shoofleurs.dashboard.rest.dtos.BundleDto;
 import com.excilys.shoofleurs.dashboard.rest.events.BundleUpdatesEvent;
 import com.excilys.shoofleurs.dashboard.rest.events.BundleUpdatesResponseEvent;
-import com.excilys.shoofleurs.dashboard.rest.mappers.BundleDtoMapper;
+import com.excilys.shoofleurs.dashboard.rest.dtos.mappers.BundleDtoMapper;
 import com.excilys.shoofleurs.dashboard.ui.event.SetDebugMessageEvent;
 
 import org.greenrobot.eventbus.EventBus;
@@ -33,7 +33,7 @@ public class BundleService {
     }
 
     /**
-     * This method checks if new slideshows are available to the server
+     * This method checks if new Bundles are available to the server
      */
     @Subscribe
     public void onBundleUpdatesEvent(BundleUpdatesEvent bundleUpdatesEvent) {

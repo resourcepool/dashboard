@@ -1,33 +1,32 @@
 package com.excilys.shoofleurs.dashboard.ui.displayables;
 
-import com.excilys.shoofleurs.dashboard.model.entities.AbstractContent;
-import com.excilys.shoofleurs.dashboard.model.entities.ImageContent;
-import com.excilys.shoofleurs.dashboard.model.entities.VideoContent;
-import com.excilys.shoofleurs.dashboard.model.entities.WebContent;
+import com.excilys.shoofleurs.dashboard.model.entities.Media;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class DisplayableFactory {
-    public static AbstractDisplayable create(AbstractContent abstractContent, AbstractDisplayable.OnCompletionListener listener) {
-        if (abstractContent instanceof ImageContent) {
-            ImageContent imageContent = (ImageContent) abstractContent;
-            return new ImageDisplayable(imageContent.getUrl(), imageContent.getDurationInSlideShow(), listener);
-        } else if (abstractContent instanceof VideoContent) {
-            VideoContent videoContent = (VideoContent) abstractContent;
-            return new VideoDisplayable(videoContent.getUrl(), listener);
-        } else if (abstractContent instanceof WebContent) {
-            WebContent webContent = (WebContent) abstractContent;
-            return new WebDisplayable(webContent.getUrl(), webContent.getIsAutoScroll() ? 0 : webContent.getDurationInSlideshow(), listener);
+    public static AbstractDisplayable create(Media media, AbstractDisplayable.OnCompletionListener listener) {
+        switch (media.getMediaType()) {
+            case IMAGE_JPG:
+                return new ImageDisplayable(media.getUrl(), 5, listener);
+            case IMAGE_PNG:
+                return new ImageDisplayable(media.getUrl(), 5, listener);
+            case VIDEO_MP4:
+                return new VideoDisplayable(media.getUrl(), listener);
+            case VIDEO_MPEG:
+                return new VideoDisplayable(media.getUrl(), listener);
+            case WEB_SITE:
+                return new WebDisplayable(media.getUrl(), 5, listener);
         }
 
-        throw new IllegalArgumentException("This AbstractContent (" + abstractContent.toString() + ") has not DisplayableFactory");
+        throw new IllegalArgumentException("This media (" + media.toString() + ") has not DisplayableFactory");
     }
 
-    public static List<AbstractDisplayable> createAll(List<AbstractContent> abstractContents, AbstractDisplayable.OnCompletionListener onCompletionListener) {
+    public static List<AbstractDisplayable> createAll(List<Media> medias, AbstractDisplayable.OnCompletionListener onCompletionListener) {
         List<AbstractDisplayable> displayables = new ArrayList<>();
-        for (AbstractContent abstractContent : abstractContents) {
-            displayables.add(create(abstractContent, onCompletionListener));
+        for (Media media : medias) {
+            displayables.add(create(media, onCompletionListener));
         }
         return displayables;
     }

@@ -8,10 +8,10 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.excilys.shoofleurs.dashboard.R;
-import com.excilys.shoofleurs.dashboard.model.comparators.SlideShowComparator;
+import com.excilys.shoofleurs.dashboard.model.comparators.BundleComparator;
 import com.excilys.shoofleurs.dashboard.model.entities.Bundle;
 import com.excilys.shoofleurs.dashboard.ui.DashboardApplication;
-import com.excilys.shoofleurs.dashboard.ui.adapters.SlideShowPagerAdapter;
+import com.excilys.shoofleurs.dashboard.ui.adapters.MediaPagerAdapter;
 import com.excilys.shoofleurs.dashboard.ui.displayables.AbstractDisplayable;
 import com.excilys.shoofleurs.dashboard.ui.displayables.Displayable;
 import com.excilys.shoofleurs.dashboard.ui.factories.AnimatorFactory;
@@ -32,7 +32,7 @@ import butterknife.ButterKnife;
 
 /**
  * This Activity represents the main view of the application.
- * It asks the server for slideshows updates via the BundleService and
+ * It asks the server for bundles updates via the BundleService and
  * displays them.
  */
 public class DashboardActivity extends FragmentActivity implements DashboardView {
@@ -56,17 +56,17 @@ public class DashboardActivity extends FragmentActivity implements DashboardView
     @BindView(R.id.view_pager)
     ViewPagerCustomDuration mViewPager;
 
-    private SlideShowPagerAdapter mAdapter;
+    private MediaPagerAdapter mAdapter;
 
     /**
      * The sorted slides queue
      */
-    private Queue<Bundle> mSlideShowQueue;
+    private Queue<Bundle> mBundleQueue;
 
     /**
-     * The current slideshow to be displayed
+     * The current bundle to be displayed
      */
-    private Bundle mCurrentSlideShow;
+    private Bundle mCurrentBundle;
 
     private DashboardPresenter mDashboardPresenter;
 
@@ -79,12 +79,12 @@ public class DashboardActivity extends FragmentActivity implements DashboardView
         mDashboardPresenter = new DashboardPresenter((DashboardApplication) getApplication());
         mDashboardPresenter.attachView(this);
 
-        mSlideShowQueue = new PriorityQueue<>(10, new SlideShowComparator());
+        mBundleQueue = new PriorityQueue<>(10, new BundleComparator());
         setUpViewPager();
     }
 
     private void setUpViewPager() {
-        mAdapter = new SlideShowPagerAdapter(getSupportFragmentManager(), this, new ArrayList<AbstractDisplayable>());
+        mAdapter = new MediaPagerAdapter(getSupportFragmentManager(), this, new ArrayList<AbstractDisplayable>());
 
         mViewPager.addOnPageChangeListener(mAdapter);
         mViewPager.setAdapter(mAdapter);
@@ -93,58 +93,58 @@ public class DashboardActivity extends FragmentActivity implements DashboardView
 
 
     @Override
-    public void addBundles(List<Bundle> slideShows) {
-        Log.d(TAG, "addBundles: " + slideShows);
-        for (Bundle d : slideShows) {
-            if (!mSlideShowQueue.contains(d)) {
-                mSlideShowQueue.add(d);
+    public void addBundles(List<Bundle> bundles) {
+        Log.d(TAG, "addBundles: " + bundles);
+        for (Bundle d : bundles) {
+            if (!mBundleQueue.contains(d)) {
+                mBundleQueue.add(d);
             }
         }
 
-        if (mSlideShowQueue.isEmpty()) {
-            showDebugMessage(R.string.debug_no_slideshows_to_display);
+        if (mBundleQueue.isEmpty()) {
+            showDebugMessage(R.string.debug_no_bundle_to_display);
             return;
         }
 
-        if (mCurrentSlideShow != null) {
-            Bundle headSlideShow = mSlideShowQueue.peek();
-            if (!mCurrentSlideShow.equals(headSlideShow)) {
-                replaceSlideShow(headSlideShow);
+        if (mCurrentBundle != null) {
+            Bundle headBundle = mBundleQueue.peek();
+            if (!mCurrentBundle.equals(headBundle)) {
+                replaceBundle(headBundle);
             }
         } else {
-            replaceSlideShow(mSlideShowQueue.poll());
+            replaceBundle(mBundleQueue.poll());
         }
     }
 
     /**
-     * Replace or create the current slideshow
+     * Replace or create the current bundle
      *
-     * @param newSlideShow
+     * @param newBundle
      */
-    private void replaceSlideShow(Bundle newSlideShow) {
-        stopSlideShow();
-        mCurrentSlideShow = newSlideShow;
-        Log.i(TAG, "replaceSlideShow: " + mCurrentSlideShow);
-        startSlideShow();
+    private void replaceBundle(Bundle newBundle) {
+        stopBundle();
+        mCurrentBundle = newBundle;
+        Log.i(TAG, "replaceBundle: " + mCurrentBundle);
+        startBundle();
     }
 
-    public void stopSlideShow() {
+    public void stopBundle() {
     }
 
 
     /**
-     * Start the display of the current slideshow
+     * Start the display of the current bundle
      */
-    private void startSlideShow() {
-        Log.i(TAG, "startSlideShow " + mCurrentSlideShow);
+    private void startBundle() {
+        Log.i(TAG, "startBundle " + mCurrentBundle);
         /**TODO send medias request of the bundle**/
-//        if (mCurrentSlideShow != null) {
-//            if (mCurrentSlideShow.getContents().size() > 0) {
+//        if (mCurrentBundle != null) {
+//            if (mCurrentBundle.getContents().size() > 0) {
 //                mAdapter.clearAllDatas();
-//                mAdapter.addAllDatas(DisplayableFactory.createAll(mCurrentSlideShow.getContents(), mAdapter));
+//                mAdapter.addAllDatas(DisplayableFactory.createAll(mCurrentBundle.getContents(), mAdapter));
 //                mAdapter.onPageSelected(0);
 //            } else {
-//                Log.i(TAG, "startSlideShow: The contents are empty!!");
+//                Log.i(TAG, "startBundle: The contents are empty!!");
 //            }
 //        }
     }

@@ -26,7 +26,7 @@ public class DashboardPresenter extends AbstractPresenter<DashboardView> {
     public void attachView(DashboardView view) {
         this.mDashboardView = view;
         mDashboardView.startWaitingAnimation();
-        /*Check slideshows updates*/
+        /*Check bundles updates*/
         mEventBus.post(new BundleUpdatesEvent());
     }
 

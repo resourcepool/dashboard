@@ -1,19 +1,26 @@
-package com.excilys.shoofleurs.dashboard.model.entities;
+package com.excilys.shoofleurs.dashboard.rest.dtos;
 
+import com.excilys.shoofleurs.dashboard.model.entities.Validity;
 import com.excilys.shoofleurs.dashboard.model.type.MediaType;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * Created by excilys on 09/06/16.
  */
-public class Media {
+public class MediaDto {
+    @JsonProperty("uuid")
     private String mUuid;
 
+    @JsonProperty("name")
     private String mName;
 
+    @JsonProperty("mediaType")
     private MediaType mMediaType;
 
+    @JsonProperty("validity")
     private Validity mValidity;
 
+    @JsonProperty("url")
     private String mUrl;
 
     public String getUuid() {
