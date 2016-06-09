@@ -43,7 +43,7 @@ public class FileHelper {
             stream.close();
 
             // Url to access the file
-            mediaMetadataDto.setUrl(baseUrl + "/" + mediaMetadataDto.getUuidBundle() + "/" + fileName);
+            mediaMetadataDto.setUrl("/" + mediaMetadataDto.getUuidBundle() + "/" + fileName);
             mediaMetadataDto.setMediaType(file.getContentType());
             return true;
         } catch (IOException e) {
