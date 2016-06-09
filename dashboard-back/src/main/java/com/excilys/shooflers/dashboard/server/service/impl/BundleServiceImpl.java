@@ -66,7 +66,7 @@ public class BundleServiceImpl implements BundleService {
             File dirMedia = new File(props.getBasePath() + "/media/" + bundle.getUuid());
             new File(props.getBasePath() + "/media/" + oldUuid).renameTo(new File(props.getBasePath() + "/media/" + bundle.getUuid()));
             new File(props.getBaseResources() + "/" + oldUuid).renameTo(new File(props.getBaseResources() + "/" + bundle.getUuid()));
-            updateUrlMedia(oldUuid, bundle.getUuid(), dirMedia);
+            updateUrlMedia(bundle.getUuid(), dirMedia);
             // Create a new revision
             bundle.setRevision(revisionService.add(Revision.Action.UPDATE, oldUuid, Revision.Type.BUNDLE, bundle.getUuid()).getRevision());
             return bundle;
@@ -100,7 +100,12 @@ public class BundleServiceImpl implements BundleService {
         return result;
     }
 
-    private void updateUrlMedia(String oldUuidBundle, String uuidBundle, File newMediaDir) {
+    /**
+     * When a bundle is updated, change the bundle tag in all media associated
+     * @param uuidBundle New uuid bundle
+     * @param newMediaDir New bundle folder
+     */
+    private void updateUrlMedia(String uuidBundle, File newMediaDir) {
         File[] files = newMediaDir.listFiles();
         if (files != null) {
             for (File file : files) {
