@@ -1,7 +1,6 @@
 package com.excilys.shoofleurs.dashboard.model.entities;
 
 
-import com.excilys.shoofleurs.dashboard.model.json.Views;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonProperty;

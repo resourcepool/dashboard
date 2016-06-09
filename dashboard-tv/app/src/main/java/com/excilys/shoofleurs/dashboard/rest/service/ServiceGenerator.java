@@ -1,8 +1,6 @@
 package com.excilys.shoofleurs.dashboard.rest.service;
 
-import android.util.Base64;
-
-import com.excilys.shoofleurs.dashboard.utils.Data;
+import com.excilys.shoofleurs.dashboard.BuildConfig;
 
 import java.io.IOException;
 
@@ -15,8 +13,7 @@ import retrofit2.converter.jackson.JacksonConverterFactory;
 
 public class ServiceGenerator {
     public static final String API_BASE_URL = Data.BASE_URL;
-
-    private static OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
+    public static final String API_KEY_HEADER = "x-api-key";
 
     private static Retrofit.Builder builder =
             new Retrofit.Builder()
@@ -25,33 +22,23 @@ public class ServiceGenerator {
 
 
     public static <S> S createService(Class<S> serviceClass) {
-        return createService(serviceClass, null, null);
-    }
+        OkHttpClient.Builder clientBuilder = new OkHttpClient.Builder();
 
-    public static <S> S createService(Class<S> serviceClass, String username, String password) {
-        if (username != null && password != null) {
-            String credentials = username + ":" + password;
-            final String basic =
-                    "Basic " + Base64.encodeToString(credentials.getBytes(), Base64.NO_WRAP);
+        clientBuilder.addInterceptor(new Interceptor() {
+            @Override
+            public Response intercept(Chain chain) throws IOException {
+                Request request = chain.request();
 
-            httpClient.addInterceptor(new Interceptor() {
-                @Override
-                public Response intercept(Chain chain) throws IOException {
-                    Request original = chain.request();
+                Request.Builder requestBuilder = request.newBuilder()
+                        .addHeader(API_KEY_HEADER, BuildConfig.API_KEY)
+                        .method(request.method(), request.body());
 
-                    Request.Builder requestBuilder = original.newBuilder()
-                            .header("Authorization", basic)
-                            .header("Accept", "application/json")
-                            .method(original.method(), original.body());
+                return chain.proceed(requestBuilder.build());
+            }
+        });
 
-                    Request request = requestBuilder.build();
-                    return chain.proceed(request);
-                }
-            });
-        }
+        OkHttpClient client = clientBuilder.build();
 
-        OkHttpClient client = httpClient.build();
-        Retrofit retrofit = builder.client(client).build();
-        return retrofit.create(serviceClass);
+        return builder.client(client).build().create(serviceClass);
     }
 }
