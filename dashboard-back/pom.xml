@@ -28,6 +28,7 @@
         <commons-codec.version>1.10</commons-codec.version>
         <commons-lang3.version>3.4</commons-lang3.version>
         <commons-io.version>2.5</commons-io.version>
+        <hamcrest-date.version>2.0.1</hamcrest-date.version>
     </properties>
 
     <dependencies>
@@ -130,6 +131,12 @@
             <artifactId>commons-io</artifactId>
             <version>${commons-io.version}</version>
             <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.exparity</groupId>
+            <artifactId>hamcrest-date</artifactId>
+            <version>${hamcrest-date.version}</version>
         </dependency>
     </dependencies>
 

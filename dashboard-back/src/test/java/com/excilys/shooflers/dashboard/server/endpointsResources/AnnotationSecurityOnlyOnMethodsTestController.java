@@ -1,4 +1,4 @@
-package com.excilys.shooflers.dashboard.server.endpointsTests;
+package com.excilys.shooflers.dashboard.server.endpointsResources;
 
 import com.excilys.shooflers.dashboard.server.security.annotation.RequireValidApiKey;
 import com.excilys.shooflers.dashboard.server.security.annotation.RequireValidUser;

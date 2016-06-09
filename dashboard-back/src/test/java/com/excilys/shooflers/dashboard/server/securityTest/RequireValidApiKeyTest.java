@@ -1,5 +1,6 @@
-package com.excilys.shooflers.dashboard.server;
+package com.excilys.shooflers.dashboard.server.securityTest;
 
+import com.excilys.shooflers.dashboard.server.DashboardApplication;
 import com.excilys.shooflers.dashboard.server.property.DashboardProperties;
 import com.excilys.shooflers.dashboard.server.security.interceptor.CorsInterceptor;
 import org.apache.commons.codec.binary.Base64;
@@ -8,7 +9,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
-import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
@@ -18,21 +18,27 @@ import org.springframework.web.context.WebApplicationContext;
 import java.net.URI;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
- * Test the Security Feature.
+ * Test Resources only annoted by @RequireValidApiKey.
  *
  * @author Mickael
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(DashboardApplication.class)
 @WebAppConfiguration
-public class RequireValidApikeyTest {
+public class RequireValidApiKeyTest {
 
+    // ============================================================
+    //	Consts
+    // ============================================================
     public static final String HEADER_AUTHORIZATION = "Authorization";
+    public static final String URL_TO_TEST = "/test1/requireApiKey";
 
+    // ============================================================
+    //	Attributs
+    // ============================================================
     /**
      * Client Rest
      */
@@ -43,6 +49,10 @@ public class RequireValidApikeyTest {
 
     @Autowired
     private WebApplicationContext webApplicationContext;
+
+    //============================================================
+    // Methods utils
+    //============================================================
 
     /**
      * @return Content of header to authenticate to the API REST with default admin credentials.
@@ -63,46 +73,42 @@ public class RequireValidApikeyTest {
         return "Basic " + Base64.encodeBase64String((login + ":" + password).getBytes());
     }
 
+    //============================================================
+    // Callbacks
+    //============================================================
     @Before
     public void setUp() throws Exception {
         // Set up the REST client
         this.mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
     }
 
+    //============================================================
+    // Tests
+    //============================================================
     @Test
-    public void bundleNotAccessible() throws Exception {
-        mockMvc.perform(get(URI.create("/bundle")))
+    public void notAccessibleWithoutApiKey() throws Exception {
+        mockMvc.perform(get(URI.create(URL_TO_TEST)))
                 .andExpect(status().isUnauthorized())
         ;
     }
 
     @Test
-    public void loginAlsoWorks() throws Exception {
-        mockMvc.perform(get(URI.create("/bundle")).header(HEADER_AUTHORIZATION, getHeaderAuthenticationContent("admin", "admin")))
-                .andExpect(status().isOk())
+    public void notAccessibleAlsoByLogin() throws Exception {
+        mockMvc.perform(get(URI.create(URL_TO_TEST)).header(HEADER_AUTHORIZATION, getHeaderAuthenticationContent("admin", "admin")))
+                .andExpect(status().isUnauthorized())
         ;
     }
 
     @Test
     public void goodApikey() throws Exception {
-        mockMvc.perform(get(URI.create("/bundle")).header(CorsInterceptor.HEADER_API_KEY, props.getApiKey()))
+        mockMvc.perform(get(URI.create(URL_TO_TEST)).header(CorsInterceptor.HEADER_API_KEY, props.getApiKey()))
                 .andExpect(status().isOk())
         ;
     }
 
     @Test
     public void wrongApikey() throws Exception {
-        mockMvc.perform(get(URI.create("/bundle")).header(CorsInterceptor.HEADER_API_KEY, "phoenix wrong"))
-                .andExpect(status().isUnauthorized())
-        ;
-    }
-
-    @Test
-    public void doesntWorkOnOnlyRequireUser() throws Exception {
-        mockMvc.perform(post(URI.create("/bundle"))
-                .content(("{}"))
-                .contentType(MediaType.APPLICATION_JSON_UTF8)
-                .header(CorsInterceptor.HEADER_API_KEY, props.getApiKey()))
+        mockMvc.perform(get(URI.create(URL_TO_TEST)).header(CorsInterceptor.HEADER_API_KEY, "phoenix wrong"))
                 .andExpect(status().isUnauthorized())
         ;
     }

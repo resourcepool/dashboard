@@ -5,8 +5,15 @@ import com.excilys.shooflers.dashboard.server.security.annotation.RequireValidAp
 import com.excilys.shooflers.dashboard.server.security.annotation.RequireValidUser;
 import com.excilys.shooflers.dashboard.server.service.BundleService;
 import com.excilys.shooflers.dashboard.server.service.RevisionService;
+import com.excilys.shooflers.dashboard.server.validator.BundleMedataDtoValidatorImpl;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
@@ -23,6 +30,9 @@ public class BundleController {
 
     @Autowired
     private RevisionService revisionService;
+
+    @Autowired
+    private BundleMedataDtoValidatorImpl bundleMedataDtoValidator;
 
     /**
      * Get all Bundle.
@@ -44,6 +54,8 @@ public class BundleController {
      */
     @RequestMapping(method = RequestMethod.POST)
     public BundleMetadataDto save(@RequestBody BundleMetadataDto bundleMetadataDto) {
+        bundleMetadataDto.setUuid(null);
+        bundleMedataDtoValidator.validate(bundleMetadataDto);
         return bundleService.create(bundleMetadataDto);
     }
 
@@ -55,8 +67,13 @@ public class BundleController {
      */
     @RequestMapping(value = "{uuid}", method = RequestMethod.GET)
     @RequireValidApiKey
-    public BundleMetadataDto get(@PathVariable("uuid") String uuid) {
-        return bundleService.get(uuid);
+    public ResponseEntity<?> get(@PathVariable("uuid") String uuid) {
+        BundleMetadataDto result = bundleService.get(uuid);
+        if (result == null) {
+            return new ResponseEntity<>("Bound not found", HttpStatus.NOT_FOUND);
+        } else {
+            return new ResponseEntity<>(result, HttpStatus.OK);
+        }
     }
 
     /**
@@ -67,6 +84,9 @@ public class BundleController {
      */
     @RequestMapping(method = RequestMethod.PUT)
     public BundleMetadataDto update(@RequestBody BundleMetadataDto bundle) {
+        if (bundleService.get(bundle.getUuid()) == null) {
+            throw new IllegalArgumentException("An UUID is need to edit an bundle.");
+        }
         return bundleService.update(bundle);
     }
 
@@ -76,7 +96,11 @@ public class BundleController {
      * @param uuid uuid to delete
      */
     @RequestMapping(value = "{uuid}", method = RequestMethod.DELETE)
-    public void delete(@PathVariable("uuid") String uuid) {
-        bundleService.delete(uuid);
+    public ResponseEntity delete(@PathVariable("uuid") String uuid) {
+        if (bundleService.delete(uuid)) {
+            return new ResponseEntity(HttpStatus.NO_CONTENT);
+        } else {
+            return new ResponseEntity(HttpStatus.NOT_FOUND);
+        }
     }
 }

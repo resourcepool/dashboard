@@ -1,6 +1,7 @@
-package com.excilys.shooflers.dashboard.server;
+package com.excilys.shooflers.dashboard.server.securityTest;
 
-import com.excilys.shooflers.dashboard.server.endpointsTests.AnnotationSecurityOnlyOnMethodsTestController;
+import com.excilys.shooflers.dashboard.server.DashboardApplication;
+import com.excilys.shooflers.dashboard.server.endpointsResources.AnnotationSecurityOnlyOnMethodsTestController;
 import com.excilys.shooflers.dashboard.server.property.DashboardProperties;
 import com.excilys.shooflers.dashboard.server.security.interceptor.CorsInterceptor;
 import org.apache.commons.codec.binary.Base64;
@@ -29,13 +30,14 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(DashboardApplication.class)
 @WebAppConfiguration
-public class RequireValidUserOrApiKeyOnCombinationAnnotationsTest {
+public class RequireValidUserOrApiKeyTest {
 
     //============================================================
     // Consts
     //============================================================
     static final String HEADER_AUTHORIZATION = "Authorization";
-    private static final String URL_TO_TEST = "erzer";
+
+    public static final String URL_TO_TEST = "/test1/requireUserOrApiKey";
 
     //============================================================
     // Attributes
@@ -87,46 +89,33 @@ public class RequireValidUserOrApiKeyOnCombinationAnnotationsTest {
     // Tests
     //============================================================
     @Test
-    public void baseNotAccessible() throws Exception {
-        mockMvc.perform(get(URI.create("/test2/requireUser")))
+    public void notAccessible() throws Exception {
+        mockMvc.perform(get(URI.create(URL_TO_TEST)))
                 .andExpect(status().isUnauthorized())
         ;
     }
 
     @Test
-    public void baseNoodAuthentication() throws Exception {
-        mockMvc.perform(get(URI.create("/test2/requireUser")).header(HEADER_AUTHORIZATION, getHeaderAuthenticationContent()))
-                .andExpect(status().isOk())
-                .andExpect(content().string(AnnotationSecurityOnlyOnMethodsTestController.MESSAGE_OK))
-        ;
-    }
-
-    @Test
-    public void baseNoodApiKey() throws Exception {
-        mockMvc.perform(get(URI.create("/test2/requireUser")).header(CorsInterceptor.HEADER_API_KEY, props.getApiKey()))
-                .andExpect(status().isUnauthorized())
-        ;
-    }
-
-    @Test
-    public void combinationNotAccessible() throws Exception {
-        mockMvc.perform(get(URI.create("/test2/requireUserOrApiKey")))
-                .andExpect(status().isUnauthorized())
-        ;
+    public void badValueAuthentification() throws Exception {
+        mockMvc.perform(get(URI.create(URL_TO_TEST))
+                .header(HEADER_AUTHORIZATION, "Basic dsfispodifqsdpoif"))
+                .andExpect(status().isUnauthorized());
     }
 
     @Test
     public void goodAuthentication() throws Exception {
-        mockMvc.perform(get(URI.create("/test2/requireUserOrApiKey")).header(HEADER_AUTHORIZATION, getHeaderAuthenticationContent()))
+        mockMvc.perform(get(URI.create(URL_TO_TEST)).header(HEADER_AUTHORIZATION, getHeaderAuthenticationContent()))
                 .andExpect(status().isOk())
                 .andExpect(content().string(AnnotationSecurityOnlyOnMethodsTestController.MESSAGE_OK))
+
         ;
     }
 
     @Test
     public void goodApiKey() throws Exception {
-        mockMvc.perform(get(URI.create("/test2/requireUserOrApiKey")).header(CorsInterceptor.HEADER_API_KEY, props.getApiKey()))
+        mockMvc.perform(get(URI.create(URL_TO_TEST)).header(CorsInterceptor.HEADER_API_KEY, props.getApiKey()))
                 .andExpect(status().isOk())
+                .andExpect(content().string(AnnotationSecurityOnlyOnMethodsTestController.MESSAGE_OK))
         ;
     }
 }

@@ -48,9 +48,6 @@ public class Validity {
                 start = LocalDateTime.now();
             }
 
-            if (end == null) {
-                end = start.plusDays(1);
-            }
             return new Validity(start, end);
         }
     }
