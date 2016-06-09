@@ -14,6 +14,7 @@ import java.util.List;
  * @author Loïc Ortola on 07/06/2016.
  */
 @RestController
+@RequireValidUser
 @RequestMapping("/bundle")
 public class BundleController {
 
@@ -41,7 +42,6 @@ public class BundleController {
      *
      * @param bundleMetadataDto Bundle to save
      */
-    @RequireValidUser
     @RequestMapping(method = RequestMethod.POST)
     public BundleMetadataDto save(@RequestBody BundleMetadataDto bundleMetadataDto) {
         return bundleService.create(bundleMetadataDto);
@@ -66,7 +66,6 @@ public class BundleController {
      * @return
      */
     @RequestMapping(method = RequestMethod.PUT)
-    @RequireValidUser
     public BundleMetadataDto update(@RequestBody BundleMetadataDto bundle) {
         return bundleService.update(bundle);
     }
@@ -77,7 +76,6 @@ public class BundleController {
      * @param uuid uuid to delete
      */
     @RequestMapping(value = "{uuid}", method = RequestMethod.DELETE)
-    @RequireValidUser
     public void delete(@PathVariable("uuid") String uuid) {
         bundleService.delete(uuid);
     }
