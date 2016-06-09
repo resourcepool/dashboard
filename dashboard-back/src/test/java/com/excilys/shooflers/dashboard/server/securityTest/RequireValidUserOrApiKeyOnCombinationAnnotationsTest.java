@@ -1,10 +1,11 @@
-package com.excilys.shooflers.dashboard.server;
+package com.excilys.shooflers.dashboard.server.securityTest;
 
+import com.excilys.shooflers.dashboard.server.DashboardApplication;
+import com.excilys.shooflers.dashboard.server.endpointsResources.AnnotationSecurityOnlyOnMethodsTestController;
 import com.excilys.shooflers.dashboard.server.property.DashboardProperties;
 import com.excilys.shooflers.dashboard.server.security.interceptor.CorsInterceptor;
 import org.apache.commons.codec.binary.Base64;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,26 +18,25 @@ import org.springframework.web.context.WebApplicationContext;
 
 import java.net.URI;
 
-import static org.junit.Assert.fail;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
- * Test Resources without annotations.
+ * Test Resources annoted by @RequireValidUser and @RequireValidApiKey.
  *
  * @author Mickael
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(DashboardApplication.class)
 @WebAppConfiguration
-public class NoRequireTest {
+public class RequireValidUserOrApiKeyOnCombinationAnnotationsTest {
 
     //============================================================
     // Consts
     //============================================================
     static final String HEADER_AUTHORIZATION = "Authorization";
-
-    public static final String URL_TO_TEST = "/test1/public";
+    private static final String URL_TO_TEST = "erzer";
 
     //============================================================
     // Attributes
@@ -88,38 +88,45 @@ public class NoRequireTest {
     // Tests
     //============================================================
     @Test
-    public void noNeedAuthenticationOnNonAnnotated() throws Exception {
-        mockMvc.perform(get(URI.create("/test1/public")))
+    public void baseNotAccessible() throws Exception {
+        mockMvc.perform(get(URI.create("/test2/requireUser")))
+                .andExpect(status().isUnauthorized())
+        ;
+    }
+
+    @Test
+    public void baseNoodAuthentication() throws Exception {
+        mockMvc.perform(get(URI.create("/test2/requireUser")).header(HEADER_AUTHORIZATION, getHeaderAuthenticationContent()))
                 .andExpect(status().isOk())
+                .andExpect(content().string(AnnotationSecurityOnlyOnMethodsTestController.MESSAGE_OK))
         ;
     }
 
     @Test
-    public void noNeedAuthenticationOn404() throws Exception {
-        mockMvc.perform(get(URI.create("/unknown")))
-                .andExpect(status().isNotFound())
+    public void baseNoodApiKey() throws Exception {
+        mockMvc.perform(get(URI.create("/test2/requireUser")).header(CorsInterceptor.HEADER_API_KEY, props.getApiKey()))
+                .andExpect(status().isUnauthorized())
         ;
     }
 
     @Test
-    public void authenticationAlwaysWorks() throws Exception {
-        mockMvc.perform(get(URI.create(URL_TO_TEST)).header(HEADER_AUTHORIZATION, getHeaderAuthenticationContent()))
+    public void combinationNotAccessible() throws Exception {
+        mockMvc.perform(get(URI.create("/test2/requireUserOrApiKey")))
+                .andExpect(status().isUnauthorized())
+        ;
+    }
+
+    @Test
+    public void goodAuthentication() throws Exception {
+        mockMvc.perform(get(URI.create("/test2/requireUserOrApiKey")).header(HEADER_AUTHORIZATION, getHeaderAuthenticationContent()))
                 .andExpect(status().isOk())
+                .andExpect(content().string(AnnotationSecurityOnlyOnMethodsTestController.MESSAGE_OK))
         ;
     }
 
     @Test
-    @Ignore("Not implemented yet...")
-    public void tokenAlwaysWorks() throws Exception {
-        mockMvc.perform(get(URI.create(URL_TO_TEST)).header(HEADER_AUTHORIZATION, "Token "))
-                .andExpect(status().isOk())
-        ;
-        fail();
-    }
-
-    @Test
-    public void apiKeyAlwaysWorks() throws Exception {
-        mockMvc.perform(get(URI.create(URL_TO_TEST)).header(CorsInterceptor.HEADER_API_KEY, props.getApiKey()))
+    public void goodApiKey() throws Exception {
+        mockMvc.perform(get(URI.create("/test2/requireUserOrApiKey")).header(CorsInterceptor.HEADER_API_KEY, props.getApiKey()))
                 .andExpect(status().isOk())
         ;
     }

@@ -1,9 +1,9 @@
-package com.excilys.shooflers.dashboard.server;
+package com.excilys.shooflers.dashboard.server.securityTest;
 
+import com.excilys.shooflers.dashboard.server.DashboardApplication;
 import com.excilys.shooflers.dashboard.server.property.DashboardProperties;
 import com.excilys.shooflers.dashboard.server.security.interceptor.CorsInterceptor;
 import org.apache.commons.codec.binary.Base64;
-import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -13,32 +13,31 @@ import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import java.net.URI;
 
-import static org.junit.Assert.assertThat;
+import static org.junit.Assert.fail;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
- * Test Resources only annoted by @RequireValidUser.
+ * Test Resources without annotations.
  *
  * @author Mickael
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(DashboardApplication.class)
 @WebAppConfiguration
-public class RequireValidUserTest {
+public class NoRequireTest {
 
     //============================================================
     // Consts
     //============================================================
     static final String HEADER_AUTHORIZATION = "Authorization";
 
-    public static final String URL_TO_TEST = "/test1/requireUser";
+    public static final String URL_TO_TEST = "/test1/public";
 
     //============================================================
     // Attributes
@@ -57,6 +56,7 @@ public class RequireValidUserTest {
     //============================================================
     // Methods utils for tests
     //============================================================
+
     /**
      * @return Content of header to authenticate to the API REST with default admin credentials.
      * (withtout the key work Basic at the start)
@@ -89,13 +89,6 @@ public class RequireValidUserTest {
     // Tests
     //============================================================
     @Test
-    public void notAccessible() throws Exception {
-        mockMvc.perform(get(URI.create(URL_TO_TEST)))
-                .andExpect(status().isUnauthorized())
-        ;
-    }
-
-    @Test
     public void noNeedAuthenticationOnNonAnnotated() throws Exception {
         mockMvc.perform(get(URI.create("/test1/public")))
                 .andExpect(status().isOk())
@@ -110,74 +103,25 @@ public class RequireValidUserTest {
     }
 
     @Test
-    public void badValueAuthentification() throws Exception {
-        mockMvc.perform(get(URI.create(URL_TO_TEST))
-                .header(HEADER_AUTHORIZATION, "Basic dsfispodifqsdpoif"))
-                .andExpect(status().isUnauthorized());
-    }
-
-    @Test
-    public void badValueAuthentification2() throws Exception {
-        mockMvc.perform(get(URI.create(URL_TO_TEST)).header(HEADER_AUTHORIZATION, "Basic"))
-                .andExpect(status().isUnauthorized())
-        ;
-    }
-
-    @Test
-    @Ignore("Think later a good response for this use case")
-    public void wrongAuthentification() throws Exception {
-        mockMvc.perform(get(URI.create(URL_TO_TEST)).header(HEADER_AUTHORIZATION, getHeaderAuthenticationContent("user", "user")))
-                .andExpect(status().isUnauthorized())
-        ;
-    }
-
-    @Test
-    public void goodAuthentication() throws Exception {
+    public void authenticationAlwaysWorks() throws Exception {
         mockMvc.perform(get(URI.create(URL_TO_TEST)).header(HEADER_AUTHORIZATION, getHeaderAuthenticationContent()))
                 .andExpect(status().isOk())
         ;
     }
 
     @Test
-    public void badValueToken() throws Exception {
-        mockMvc.perform(get(URI.create(URL_TO_TEST)).header(HEADER_AUTHORIZATION, "Token " + "perieprfdkjdg"))
-                .andExpect(status().isUnauthorized())
+    @Ignore("Not implemented yet...")
+    public void tokenAlwaysWorks() throws Exception {
+        mockMvc.perform(get(URI.create(URL_TO_TEST)).header(HEADER_AUTHORIZATION, "Token "))
+                .andExpect(status().isOk())
         ;
+        fail();
     }
 
     @Test
-    public void badValueToken2() throws Exception {
-        mockMvc.perform(get(URI.create(URL_TO_TEST)).header(HEADER_AUTHORIZATION, "Token"))
-                .andExpect(status().isUnauthorized())
-        ;
-    }
-
-    @Test
-    public void wrongToken() throws Exception {
-        mockMvc.perform(get(URI.create(URL_TO_TEST)).header(HEADER_AUTHORIZATION, "Token " + getHeaderAuthenticationContent()))
-                .andExpect(status().isUnauthorized())
-        ;
-    }
-
-    @Test
-    @Ignore("Not terminated")
-    public void retrieveTokenAfterLogin() throws Exception {
-        MvcResult result = mockMvc.perform(get(URI.create(URL_TO_TEST)).header(HEADER_AUTHORIZATION, getHeaderAuthenticationContent()))
-                .andExpect(status().isOk()).andReturn();
-
-        String headerAuthorization = result.getResponse().getHeader(HEADER_AUTHORIZATION);
-
-        System.out.println(headerAuthorization);
-
-        assertThat(headerAuthorization, Matchers.startsWith("Token "));
-        mockMvc.perform(get(URI.create(URL_TO_TEST)).header(HEADER_AUTHORIZATION, headerAuthorization))
-                .andExpect(status().isOk());
-    }
-
-    @Test
-    public void notAccessibleWithApiKey() throws Exception {
+    public void apiKeyAlwaysWorks() throws Exception {
         mockMvc.perform(get(URI.create(URL_TO_TEST)).header(CorsInterceptor.HEADER_API_KEY, props.getApiKey()))
-                .andExpect(status().isUnauthorized())
+                .andExpect(status().isOk())
         ;
     }
 }

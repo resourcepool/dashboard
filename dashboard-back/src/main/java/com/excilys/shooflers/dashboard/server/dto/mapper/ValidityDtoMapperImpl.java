@@ -14,14 +14,14 @@ public class ValidityDtoMapperImpl implements ValidityDtoMapper {
 
     @Override
     public ValidityDto toDto(Validity model) {
-        return model != null ? new ValidityDto(model.getStart().format(FORMATTER), model.getEnd().format(FORMATTER)) : null;
+        return model != null ? new ValidityDto(model.getStart().format(FORMATTER), model.getEnd() == null ? null : model.getEnd().format(FORMATTER)) : null;
     }
 
     @Override
     public Validity fromDto(ValidityDto dto) {
-        return dto != null ? new Validity.Builder()
-                .start(LocalDateTime.parse(dto.getStart(), FORMATTER))
-                .end(LocalDateTime.parse(dto.getEnd(), FORMATTER))
+        return dto != null && (dto.getStart() != null || dto.getEnd() != null) ? new Validity.Builder()
+                .start(dto.getStart() == null ? null : LocalDateTime.parse(dto.getStart(), FORMATTER))
+                .end(dto.getEnd() == null ? null : LocalDateTime.parse(dto.getEnd(), FORMATTER))
                 .build() : null;
     }
 }

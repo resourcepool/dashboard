@@ -57,6 +57,7 @@ public class RevisionServiceImpl implements RevisionService {
                         Revision deleteAction = Revision
                                 .builder()
                                 .action(Revision.Action.DELETE)
+                                .type(rev.getType())
                                 .revision(rev.getRevision())
                                 .target(rev.getTarget())
                                 .build();
@@ -67,6 +68,7 @@ public class RevisionServiceImpl implements RevisionService {
                     Revision addAction = Revision
                             .builder()
                             .action(Revision.Action.ADD)
+                            .type(rev.getType())
                             .revision(rev.getRevision())
                             .target(rev.getResult()) // Target of the new object is result of the update object
                             .build();
