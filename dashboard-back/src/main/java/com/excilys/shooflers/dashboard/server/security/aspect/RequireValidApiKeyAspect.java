@@ -64,7 +64,11 @@ public class RequireValidApiKeyAspect {
     public Object checkValidApiKey(ProceedingJoinPoint joinPoint) {
         Object returnValue = null;
         try {
-            sessionService.validateApiKey();
+            try {
+                sessionService.validateApiKey();
+            } catch (RuntimeException ignore) {
+                sessionService.validateUser();
+            }
             returnValue = joinPoint.proceed();
         } catch (RuntimeException e) {
             HttpServletResponse response = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getResponse();

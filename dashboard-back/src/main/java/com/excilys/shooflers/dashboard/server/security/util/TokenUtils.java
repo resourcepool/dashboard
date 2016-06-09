@@ -66,6 +66,10 @@ public class TokenUtils {
         }
 
         String[] base64 = tokenHeader.split(" ");
+        if (base64.length < 2) {
+            return null;
+        }
+
         return stringEncryptor.decrypt(new String(Base64.decodeBase64(base64[1])));
     }
 
