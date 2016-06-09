@@ -8,9 +8,9 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 @Component
-public class ValidityDtoMapperImpl implements MapperDto<Validity, ValidityDto> {
+public class ValidityDtoMapperImpl implements ValidityDtoMapper {
 
-    private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ISO_DATE_TIME;
+    public static final DateTimeFormatter FORMATTER = DateTimeFormatter.ISO_DATE_TIME;
 
     @Override
     public ValidityDto toDto(Validity model) {

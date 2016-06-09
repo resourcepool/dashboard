@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class MediaDtoMapperImpl implements MapperDto<MediaMetadata, MediaMetadataDto> {
+public class MediaDtoMapperImpl implements MediaDtoMapper {
 
     @Autowired
     private ValidityDtoMapperImpl validityDtoMapper;

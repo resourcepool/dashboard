@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class BundleDtoMapperImpl implements MapperDto<BundleMetadata, BundleMetadataDto> {
+public class BundleDtoMapperImpl implements BundleDtoMapper {
 
     @Autowired
     private ValidityDtoMapperImpl validityDtoMapper;
