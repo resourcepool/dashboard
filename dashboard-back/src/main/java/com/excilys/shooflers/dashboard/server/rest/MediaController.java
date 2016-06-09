@@ -26,6 +26,7 @@ import java.util.UUID;
  * @author Loïc Ortola on 07/06/2016.
  */
 @RestController
+@RequireValidUser
 @RequestMapping("/media")
 public class MediaController {
 
@@ -53,7 +54,6 @@ public class MediaController {
         return mediaService.getByBundle(uuidBundle);
     }
 
-    @RequireValidUser
     @RequestMapping(method = RequestMethod.POST)
     public MediaMetadataDto save(@RequestParam("media") String json, @RequestParam("file") MultipartFile multipartFile) {
         MediaMetadataDto media = mediaService.fromJson(json);
@@ -81,7 +81,6 @@ public class MediaController {
         return media;
     }
 
-    @RequireValidUser
     @RequestMapping(value = "{uuidbundle}/{uuid}", method = RequestMethod.DELETE)
     public void delete(@PathVariable("uuidbundle") String uuidBundle, @PathVariable("uuid") String uuid) {
         if (mediaService.delete(uuid, uuidBundle)) {
