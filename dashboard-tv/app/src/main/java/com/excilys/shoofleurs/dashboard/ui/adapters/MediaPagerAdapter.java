@@ -5,18 +5,18 @@ import android.support.v4.app.FragmentManager;
 
 import com.excilys.shoofleurs.dashboard.ui.displayables.AbstractDisplayable;
 import com.excilys.shoofleurs.dashboard.ui.displayables.Displayable;
-import com.excilys.shoofleurs.dashboard.ui.fragments.DisplayableFragment;
+import com.excilys.shoofleurs.dashboard.ui.fragments.MediaFragment;
 import com.excilys.shoofleurs.dashboard.ui.utils.LoopingPagerAdapter;
 import com.excilys.shoofleurs.dashboard.ui.views.DashboardView;
 
 import java.util.List;
 
-public class SlideShowPagerAdapter extends LoopingPagerAdapter<AbstractDisplayable> implements AbstractDisplayable.OnCompletionListener {
+public class MediaPagerAdapter extends LoopingPagerAdapter<AbstractDisplayable> implements AbstractDisplayable.OnCompletionListener {
     private List<AbstractDisplayable> mDisplayables;
     private DashboardView mDashboardView;
     private int mCurrentPage;
 
-    public SlideShowPagerAdapter(FragmentManager fragmentManager, DashboardView dashboardView, List<AbstractDisplayable> displayables) {
+    public MediaPagerAdapter(FragmentManager fragmentManager, DashboardView dashboardView, List<AbstractDisplayable> displayables) {
         super(fragmentManager, displayables);
         this.mDisplayables = displayables;
         this.mDashboardView = dashboardView;
@@ -25,7 +25,7 @@ public class SlideShowPagerAdapter extends LoopingPagerAdapter<AbstractDisplayab
     @Override
     public Fragment getRealItem(int position) {
         AbstractDisplayable displayable = mDisplayables.get(position);
-        return DisplayableFragment.newInstance(displayable);
+        return MediaFragment.newInstance(displayable);
     }
 
     @Override

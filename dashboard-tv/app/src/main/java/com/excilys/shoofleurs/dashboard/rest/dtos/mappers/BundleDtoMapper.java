@@ -1,4 +1,4 @@
-package com.excilys.shoofleurs.dashboard.rest.mappers;
+package com.excilys.shoofleurs.dashboard.rest.dtos.mappers;
 
 import com.excilys.shoofleurs.dashboard.model.entities.Bundle;
 import com.excilys.shoofleurs.dashboard.rest.dtos.BundleDto;

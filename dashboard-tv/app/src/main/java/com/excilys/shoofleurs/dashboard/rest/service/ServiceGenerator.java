@@ -12,12 +12,11 @@ import retrofit2.Retrofit;
 import retrofit2.converter.jackson.JacksonConverterFactory;
 
 public class ServiceGenerator {
-    public static final String API_BASE_URL = Data.BASE_URL;
     public static final String API_KEY_HEADER = "x-api-key";
 
     private static Retrofit.Builder builder =
             new Retrofit.Builder()
-                    .baseUrl(API_BASE_URL)
+                    .baseUrl(BuildConfig.API_URL)
                     .addConverterFactory(JacksonConverterFactory.create());
 
 

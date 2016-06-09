@@ -43,4 +43,14 @@ public class Bundle {
     public void setRevision(long revision) {
         mRevision = revision;
     }
+
+    @Override
+    public String toString() {
+        return "Bundle{" +
+                "mUuid='" + mUuid + '\'' +
+                ", mName='" + mName + '\'' +
+                ", mValidity=" + mValidity +
+                ", mRevision=" + mRevision +
+                '}';
+    }
 }

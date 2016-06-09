@@ -16,7 +16,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 
-public class DisplayableFragment extends Fragment {
+public class MediaFragment extends Fragment {
     /**
      * The layout encompassing the contents
      */
@@ -28,13 +28,13 @@ public class DisplayableFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_displayable, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_media, container, false);
         ButterKnife.bind(this, rootView);
         return rootView;
     }
 
-    public static DisplayableFragment newInstance(Displayable displayable) {
-        DisplayableFragment fragment = new DisplayableFragment();
+    public static MediaFragment newInstance(Displayable displayable) {
+        MediaFragment fragment = new MediaFragment();
         fragment.mDisplayable = displayable;
         return fragment;
     }
