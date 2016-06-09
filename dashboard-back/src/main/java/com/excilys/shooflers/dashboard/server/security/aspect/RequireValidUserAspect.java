@@ -33,7 +33,9 @@ public class RequireValidUserAspect {
      *
      * @see com.excilys.shooflers.dashboard.server.security.annotation.RequireValidUser
      */
-    @Pointcut("@annotation(com.excilys.shooflers.dashboard.server.security.annotation.RequireValidUser)")
+    @Pointcut("@annotation(com.excilys.shooflers.dashboard.server.security.annotation.RequireValidUser) && " +
+            "!@annotation(com.excilys.shooflers.dashboard.server.security.annotation.RequireValidApiKey) && " +
+            "!within(@com.excilys.shooflers.dashboard.server.security.annotation.RequireValidApiKey *) ")
     private void methodAnnotatedWithRequireValidUser() {
     }
 
@@ -42,7 +44,9 @@ public class RequireValidUserAspect {
      *
      * @see com.excilys.shooflers.dashboard.server.security.annotation.RequireValidUser
      */
-    @Pointcut("within(@com.excilys.shooflers.dashboard.server.security.annotation.RequireValidUser *)")
+    @Pointcut("within(@com.excilys.shooflers.dashboard.server.security.annotation.RequireValidUser *) && " +
+            "!@annotation(com.excilys.shooflers.dashboard.server.security.annotation.RequireValidApiKey) && " +
+            "!within(@com.excilys.shooflers.dashboard.server.security.annotation.RequireValidApiKey *) ")
     public void beanAnnotatedWithRequireValidUser() {
     }
 
@@ -53,6 +57,16 @@ public class RequireValidUserAspect {
      */
     @Pointcut("execution(public * *(..))")
     private void beanPublicMethod() {
+    }
+
+    // Combination of RequireVU & RequireVAK
+    @Pointcut("(@annotation(com.excilys.shooflers.dashboard.server.security.annotation.RequireValidUser) && @annotation(com.excilys.shooflers.dashboard.server.security.annotation.RequireValidApiKey)) || " +
+            "(within(@com.excilys.shooflers.dashboard.server.security.annotation.RequireValidUser *) && @annotation(com.excilys.shooflers.dashboard.server.security.annotation.RequireValidApiKey)) || " +
+            "(@annotation(com.excilys.shooflers.dashboard.server.security.annotation.RequireValidUser) && within(@com.excilys.shooflers.dashboard.server.security.annotation.RequireValidApiKey *)) || " +
+            "(within(@com.excilys.shooflers.dashboard.server.security.annotation.RequireValidUser *) && within(@com.excilys.shooflers.dashboard.server.security.annotation.RequireValidApiKey *))"
+    )
+    private void annotatedWithRequireValidUserAnd() {
+
     }
 
     /**
@@ -92,4 +106,23 @@ public class RequireValidUserAspect {
         return checkValidUser(joinPoint);
     }
 
+    @Around("annotatedWithRequireValidUserAnd()")
+    public Object checkValidUserOrValid(ProceedingJoinPoint joinPoint) {
+        Object returnValue = null;
+        try {
+            try {
+                sessionService.validateApiKey();
+            } catch (RuntimeException ignore) {
+                sessionService.validateUser();
+            }
+            returnValue = joinPoint.proceed();
+        } catch (RuntimeException e) {
+            HttpServletResponse response = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getResponse();
+            response.setHeader("WWW-Authenticate", "Basic realm=\"" + REALM + "\"");
+            throw e;
+        } catch (Throwable throwable) {
+            throw new IllegalStateException(throwable);
+        }
+        return returnValue;
+    }
 }

@@ -30,7 +30,9 @@ public class RequireValidApiKeyAspect {
      *
      * @see com.excilys.shooflers.dashboard.server.security.annotation.RequireValidApiKey
      */
-    @Pointcut("@annotation(com.excilys.shooflers.dashboard.server.security.annotation.RequireValidApiKey)")
+    @Pointcut("@annotation(com.excilys.shooflers.dashboard.server.security.annotation.RequireValidApiKey) && " +
+            "!@annotation(com.excilys.shooflers.dashboard.server.security.annotation.RequireValidUser) && " +
+            "!within(@com.excilys.shooflers.dashboard.server.security.annotation.RequireValidUser *) ")
     private void methodAnnotatedWithRequireValidApiKey() {
     }
 
@@ -39,7 +41,9 @@ public class RequireValidApiKeyAspect {
      *
      * @see com.excilys.shooflers.dashboard.server.security.annotation.RequireValidApiKey
      */
-    @Pointcut("within(@com.excilys.shooflers.dashboard.server.security.annotation.RequireValidApiKey *)")
+    @Pointcut("within(@com.excilys.shooflers.dashboard.server.security.annotation.RequireValidApiKey *) && " +
+            "!@annotation(com.excilys.shooflers.dashboard.server.security.annotation.RequireValidUser) && " +
+            "!within(@com.excilys.shooflers.dashboard.server.security.annotation.RequireValidUser *) ")
     public void beanAnnotatedWithRequireValidApiKey() {
     }
 
@@ -64,11 +68,7 @@ public class RequireValidApiKeyAspect {
     public Object checkValidApiKey(ProceedingJoinPoint joinPoint) {
         Object returnValue = null;
         try {
-            try {
-                sessionService.validateApiKey();
-            } catch (RuntimeException ignore) {
-                sessionService.validateUser();
-            }
+            sessionService.validateApiKey();
             returnValue = joinPoint.proceed();
         } catch (RuntimeException e) {
             HttpServletResponse response = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getResponse();
