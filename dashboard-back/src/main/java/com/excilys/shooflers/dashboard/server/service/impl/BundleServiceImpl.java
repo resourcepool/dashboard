@@ -1,9 +1,11 @@
 package com.excilys.shooflers.dashboard.server.service.impl;
 
 import com.excilys.shooflers.dashboard.server.dao.BundleDao;
+import com.excilys.shooflers.dashboard.server.dao.MediaDao;
 import com.excilys.shooflers.dashboard.server.dto.BundleMetadataDto;
 import com.excilys.shooflers.dashboard.server.dto.mapper.BundleDtoMapperImpl;
 import com.excilys.shooflers.dashboard.server.model.Revision;
+import com.excilys.shooflers.dashboard.server.model.metadata.MediaMetadata;
 import com.excilys.shooflers.dashboard.server.property.DashboardProperties;
 import com.excilys.shooflers.dashboard.server.service.BundleService;
 import com.excilys.shooflers.dashboard.server.service.RevisionService;
@@ -29,6 +31,9 @@ public class BundleServiceImpl implements BundleService {
 
     @Autowired
     private DashboardProperties props;
+
+    @Autowired
+    private MediaDao mediaDao;
 
     @Override
     public BundleMetadataDto get(String uuid) {
@@ -58,8 +63,10 @@ public class BundleServiceImpl implements BundleService {
             bundle.setUuid(null);
             bundle = mapper.toDto(bundleDao.save(mapper.fromDto(bundle)));
             // Rename media foler
+            File dirMedia = new File(props.getBasePath() + "/media/" + bundle.getUuid());
             new File(props.getBasePath() + "/media/" + oldUuid).renameTo(new File(props.getBasePath() + "/media/" + bundle.getUuid()));
             new File(props.getBaseResources() + "/" + oldUuid).renameTo(new File(props.getBaseResources() + "/" + bundle.getUuid()));
+            updateUrlMedia(oldUuid, bundle.getUuid(), dirMedia);
             // Create a new revision
             bundle.setRevision(revisionService.add(Revision.Action.UPDATE, oldUuid, Revision.Type.BUNDLE, bundle.getUuid()).getRevision());
             return bundle;
@@ -91,5 +98,20 @@ public class BundleServiceImpl implements BundleService {
             dir.delete();
         }
         return result;
+    }
+
+    private void updateUrlMedia(String oldUuidBundle, String uuidBundle, File newMediaDir) {
+        File[] files = newMediaDir.listFiles();
+        if (files != null) {
+            for (File file : files) {
+                String uuid = file.getName().substring(0, file.getName().lastIndexOf("."));
+                MediaMetadata media = mediaDao.get(uuid, uuidBundle);
+                String oldUrl = media.getUrl();
+                media.setUrl(props.getBaseUrl() + "/" + uuidBundle + oldUrl.substring(oldUrl.lastIndexOf("/")));
+                media.setBundleTag(uuidBundle);
+                mediaDao.delete(uuid, uuidBundle);
+                mediaDao.save(media);
+            }
+        }
     }
 }
