@@ -23,8 +23,7 @@ public class FileHelper {
      */
     public static boolean saveFile(MultipartFile file, MediaMetadataDto mediaMetadataDto, String baseUrl) {
         // If extension are invalid, abort
-        if (MediaType.getMediaType(file.getContentType()) == MediaType.NONE ||
-                MediaType.getMediaType(mediaMetadataDto.getMediaType()) == MediaType.NONE) {
+        if (MediaType.getMediaType(file.getContentType()) == MediaType.NONE) {
             throw new UploadingFileException("Unrecognized extension");
         }
 
@@ -45,6 +44,7 @@ public class FileHelper {
 
             // Url to access the file
             mediaMetadataDto.setUrl(baseUrl + "/" + mediaMetadataDto.getUuidBundle() + "/" + fileName);
+            mediaMetadataDto.setMediaType(file.getContentType());
             return true;
         } catch (IOException e) {
             throw new UploadingFileException("Error uploading file");

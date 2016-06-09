@@ -34,6 +34,10 @@ public enum MediaType {
      */
     public static MediaType getMediaType(String mimeType) {
         MediaType mediaType;
+        if (mimeType == null) {
+            return NONE;
+        }
+
         switch (mimeType) {
             case "image/png":
                 mediaType = IMAGE_PNG;
