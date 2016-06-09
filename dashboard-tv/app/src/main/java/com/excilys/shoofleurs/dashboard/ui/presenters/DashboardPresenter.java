@@ -1,7 +1,7 @@
 package com.excilys.shoofleurs.dashboard.ui.presenters;
 
-import com.excilys.shoofleurs.dashboard.rest.events.SlideShowUpdatesEvent;
-import com.excilys.shoofleurs.dashboard.rest.events.SlideShowUpdatesResponseEvent;
+import com.excilys.shoofleurs.dashboard.rest.events.BundleUpdatesEvent;
+import com.excilys.shoofleurs.dashboard.rest.events.BundleUpdatesResponseEvent;
 import com.excilys.shoofleurs.dashboard.ui.DashboardApplication;
 import com.excilys.shoofleurs.dashboard.ui.event.SetDebugMessageEvent;
 import com.excilys.shoofleurs.dashboard.ui.views.DashboardView;
@@ -27,7 +27,7 @@ public class DashboardPresenter extends AbstractPresenter<DashboardView> {
         this.mDashboardView = view;
         mDashboardView.startWaitingAnimation();
         /*Check slideshows updates*/
-        mEventBus.post(new SlideShowUpdatesEvent());
+        mEventBus.post(new BundleUpdatesEvent());
     }
 
     @Override
@@ -52,7 +52,7 @@ public class DashboardPresenter extends AbstractPresenter<DashboardView> {
     }
 
     @Subscribe
-    public void onSlideShowUpdatesResponseEvent(SlideShowUpdatesResponseEvent slideShowUpdatesResponseEvent) {
-        mDashboardView.addSlideShows(slideShowUpdatesResponseEvent.getSlideShows());
+    public void onBundleUpdatesResponseEvent(BundleUpdatesResponseEvent bundleUpdatesResponseEvent) {
+        mDashboardView.addBundles(bundleUpdatesResponseEvent.getBundles());
     }
 }

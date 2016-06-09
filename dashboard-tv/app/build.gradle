@@ -14,9 +14,15 @@ android {
         versionName "1.0"
     }
     buildTypes {
+        debug {
+            buildConfigField "String", "API_KEY", loadPropertiesFile("conf.properties").getProperty("apiKey")
+            buildConfigField "String", "API_URL", '"192.168.10.23:8080/"'
+        }
+
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            buildConfigField "String", "API_KEY", loadPropertiesFile("conf.properties").getProperty("apiKey")
         }
     }
     packagingOptions {
@@ -88,3 +94,11 @@ task checkstyle(type: Checkstyle) {
 }
 
 preBuild.dependsOn('checkstyle')
+
+
+// Load the properties from the given file
+def loadPropertiesFile(String name) {
+    def props = new Properties()
+    props.load(new FileInputStream(name))
+    return props
+}

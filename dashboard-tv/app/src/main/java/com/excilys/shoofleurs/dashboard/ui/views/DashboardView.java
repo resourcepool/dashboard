@@ -1,6 +1,6 @@
 package com.excilys.shoofleurs.dashboard.ui.views;
 
-import com.excilys.shoofleurs.dashboard.model.entities.SlideShow;
+import com.excilys.shoofleurs.dashboard.model.entities.Bundle;
 
 import java.util.List;
 
@@ -13,6 +13,6 @@ public interface DashboardView extends View {
     void hideBackground();
     void showBackground();
     void showDebugMessage(int messageId);
-    void addSlideShows(List<SlideShow> slideShows);
+    void addBundles(List<Bundle> bundles);
     void nextMedia();
 }

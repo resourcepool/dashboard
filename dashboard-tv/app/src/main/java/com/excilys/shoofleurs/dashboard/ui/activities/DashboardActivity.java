@@ -1,7 +1,6 @@
 package com.excilys.shoofleurs.dashboard.ui.activities;
 
 import android.animation.AnimatorSet;
-import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.View;
@@ -10,12 +9,11 @@ import android.widget.TextView;
 
 import com.excilys.shoofleurs.dashboard.R;
 import com.excilys.shoofleurs.dashboard.model.comparators.SlideShowComparator;
-import com.excilys.shoofleurs.dashboard.model.entities.SlideShow;
+import com.excilys.shoofleurs.dashboard.model.entities.Bundle;
 import com.excilys.shoofleurs.dashboard.ui.DashboardApplication;
 import com.excilys.shoofleurs.dashboard.ui.adapters.SlideShowPagerAdapter;
 import com.excilys.shoofleurs.dashboard.ui.displayables.AbstractDisplayable;
 import com.excilys.shoofleurs.dashboard.ui.displayables.Displayable;
-import com.excilys.shoofleurs.dashboard.ui.displayables.DisplayableFactory;
 import com.excilys.shoofleurs.dashboard.ui.factories.AnimatorFactory;
 import com.excilys.shoofleurs.dashboard.ui.presenters.DashboardPresenter;
 import com.excilys.shoofleurs.dashboard.ui.utils.AndroidUtils;
@@ -34,7 +32,7 @@ import butterknife.ButterKnife;
 
 /**
  * This Activity represents the main view of the application.
- * It asks the server for slideshows updates via the SlideShowService and
+ * It asks the server for slideshows updates via the BundleService and
  * displays them.
  */
 public class DashboardActivity extends FragmentActivity implements DashboardView {
@@ -63,17 +61,17 @@ public class DashboardActivity extends FragmentActivity implements DashboardView
     /**
      * The sorted slides queue
      */
-    private Queue<SlideShow> mSlideShowQueue;
+    private Queue<Bundle> mSlideShowQueue;
 
     /**
      * The current slideshow to be displayed
      */
-    private SlideShow mCurrentSlideShow;
+    private Bundle mCurrentSlideShow;
 
     private DashboardPresenter mDashboardPresenter;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(android.os.Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         AndroidUtils.hideStatusBar(this);
         setContentView(R.layout.activity_main);
@@ -95,9 +93,9 @@ public class DashboardActivity extends FragmentActivity implements DashboardView
 
 
     @Override
-    public void addSlideShows(List<SlideShow> slideShows) {
-        Log.d(TAG, "addSlideShows: " + slideShows);
-        for (SlideShow d : slideShows) {
+    public void addBundles(List<Bundle> slideShows) {
+        Log.d(TAG, "addBundles: " + slideShows);
+        for (Bundle d : slideShows) {
             if (!mSlideShowQueue.contains(d)) {
                 mSlideShowQueue.add(d);
             }
@@ -109,7 +107,7 @@ public class DashboardActivity extends FragmentActivity implements DashboardView
         }
 
         if (mCurrentSlideShow != null) {
-            SlideShow headSlideShow = mSlideShowQueue.peek();
+            Bundle headSlideShow = mSlideShowQueue.peek();
             if (!mCurrentSlideShow.equals(headSlideShow)) {
                 replaceSlideShow(headSlideShow);
             }
@@ -123,7 +121,7 @@ public class DashboardActivity extends FragmentActivity implements DashboardView
      *
      * @param newSlideShow
      */
-    private void replaceSlideShow(SlideShow newSlideShow) {
+    private void replaceSlideShow(Bundle newSlideShow) {
         stopSlideShow();
         mCurrentSlideShow = newSlideShow;
         Log.i(TAG, "replaceSlideShow: " + mCurrentSlideShow);
@@ -139,16 +137,16 @@ public class DashboardActivity extends FragmentActivity implements DashboardView
      */
     private void startSlideShow() {
         Log.i(TAG, "startSlideShow " + mCurrentSlideShow);
-
-        if (mCurrentSlideShow != null) {
-            if (mCurrentSlideShow.getContents().size() > 0) {
-                mAdapter.clearAllDatas();
-                mAdapter.addAllDatas(DisplayableFactory.createAll(mCurrentSlideShow.getContents(), mAdapter));
-                mAdapter.onPageSelected(0);
-            } else {
-                Log.i(TAG, "startSlideShow: The contents are empty!!");
-            }
-        }
+        /**TODO send medias request of the bundle**/
+//        if (mCurrentSlideShow != null) {
+//            if (mCurrentSlideShow.getContents().size() > 0) {
+//                mAdapter.clearAllDatas();
+//                mAdapter.addAllDatas(DisplayableFactory.createAll(mCurrentSlideShow.getContents(), mAdapter));
+//                mAdapter.onPageSelected(0);
+//            } else {
+//                Log.i(TAG, "startSlideShow: The contents are empty!!");
+//            }
+//        }
     }
 
     /**

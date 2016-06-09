@@ -1,11 +1,8 @@
 package com.excilys.shooflers.dashboard;
 
 import com.excilys.shoofleurs.dashboard.model.entities.AbstractContent;
-import com.excilys.shoofleurs.dashboard.model.entities.SlideShow;
 import com.excilys.shoofleurs.dashboard.model.entities.ImageContent;
 import com.excilys.shoofleurs.dashboard.model.entities.WebContent;
-import com.excilys.shoofleurs.dashboard.model.json.ServerResponse;
-import com.excilys.shoofleurs.dashboard.model.json.Views;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.junit.Assert;
