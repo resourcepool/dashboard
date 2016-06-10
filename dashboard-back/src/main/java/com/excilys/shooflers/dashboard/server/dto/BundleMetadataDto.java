@@ -1,6 +1,5 @@
 package com.excilys.shooflers.dashboard.server.dto;
 
-
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
@@ -12,9 +11,9 @@ public class BundleMetadataDto {
 
     private ValidityDto validity;
 
-    private Long revision;
+    private long revision;
 
-
+    @SuppressWarnings("unused")
     public BundleMetadataDto() { }
 
     private BundleMetadataDto(String uuid, String name, ValidityDto validity) {
@@ -74,7 +73,7 @@ public class BundleMetadataDto {
         this.validity = validity;
     }
 
-    public Long getRevision() {
+    public long getRevision() {
         return revision;
     }
 

@@ -11,6 +11,7 @@ import com.excilys.shooflers.dashboard.server.security.annotation.RequireValidUs
 import com.excilys.shooflers.dashboard.server.service.BundleService;
 import com.excilys.shooflers.dashboard.server.service.MediaService;
 import com.excilys.shooflers.dashboard.server.service.RevisionService;
+import org.apache.commons.validator.routines.UrlValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -38,6 +39,8 @@ public class MediaController {
     public static final String MESSAGE_NEED_FILE = "Need file with this type of media \"%s\".";
     public static final String MESSAGE_NEED_FILE_WHEN_NO_MEDIA_TYPE = "Need file when you don't specify a mediatype.";
     public static final String MESSAGE_NOT_CORRESPONDING_MEDIA_TYPE = "Provided MediaType differnete of Provided mediatype in the file";
+    public static final String MESSAGE_NEED_URL = "This mediatype %s need an url.";
+    public static final String MESSAGE_MALFORMED_URL = "The url provided is malformed";
 
     @Autowired
     private RevisionService revisionService;
@@ -50,6 +53,8 @@ public class MediaController {
 
     @Autowired
     private BundleService bundleService;
+
+    private UrlValidator urlValidator = new UrlValidator(new String[]{"http", "https"});
 
     @RequireValidApiKey
     @RequestMapping(value = "{uuidbundle}/{uuid}", method = RequestMethod.GET)
@@ -84,6 +89,13 @@ public class MediaController {
 
         // Not expected a file to save, directly save media with url set
         if (mediaType == MediaType.WEB_SITE || mediaType == MediaType.WEB_VIDEO) {
+            if (mediaMetadataDto.getUrl() == null || mediaMetadataDto.getUrl().isEmpty()) {
+                throw new IllegalArgumentException(String.format(MESSAGE_NEED_URL, mediaType.getMimeType()));
+            }
+
+            if (!urlValidator.isValid(mediaMetadataDto.getUrl())) {
+                throw new IllegalArgumentException(MESSAGE_MALFORMED_URL);
+            }
             mediaMetadataDto = mediaService.save(mediaMetadataDto);
         } else {
             if (multipartFile == null) {

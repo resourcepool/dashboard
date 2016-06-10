@@ -29,6 +29,7 @@
         <commons-lang3.version>3.4</commons-lang3.version>
         <commons-io.version>2.5</commons-io.version>
         <hamcrest-date.version>2.0.1</hamcrest-date.version>
+        <commons-validator.version>1.5.1</commons-validator.version>
     </properties>
 
     <dependencies>
@@ -103,6 +104,13 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-configuration-processor</artifactId>
             <optional>true</optional>
+        </dependency>
+
+        <!-- Mini Validators-->
+        <dependency>
+            <groupId>commons-validator</groupId>
+            <artifactId>commons-validator</artifactId>
+            <version>${commons-validator.version}</version>
         </dependency>
 
 
