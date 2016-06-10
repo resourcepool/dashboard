@@ -2,15 +2,14 @@ package com.excilys.shoofleurs.dashboard.rest.service;
 
 import android.util.Log;
 
-import com.excilys.shoofleurs.dashboard.R;
 import com.excilys.shoofleurs.dashboard.rest.dtos.BundleDto;
-import com.excilys.shoofleurs.dashboard.rest.events.BundleUpdatesEvent;
-import com.excilys.shoofleurs.dashboard.rest.events.BundleUpdatesResponseEvent;
+import com.excilys.shoofleurs.dashboard.rest.dtos.MediaDto;
 import com.excilys.shoofleurs.dashboard.rest.dtos.mappers.BundleDtoMapper;
-import com.excilys.shoofleurs.dashboard.ui.event.SetDebugMessageEvent;
+import com.excilys.shoofleurs.dashboard.rest.dtos.mappers.MediaDtoMapper;
+import com.excilys.shoofleurs.dashboard.rest.events.GetBundleResponseEvent;
+import com.excilys.shoofleurs.dashboard.rest.events.GetMediaResponseEvent;
 
 import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
 
 import java.util.List;
 
@@ -28,24 +27,17 @@ public class BundleService {
 
     public BundleService(EventBus eventBus) {
         this.mEventBus = eventBus;
-        mEventBus.register(this);
         mBundleApi = ServiceGenerator.createService(BundleApi.class);
     }
 
-    /**
-     * This method checks if new Bundles are available to the server
-     */
-    @Subscribe
-    public void onBundleUpdatesEvent(BundleUpdatesEvent bundleUpdatesEvent) {
-        mEventBus.post(new SetDebugMessageEvent(R.string.debug_check_updates));
-
+    public void getBundles() {
         Call<List<BundleDto>> call = mBundleApi.getBundles();
 
         call.enqueue(new Callback<List<BundleDto>>() {
             @Override
             public void onResponse(Call<List<BundleDto>> call, Response<List<BundleDto>> response) {
                 if (response.isSuccessful()) {
-                    mEventBus.post(new BundleUpdatesResponseEvent(BundleDtoMapper.toBundles(response.body())));
+                    mEventBus.post(new GetBundleResponseEvent(BundleDtoMapper.toBundles(response.body())));
                 } else {
                     Log.e(TAG, "getBundles: Error " + response.code() + ": " + response.message());
                 }
@@ -53,7 +45,27 @@ public class BundleService {
 
             @Override
             public void onFailure(Call<List<BundleDto>> call, Throwable t) {
-                Log.e(TAG, "onFailure: " + t.toString());
+                Log.e(TAG, "getBundles onFailure: " + t.toString());
+            }
+        });
+    }
+
+    public void getMedias(String bundleUuid) {
+        Call<List<MediaDto>> call = mBundleApi.getMedias(bundleUuid);
+
+        call.enqueue(new Callback<List<MediaDto>>() {
+            @Override
+            public void onResponse(Call<List<MediaDto>> call, Response<List<MediaDto>> response) {
+                if (response.isSuccessful()) {
+                    mEventBus.post(new GetMediaResponseEvent(MediaDtoMapper.toMedias(response.body())));
+                } else {
+                    Log.e(TAG, "onResponse: Error " + response.code() + ": " + response.message());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<MediaDto>> call, Throwable t) {
+                Log.e(TAG, "getMedias onFailure: " + t.toString());
             }
         });
     }
