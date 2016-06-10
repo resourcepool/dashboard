@@ -16,6 +16,12 @@ public class Media {
 
     private String mUrl;
 
+    private int mDuration;
+
+    private String mUuidBundle;
+
+    private long mRevision;
+
     public String getUuid() {
         return mUuid;
     }
@@ -54,5 +60,43 @@ public class Media {
 
     public void setUrl(String url) {
         mUrl = url;
+    }
+
+    public int getDuration() {
+        return mDuration;
+    }
+
+    public void setDuration(int duration) {
+        mDuration = duration;
+    }
+
+    public String getUuidBundle() {
+        return mUuidBundle;
+    }
+
+    public void setUuidBundle(String uuidBundle) {
+        mUuidBundle = uuidBundle;
+    }
+
+    public long getRevision() {
+        return mRevision;
+    }
+
+    public void setRevision(long revision) {
+        mRevision = revision;
+    }
+
+    @Override
+    public String toString() {
+        return "Media{" +
+                "mUuid='" + mUuid + '\'' +
+                ", mName='" + mName + '\'' +
+                ", mMediaType=" + mMediaType +
+                ", mValidity=" + mValidity +
+                ", mUrl='" + mUrl + '\'' +
+                ", mDuration=" + mDuration +
+                ", mUuidBundle='" + mUuidBundle + '\'' +
+                ", mRevision=" + mRevision +
+                '}';
     }
 }

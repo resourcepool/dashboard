@@ -1,7 +1,5 @@
 package com.excilys.shoofleurs.dashboard.rest.dtos;
 
-import com.excilys.shoofleurs.dashboard.model.entities.Validity;
-import com.excilys.shoofleurs.dashboard.model.type.MediaType;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
@@ -15,13 +13,22 @@ public class MediaDto {
     private String mName;
 
     @JsonProperty("mediaType")
-    private MediaType mMediaType;
+    private String mMediaType;
 
     @JsonProperty("validity")
-    private Validity mValidity;
+    private ValidityDto mValidity;
 
     @JsonProperty("url")
     private String mUrl;
+
+    @JsonProperty("duration")
+    private int mDuration;
+
+    @JsonProperty("uuidBundle")
+    private String mUuidBundle;
+
+    @JsonProperty("revision")
+    private long mRevision;
 
     public String getUuid() {
         return mUuid;
@@ -39,19 +46,19 @@ public class MediaDto {
         mName = name;
     }
 
-    public MediaType getMediaType() {
+    public String getMediaType() {
         return mMediaType;
     }
 
-    public void setMediaType(MediaType mediaType) {
+    public void setMediaType(String mediaType) {
         mMediaType = mediaType;
     }
 
-    public Validity getValidity() {
+    public ValidityDto getValidity() {
         return mValidity;
     }
 
-    public void setValidity(Validity validity) {
+    public void setValidity(ValidityDto validity) {
         mValidity = validity;
     }
 
@@ -61,5 +68,29 @@ public class MediaDto {
 
     public void setUrl(String url) {
         mUrl = url;
+    }
+
+    public int getDuration() {
+        return mDuration;
+    }
+
+    public void setDuration(int duration) {
+        mDuration = duration;
+    }
+
+    public String getUuidBundle() {
+        return mUuidBundle;
+    }
+
+    public void setUuidBundle(String uuidBundle) {
+        mUuidBundle = uuidBundle;
+    }
+
+    public long getRevision() {
+        return mRevision;
+    }
+
+    public void setRevision(long revision) {
+        mRevision = revision;
     }
 }

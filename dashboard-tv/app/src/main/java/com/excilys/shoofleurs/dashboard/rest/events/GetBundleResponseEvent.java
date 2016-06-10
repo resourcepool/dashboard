@@ -7,10 +7,10 @@ import java.util.List;
 /**
  * Created by excilys on 07/06/16.
  */
-public class BundleUpdatesResponseEvent {
+public class GetBundleResponseEvent {
     private List<Bundle> mBundles;
 
-    public BundleUpdatesResponseEvent(List<Bundle> bundles) {
+    public GetBundleResponseEvent(List<Bundle> bundles) {
         mBundles = bundles;
     }
 

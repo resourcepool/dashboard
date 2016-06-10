@@ -7,24 +7,24 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  */
 public class ValidityDto {
     @JsonProperty("start")
-    private String mStartTime;
+    private String mStart;
 
     @JsonProperty("end")
-    private String mEndTime;
+    private String mEnd;
 
-    public String getStartTime() {
-        return mStartTime;
+    public String getStart() {
+        return mStart;
     }
 
-    public void setStartTime(String startTime) {
-        mStartTime = startTime;
+    public void setStart(String start) {
+        mStart = start;
     }
 
-    public String getEndTime() {
-        return mEndTime;
+    public String getEnd() {
+        return mEnd;
     }
 
-    public void setEndTime(String endTime) {
-        mEndTime = endTime;
+    public void setEnd(String end) {
+        mEnd = end;
     }
 }
