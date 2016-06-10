@@ -46,11 +46,7 @@ public class MediaPagerAdapter extends LoopingPagerAdapter<AbstractDisplayable> 
 
     @Override
     public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-//        if (positionOffset == 0) {
-//            mDashboardView.getDashboardActivity().showBackground();
-//        } else {
-//            mDashboardView.getDashboardActivity().hideBackground();
-//        }
+            mDashboardView.showBackground(positionOffset == 0);
     }
 
     @Override

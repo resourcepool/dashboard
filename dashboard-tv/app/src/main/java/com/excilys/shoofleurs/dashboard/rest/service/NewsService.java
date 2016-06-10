@@ -3,6 +3,7 @@ package com.excilys.shoofleurs.dashboard.rest.service;
 import com.excilys.shoofleurs.dashboard.model.entities.Message;
 import com.excilys.shoofleurs.dashboard.rest.events.MessageUpdatesEvent;
 import com.excilys.shoofleurs.dashboard.rest.events.MessageUpdatesResponseEvent;
+import com.excilys.shoofleurs.dashboard.rest.service.api.MessageApi;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;

@@ -55,7 +55,7 @@ dependencies {
 
     /*Retrofit*/
     compile 'com.squareup.retrofit2:retrofit:2.0.2'
-    compile 'com.squareup.retrofit2:converter-jackson:2.0.2'
+    compile 'com.squareup.retrofit2:converter-gson:2.0.2'
 
     /*Fresco*/
     compile 'com.facebook.fresco:fresco:0.10.0'
@@ -63,10 +63,11 @@ dependencies {
     /*EventBus*/
     compile 'org.greenrobot:eventbus:3.0.0'
 
-    /*Jackson*/
-    compile 'com.fasterxml.jackson.core:jackson-core:2.7.3'
-    compile 'com.fasterxml.jackson.core:jackson-annotations:2.7.3'
-    compile 'com.fasterxml.jackson.core:jackson-databind:2.7.3'
+    /*Gson*/
+    compile 'com.google.code.gson:gson:2.6.2'
+
+    /*NoSql database Paper*/
+    compile 'io.paperdb:paperdb:1.5'
 
     /*Video caching*/
     compile 'com.danikula:videocache:2.3.4'

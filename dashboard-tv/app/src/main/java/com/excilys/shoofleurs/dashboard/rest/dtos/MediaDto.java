@@ -1,33 +1,34 @@
 package com.excilys.shoofleurs.dashboard.rest.dtos;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+
+import com.google.gson.annotations.SerializedName;
 
 /**
  * Created by excilys on 09/06/16.
  */
 public class MediaDto {
-    @JsonProperty("uuid")
+    @SerializedName("uuid")
     private String mUuid;
 
-    @JsonProperty("name")
+    @SerializedName("name")
     private String mName;
 
-    @JsonProperty("mediaType")
+    @SerializedName("mediaType")
     private String mMediaType;
 
-    @JsonProperty("validity")
+    @SerializedName("validity")
     private ValidityDto mValidity;
 
-    @JsonProperty("url")
+    @SerializedName("url")
     private String mUrl;
 
-    @JsonProperty("duration")
+    @SerializedName("duration")
     private int mDuration;
 
-    @JsonProperty("uuidBundle")
+    @SerializedName("uuidBundle")
     private String mUuidBundle;
 
-    @JsonProperty("revision")
+    @SerializedName("revision")
     private long mRevision;
 
     public String getUuid() {
