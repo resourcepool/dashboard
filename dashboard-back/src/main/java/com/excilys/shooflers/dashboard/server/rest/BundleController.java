@@ -1,6 +1,7 @@
 package com.excilys.shooflers.dashboard.server.rest;
 
 import com.excilys.shooflers.dashboard.server.dto.BundleMetadataDto;
+import com.excilys.shooflers.dashboard.server.exception.ResourceNotFoundException;
 import com.excilys.shooflers.dashboard.server.security.annotation.RequireValidApiKey;
 import com.excilys.shooflers.dashboard.server.security.annotation.RequireValidUser;
 import com.excilys.shooflers.dashboard.server.service.BundleService;
@@ -67,12 +68,12 @@ public class BundleController {
      */
     @RequestMapping(value = "{uuid}", method = RequestMethod.GET)
     @RequireValidApiKey
-    public ResponseEntity<?> get(@PathVariable("uuid") String uuid) {
+    public BundleMetadataDto get(@PathVariable("uuid") String uuid) {
         BundleMetadataDto result = bundleService.get(uuid);
         if (result == null) {
-            return new ResponseEntity<>("Bound not found", HttpStatus.NOT_FOUND);
+            throw new ResourceNotFoundException("Bound not found");
         } else {
-            return new ResponseEntity<>(result, HttpStatus.OK);
+            return result;
         }
     }
 
@@ -101,7 +102,7 @@ public class BundleController {
         if (bundleService.delete(uuid)) {
             return new ResponseEntity(HttpStatus.NO_CONTENT);
         } else {
-            return new ResponseEntity(HttpStatus.NOT_FOUND);
+            throw new ResourceNotFoundException("Bound not found");
         }
     }
 }
