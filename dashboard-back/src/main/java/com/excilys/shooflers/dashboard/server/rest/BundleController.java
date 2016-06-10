@@ -56,7 +56,7 @@ public class BundleController {
     public BundleMetadataDto save(@RequestBody BundleMetadataDto bundleMetadataDto) {
         bundleMetadataDto.setUuid(null);
         bundleMedataDtoValidator.validate(bundleMetadataDto);
-        return bundleService.create(bundleMetadataDto);
+        return bundleService.save(bundleMetadataDto);
     }
 
     /**
@@ -79,15 +79,16 @@ public class BundleController {
     /**
      * Update a bundle
      *
-     * @param bundle Bundle to update
+     * @param bundleMetadataDto Bundle to update
      * @return
      */
     @RequestMapping(method = RequestMethod.PUT)
-    public BundleMetadataDto update(@RequestBody BundleMetadataDto bundle) {
-        if (bundleService.get(bundle.getUuid()) == null) {
+    public BundleMetadataDto update(@RequestBody BundleMetadataDto bundleMetadataDto) {
+        bundleMedataDtoValidator.validate(bundleMetadataDto);
+        if (bundleService.get(bundleMetadataDto.getUuid()) == null) {
             throw new IllegalArgumentException("An UUID is need to edit an bundle.");
         }
-        return bundleService.update(bundle);
+        return bundleService.update(bundleMetadataDto);
     }
 
     /**

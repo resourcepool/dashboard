@@ -45,7 +45,7 @@ public class DaoInitializer {
             try {
                 Files.createDirectory(p);
             } catch (IOException e) {
-                String err = "The database failed to create a directory. Please check you have the right permissions";
+                String err = "The database failed to save a directory. Please check you have the right permissions";
                 LOGGER.error(err);
                 throw new IllegalStateException(err);
             }
