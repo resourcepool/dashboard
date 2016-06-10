@@ -3,6 +3,7 @@ package com.excilys.shoofleurs.dashboard.ui.presenters;
 import android.util.Log;
 
 import com.excilys.shoofleurs.dashboard.R;
+import com.excilys.shoofleurs.dashboard.database.dao.impl.BundleDaoImpl;
 import com.excilys.shoofleurs.dashboard.model.comparators.BundleComparator;
 import com.excilys.shoofleurs.dashboard.model.entities.Bundle;
 import com.excilys.shoofleurs.dashboard.model.entities.Media;
@@ -119,6 +120,7 @@ public class DashboardPresenter extends AbstractPresenter<DashboardView> {
     @SuppressWarnings("unused")
     public void onGetBundleResponseEvent(GetBundleResponseEvent getBundleResponseEvent) {
         addBundles(getBundleResponseEvent.getBundles());
+        new BundleDaoImpl().save(getBundleResponseEvent.getBundles());
     }
 
     @Subscribe

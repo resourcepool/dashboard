@@ -1,4 +1,4 @@
-package com.excilys.shoofleurs.dashboard.rest.service;
+package com.excilys.shoofleurs.dashboard.rest.service.api;
 
 import com.excilys.shoofleurs.dashboard.rest.dtos.BundleDto;
 import com.excilys.shoofleurs.dashboard.rest.dtos.MediaDto;

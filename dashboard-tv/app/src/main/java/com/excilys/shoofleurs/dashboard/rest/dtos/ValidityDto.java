@@ -1,15 +1,15 @@
 package com.excilys.shoofleurs.dashboard.rest.dtos;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.gson.annotations.SerializedName;
 
 /**
  * Created by excilys on 09/06/16.
  */
 public class ValidityDto {
-    @JsonProperty("start")
+    @SerializedName("start")
     private String mStart;
 
-    @JsonProperty("end")
+    @SerializedName("end")
     private String mEnd;
 
     public String getStart() {

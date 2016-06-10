@@ -8,6 +8,7 @@ import com.excilys.shoofleurs.dashboard.rest.dtos.mappers.BundleDtoMapper;
 import com.excilys.shoofleurs.dashboard.rest.dtos.mappers.MediaDtoMapper;
 import com.excilys.shoofleurs.dashboard.rest.events.GetBundleResponseEvent;
 import com.excilys.shoofleurs.dashboard.rest.events.GetMediaResponseEvent;
+import com.excilys.shoofleurs.dashboard.rest.service.api.BundleApi;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -30,9 +31,12 @@ public class BundleService {
         mBundleApi = ServiceGenerator.createService(BundleApi.class);
     }
 
+    public void checkRevision() {
+
+    }
+
     public void getBundles() {
         Call<List<BundleDto>> call = mBundleApi.getBundles();
-
         call.enqueue(new Callback<List<BundleDto>>() {
             @Override
             public void onResponse(Call<List<BundleDto>> call, Response<List<BundleDto>> response) {

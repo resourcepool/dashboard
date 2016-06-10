@@ -2,6 +2,7 @@ package com.excilys.shoofleurs.dashboard.ui;
 
 import android.app.Application;
 
+import com.excilys.shoofleurs.dashboard.database.DatabaseController;
 import com.excilys.shoofleurs.dashboard.rest.service.BundleService;
 import com.excilys.shoofleurs.dashboard.rest.service.NewsService;
 import com.facebook.drawee.backends.pipeline.Fresco;
@@ -15,6 +16,7 @@ public class DashboardApplication extends Application {
     private BundleService mBundleService;
     private NewsService mNewsService;
     private EventBus mEventBus;
+    private DatabaseController mDatabaseController;
 
     @Override
     public void onCreate() {
@@ -22,6 +24,7 @@ public class DashboardApplication extends Application {
         mEventBus = EventBus.getDefault();
         mBundleService = new BundleService(mEventBus);
         mNewsService = new NewsService(mEventBus);
+        mDatabaseController = new DatabaseController(getApplicationContext(), mEventBus);
         Fresco.initialize(getApplicationContext());
     }
 
@@ -35,5 +38,9 @@ public class DashboardApplication extends Application {
 
     public EventBus getEventBus() {
         return mEventBus;
+    }
+
+    public DatabaseController getDatabaseController() {
+        return mDatabaseController;
     }
 }
