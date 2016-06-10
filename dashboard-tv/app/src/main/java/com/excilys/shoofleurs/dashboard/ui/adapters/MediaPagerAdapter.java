@@ -39,7 +39,9 @@ public class MediaPagerAdapter extends LoopingPagerAdapter<AbstractDisplayable> 
 
     @Override
     public void onDisplayableCompletion() {
-        mDashboardView.nextMedia();
+        if (mDisplayables.size() != 1) {
+            mDashboardView.nextMedia();
+        }
     }
 
     @Override
