@@ -6,7 +6,7 @@
 
     <div class="pull-right">
       <h4>
-        <a href="#/bundle/:bundleId/media/add"> Add Media <span aria-hidden="true" class="glyphicon glyphicon-upload"></span></a>
+        <a href="#/bundle/{{ bundle.uuid }}/media/add"> Add Media <span aria-hidden="true" class="glyphicon glyphicon-upload"></span></a>
       </h4>
     </div>
   </div>
@@ -26,9 +26,10 @@
       <tr ng-repeat="media in medias">
       	<td >
       		<a href="{{ media.url }}">
-      			<span ng-if="media['@type'] == 'ImageContent'" class="glyphicon glyphicon-picture"></span> 
-      			<span ng-if="media['@type'] == 'WebContent'" class="glyphicon glyphicon-link"></span>
-      			<span ng-if="media['@type'] == 'VideoContent'" class="glyphicon glyphicon-film"></span>  
+      			<span ng-if="media.mediaType == 'image'" class="glyphicon glyphicon-picture"></span>
+      			<span ng-if="media.mediaType == 'application/web-site'" class="glyphicon glyphicon-link"></span>
+            <span ng-if="media.mediaType == 'application/web-video'" class="glyphicon glyphicon-link"></span>
+      			<span ng-if="media.mediaType == 'video'" class="glyphicon glyphicon-film"></span>
       			{{ media.name }}
       		</a>
       	</td>

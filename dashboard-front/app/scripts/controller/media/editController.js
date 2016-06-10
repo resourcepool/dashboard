@@ -5,14 +5,17 @@
 
 angular
   .module('dashboardFrontApp')
-  .controller('MediaEditController', ['$scope', '$http', '$routeParams', '$window', 'API', 'MSG', 'bundleService', 'mediaService',
-    function ($scope, $http, $routeParams, $window, API, MSG, bundleService, mediaService ) {
+  .controller('MediaEditController', ['$scope', '$http', '$routeParams', '$window', 'API', 'MSG', 'bundleService', 'mediaService', 'firewallService',
+    function ($scope, $http, $routeParams, $window, API, MSG, bundleService, mediaService, firewallService) {
 
       var bundleId = $routeParams.bundleId;
       var mediaId = $routeParams.mediaId;
 
+      firewallService.isAuthenticated();
+
       $scope.bundle = {};
       $scope.media = {};
+      $scope.media.validity = {};
       $scope.file = {};
       $scope.title = "Edit";
       $scope.loading = false;
@@ -28,13 +31,12 @@ angular
 
 
       // On récupère le bundle correspondant
-      mediaService.getById(bundleId).then(function(data) {
+      mediaService.getById(mediaId, bundleId).then(function(data) {
         console.log(data);
         $scope.media = data;
       }, function(error) {
         $scope.error = MSG.ERR.GET_MEDIA;
       });
-
 
       // on définit la fonction de submit
       $scope.submit = function (isValid) {

@@ -1,0 +1,29 @@
+<div class="container">
+  <div ng-if="scope.error" class="alert alert-danger">{{ scope.error }}</div>
+  <div class="row">
+    <div class="col-xs-8 col-xs-offset-1 box">
+      <form class="form-horizontal" name="form" ng-submit="login(form.$valid)" novalidate>
+        <fieldset>
+          <legend>Login</legend>
+          <p ng-show="loading">Sending ... <img src="images/loader.gif"></p>
+          <div class="form-group">
+            <label for="username">Username</label>
+            <input id="username" type='text' name="username" required class="form-control" ng-model="username">
+            <div ng-show="form.$submitted && form.username.$error.required" class="alert alert-danger">The field must not be empty</div>
+          </div>
+
+          <div class="form-group">
+            <label for="password">Password</label>
+            <input id="password" type="password" name="password" required  class="form-control" ng-model="password">
+            <div ng-show="form.$submitted && form.password.$error.required" class="alert alert-danger">The field must not be empty</div>
+          </div>
+
+          <div class="actions pull-right">
+            <button type="reset" class="btn btn-default">Reset</button>
+            <input type="submit" value="Login" class="btn btn-primary" />
+          </div>
+        </fieldset>
+      </form>
+    </div>
+  </div>
+</div>
