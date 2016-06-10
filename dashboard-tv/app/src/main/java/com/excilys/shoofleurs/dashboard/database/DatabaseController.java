@@ -25,7 +25,8 @@ public class DatabaseController {
 
     public DatabaseController(Context context, EventBus eventBus) {
         this.mEventBus = eventBus;
-        mEventBus.register(this);
+        //mEventBus.register(this);
+
         Paper.init(context);
         Paper.addSerializer(Bundle.class, new BundleSerializer());
         Paper.addSerializer(Media.class, new MediaSerializer());
@@ -33,7 +34,4 @@ public class DatabaseController {
         mBundleDao = new BundleDaoImpl();
         mMediaDao = new MediaDaoImpl();
     }
-
-
-
 }

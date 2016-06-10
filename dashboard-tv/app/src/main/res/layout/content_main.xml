@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:text="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -9,80 +8,12 @@
     tools:context=".ui.activities.DashboardActivity"
     tools:showIn="@layout/activity_main">
 
-    <RelativeLayout
-        android:id="@+id/background_layout"
+    <fragment
+        android:id="@+id/splash_fragment"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <RelativeLayout
-            android:id="@+id/title_layout"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="50dp"
-            android:gravity="center">
-
-            <com.excilys.shoofleurs.dashboard.ui.utils.TypeFaceTextView
-                android:id="@+id/title_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:padding="20dp"
-                android:text="@string/title"
-                android:textColor="@android:color/white"
-                android:textSize="75sp"
-                text:typeface="Roboto-Thin.ttf" />
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:id="@+id/progress_view_layout"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:layout_below="@id/title_layout"
-            android:layout_centerHorizontal="true">
-
-            <View
-                android:id="@+id/progress_view_top_left_point"
-                android:layout_width="3dp"
-                android:layout_height="3dp"
-                android:background="@drawable/progress_view_point" />
-
-            <View
-                android:id="@+id/progress_view_bottom_left_point"
-                android:layout_width="3dp"
-                android:layout_height="3dp"
-                android:layout_alignParentBottom="true"
-                android:background="@drawable/progress_view_point" />
-
-            <View
-                android:id="@+id/progress_view_bottom_right_point"
-                android:layout_width="3dp"
-                android:layout_height="3dp"
-                android:layout_alignParentBottom="true"
-                android:layout_alignParentRight="true"
-                android:background="@drawable/progress_view_point" />
-
-            <View
-                android:id="@+id/progress_view_top_right_point"
-                android:layout_width="3dp"
-                android:layout_height="3dp"
-                android:layout_alignParentRight="true"
-                android:background="@drawable/progress_view_point" />
-        </RelativeLayout>
-
-        <com.excilys.shoofleurs.dashboard.ui.utils.TypeFaceTextView
-            android:id="@+id/debug_message"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/progress_view_layout"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="25dp"
-            android:text="@string/debug_check_updates"
-            android:textColor="@android:color/white"
-            android:textSize="14sp"
-            text:typeface="Roboto-Light.ttf" />
-    </RelativeLayout>
-
+        android:layout_height="match_parent"
+        android:name="com.excilys.shoofleurs.dashboard.ui.fragments.SplashScreenFragment"
+        tools:layout="@layout/fragment_splash_screen"/>
 
     <com.excilys.shoofleurs.dashboard.ui.utils.ViewPagerCustomDuration
         android:id="@+id/view_pager"
