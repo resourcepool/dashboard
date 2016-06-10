@@ -108,24 +108,38 @@ public class BundleControllerTest {
         return "Basic " + Base64.encodeBase64String((login + ":" + password).getBytes());
     }
 
+    /**
+     * Map an object to JSON
+     *
+     * @param o object to map
+     * @return JSON result
+     */
     private String toJson(Object o) throws IOException {
         MockHttpOutputMessage mockHttpOutputMessage = new MockHttpOutputMessage();
         //noinspection unchecked
-        this.mappingJackson2HttpMessageConverter.write(
+        mappingJackson2HttpMessageConverter.write(
                 o, MediaType.APPLICATION_JSON, mockHttpOutputMessage);
         return mockHttpOutputMessage.getBodyAsString();
     }
 
+    /**
+     * MAp a JSON string to an Java Object
+     * @param txt String to parse
+     * @param aClass Class to convert
+     * @param <T> Generic type
+     * @return Object mapped
+     */
     private <T> T fromJson(String txt, Class<T> aClass) throws IOException {
         MockHttpInputMessage mockHttpInputMessage = new MockHttpInputMessage(txt.getBytes());
         //noinspection unchecked
         return (T) this.mappingJackson2HttpMessageConverter.read(aClass, mockHttpInputMessage);
     }
 
+
     @Autowired
     void setConverters(HttpMessageConverter<?>[] converters) {
         //noinspection OptionalGetWithoutIsPresent
-        this.mappingJackson2HttpMessageConverter = Arrays.asList(converters).stream().filter(
+        mappingJackson2HttpMessageConverter = Arrays.asList(converters).stream().filter(
                 hmc -> hmc instanceof MappingJackson2HttpMessageConverter).findAny().get();
 
         assertNotNull("the JSON message converter must not be null",
@@ -224,7 +238,7 @@ public class BundleControllerTest {
     @Test
     public void bundleFound() throws Exception {
         final String name = "bundleMetadataDto";
-        final BundleMetadataDto bundleMetadataDto = bundleService.create(new BundleMetadataDto.Builder().name(name).build());
+        final BundleMetadataDto bundleMetadataDto = bundleService.save(new BundleMetadataDto.Builder().name(name).build());
 
         MvcResult result = mockMvc.perform(getAuthenticated(("/bundle/" + bundleMetadataDto.getUuid())))
                 .andExpect(status().isOk())
@@ -489,7 +503,7 @@ public class BundleControllerTest {
 
     @Test
     public void deleteBundle() throws Exception {
-        bundleService.create(new BundleMetadataDto.Builder().name("ToDelete").build());
+        bundleService.save(new BundleMetadataDto.Builder().name("ToDelete").build());
 
         final long previousSize = bundleService.getAll().size();
         final long previousRevision = revisionService.getLatest();
@@ -528,7 +542,7 @@ public class BundleControllerTest {
     @Test
     public void editBundleSuccessBasic() throws Exception {
         final String newName = "Nouveau Nom";
-        final BundleMetadataDto bundleMetadataDto = bundleService.create(new BundleMetadataDto.Builder().name("Name").build());
+        final BundleMetadataDto bundleMetadataDto = bundleService.save(new BundleMetadataDto.Builder().name("Name").build());
         final String formName = bundleMetadataDto.getName();
         final long previousRevision = revisionService.getLatest();
         final long previousSize = bundleService.getAll().size();
@@ -556,19 +570,18 @@ public class BundleControllerTest {
         assertEquals(previousRevision + 1, revisionService.getLatest());
 
         List<Revision> revisions = revisionService.getDiffs(previousRevision);
+        revisions.sort((revision1, revision2) -> revision1.getAction().compareTo(revision2.getAction()));
         assertThat(revisions, Matchers.hasSize(2));
         System.out.println(revisions);
 
-        Revision revision = revisions.get(0);
+        Revision revision = revisions.get(1);
         assertEquals(Revision.Action.DELETE, revision.getAction());
         assertEquals(((long) revision.getRevision()), previousRevision + 1);
         assertEquals(revision.getType(), Revision.Type.BUNDLE);
         assertEquals(revision.getTarget(), bundleMetadataDto.getUuid());
         assertEquals(revision.getResult(), null);
 
-        revision = revisions.get(1);
-        System.out.println(revision);
-        System.out.println(previousRevision);
+        revision = revisions.get(0);
         assertEquals(Revision.Action.ADD, revision.getAction());
         assertEquals(((long) revision.getRevision()), previousRevision + 1);
         assertEquals(revision.getType(), Revision.Type.BUNDLE);
@@ -578,9 +591,8 @@ public class BundleControllerTest {
 
     @Test
     public void editBundleSuccessOnValidity() throws Exception {
-        final String newName = "NewName";
         final String formName = "AncienNom";
-        final BundleMetadataDto formBundleMetadataDto = bundleService.create(new BundleMetadataDto.Builder().name(formName).build());
+        final BundleMetadataDto formBundleMetadataDto = bundleService.save(new BundleMetadataDto.Builder().name(formName).build());
         final LocalDateTime startDateTime = LocalDateTime.now();
         final long previousRevision = revisionService.getLatest();
         final long previousSize = bundleService.getAll().size();
@@ -610,19 +622,18 @@ public class BundleControllerTest {
         assertEquals(previousRevision + 1, revisionService.getLatest());
 
         List<Revision> revisions = revisionService.getDiffs(previousRevision);
+        revisions.sort((revision1, revision2) -> revision1.getAction().compareTo(revision2.getAction()));
         assertThat(revisions, Matchers.hasSize(2));
         System.out.println(revisions);
 
-        Revision revision = revisions.get(0);
+        Revision revision = revisions.get(1);
         assertEquals(Revision.Action.DELETE, revision.getAction());
         assertEquals(((long) revision.getRevision()), previousRevision + 1);
         assertEquals(revision.getType(), Revision.Type.BUNDLE);
         assertEquals(revision.getTarget(), formBundleMetadataDto.getUuid());
         assertEquals(revision.getResult(), null);
 
-        revision = revisions.get(1);
-        System.out.println(revision);
-        System.out.println(previousRevision);
+        revision = revisions.get(0);
         assertEquals(Revision.Action.ADD, revision.getAction());
         assertEquals(((long) revision.getRevision()), previousRevision + 1);
         assertEquals(revision.getType(), Revision.Type.BUNDLE);
@@ -655,4 +666,149 @@ public class BundleControllerTest {
                 .andExpect(status().isBadRequest())
                 .andReturn();
     }
+
+    @Test
+    public void editBundleFailedWithoutName() throws Exception {
+        final String name = "Toupoutou";
+        final BundleMetadataDto formBundleMetadataDto = bundleService.save(new BundleMetadataDto.Builder().name(name).build());
+        formBundleMetadataDto.setName(null);
+
+        mockMvc.perform(putAuthenticated(("/bundle"))
+                .content(toJson(formBundleMetadataDto))
+                .contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(status().isBadRequest())
+                .andReturn();
+    }
+
+    @Test
+    public void editBundleFailedStartAfterEnd() throws Exception {
+        final String name = "Bouikbouik";
+        final BundleMetadataDto formBundleMetadataDto = bundleService.save(new BundleMetadataDto.Builder().name(name).build());
+
+        formBundleMetadataDto.setValidity(makeValidityDto(LocalDateTime.now(), LocalDateTime.now().minusDays(9)));
+        mockMvc.perform(putAuthenticated(("/bundle"))
+                .content(toJson(formBundleMetadataDto))
+                .contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(status().isBadRequest())
+//                .andExpect(content().string(""))
+                .andReturn();
+    }
+
+    @Test
+    public void editBundleSuccesWithValidityWithoutStartWithoutEnd() throws Exception {
+        final String name = "Jojo";
+        final BundleMetadataDto formBundleMetadataDto = bundleService.save(new BundleMetadataDto.Builder().name(name).build());
+
+        formBundleMetadataDto.setValidity(makeValidityDto(null, null));
+        assertNotNull(formBundleMetadataDto.getValidity());
+
+        MvcResult result = mockMvc.perform(putAuthenticated(("/bundle"))
+                .content(toJson(formBundleMetadataDto))
+                .contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        BundleMetadataDto bundleMetadataDtoAfter = fromJson(result.getResponse().getContentAsString(), BundleMetadataDto.class);
+        assertEquals(name, bundleMetadataDtoAfter.getName());
+        assertNull(bundleMetadataDtoAfter.getValidity());
+    }
+
+    @Test
+    public void editBundleSuccesWithValidityWithStartWithoutEnd() throws Exception {
+        final String name = "Jojo";
+        final BundleMetadataDto formBundleMetadataDto = bundleService.save(new BundleMetadataDto.Builder().name(name).build());
+        final LocalDateTime startDateTime = LocalDateTime.now().plusDays(6);
+
+        formBundleMetadataDto.setValidity(makeValidityDto(startDateTime, null));
+
+
+        MvcResult result = mockMvc.perform(putAuthenticated(("/bundle"))
+                .content(toJson(formBundleMetadataDto))
+                .contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        BundleMetadataDto bundleMetadataDtoAfter = fromJson(result.getResponse().getContentAsString(), BundleMetadataDto.class);
+        assertEquals(name, bundleMetadataDtoAfter.getName());
+        assertNotNull(bundleMetadataDtoAfter.getValidity());
+        assertNull(bundleMetadataDtoAfter.getValidity().getEnd());
+        assertEquals(startDateTime, toLocalDateTime(bundleMetadataDtoAfter.getValidity().getStart()));
+    }
+
+    @Test
+    public void editBundleSuccesWithValidityWithoutStartWithEnd() throws Exception {
+        final String name = "Bouikbouik";
+        final BundleMetadataDto formBundleMetadataDto = bundleService.save(new BundleMetadataDto.Builder().name(name).build());
+        final LocalDateTime endDateTime = LocalDateTime.now().plusDays(9);
+
+        formBundleMetadataDto.setValidity(makeValidityDto(null, endDateTime));
+
+        MvcResult result = mockMvc.perform(putAuthenticated(("/bundle"))
+                .content(toJson(formBundleMetadataDto))
+                .contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        BundleMetadataDto bundleMetadataDtoAfter = fromJson(result.getResponse().getContentAsString(), BundleMetadataDto.class);
+        assertEquals(name, bundleMetadataDtoAfter.getName());
+        assertNotNull(bundleMetadataDtoAfter.getValidity());
+        assertThat(toLocalDateTime(bundleMetadataDtoAfter.getValidity().getStart()), allOf(LocalDateTimeMatchers.before(LocalDateTime.now().plus(Duration.ofSeconds(1))), LocalDateTimeMatchers.after(LocalDateTime.now().minus(Duration.ofSeconds(1)))));
+        assertEquals(endDateTime, toLocalDateTime(bundleMetadataDtoAfter.getValidity().getEnd()));
+    }
+
+    @Test
+    public void editBundleFailedWithValidityWithoutStartWithEndAnteriorNow() throws Exception {
+        final String name = "Bouikbouik";
+        final BundleMetadataDto formBundleMetadataDto = bundleService.save(new BundleMetadataDto.Builder().name(name).build());
+        formBundleMetadataDto.setValidity(makeValidityDto(null, LocalDateTime.now().minusDays(9)));
+
+        mockMvc.perform(putAuthenticated(("/bundle"))
+                .content(toJson(formBundleMetadataDto))
+                .contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(status().isBadRequest())
+//                .andExpect(content().string(""))
+                .andReturn();
+    }
+
+    @Test
+    public void editBundleFailedWithWrongFormatStart() throws Exception {
+        final String name = "Bunduru";
+        final BundleMetadataDto formBundleMetadataDto = bundleService.save(new BundleMetadataDto.Builder().name(name).build());
+        formBundleMetadataDto.setValidity(makeValidityDto(null, null));
+        formBundleMetadataDto.getValidity().setStart("zesljkl");
+
+        mockMvc.perform(postAuthenticated(("/bundle"))
+                .content(toJson(formBundleMetadataDto))
+                .contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().string(""))
+                .andReturn();
+    }
+
+    @Test
+    public void editFailedWithWronfFormatEnd() throws Exception {
+        final String name = "Bouikbouik";
+        final BundleMetadataDto formBundleMetadataDto = bundleService.save(new BundleMetadataDto.Builder().name(name).build());
+        formBundleMetadataDto.setValidity(makeValidityDto(LocalDateTime.now(), null));
+        formBundleMetadataDto.getValidity().setEnd("zesljkl");
+
+        mockMvc.perform(postAuthenticated(("/bundle"))
+                .content(toJson(formBundleMetadataDto))
+                .contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().string(""))
+                .andReturn();
+    }
+
+
+    @Test
+    public void editBundleCreateFailedIfUnknownProperty() throws Exception {
+        mockMvc.perform(putAuthenticated(("/bundle"))
+                .content("{uuid:null, unknown:null}")
+                .contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().string(""))
+                .andReturn();
+    }
+
 }

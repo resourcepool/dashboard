@@ -29,7 +29,7 @@ public interface BundleService {
      *
      * @param bundle the bundle meta data
      */
-    BundleMetadataDto create(BundleMetadataDto bundle);
+    BundleMetadataDto save(BundleMetadataDto bundle);
 
     /**
      * Update a bundle into DB.

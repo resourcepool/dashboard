@@ -46,7 +46,7 @@ public class BundleServiceImpl implements BundleService {
     }
 
     @Override
-    public BundleMetadataDto create(BundleMetadataDto bundle) {
+    public BundleMetadataDto save(BundleMetadataDto bundle) {
         bundle = mapper.toDto(bundleDao.save(mapper.fromDto(bundle)));
         if (bundle != null) {
             // Create a new revision
