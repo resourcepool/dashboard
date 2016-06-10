@@ -60,24 +60,4 @@ public enum MediaType {
         }
         return mediaType;
     }
-
-    /**
-     * MimeType to extension
-     * @param mimeType mime type to convert
-     * @return Extension
-     */
-    public static String getExtension(String mimeType) {
-        String extension = "";
-        if (mimeType == null) {
-            return extension;
-        }
-
-        for (MediaType m : MediaType.values()) {
-            if (mimeType.equals(m.getMimeType())) {
-                extension = m.getExtension();
-                break;
-            }
-        }
-        return extension;
-    }
 }
