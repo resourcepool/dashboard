@@ -5,7 +5,7 @@
 angular
   .module('dashboardFrontApp')
   .constant("API", {
-    "BASE_URL": "http://localhost:8080/",
+    "BASE_URL": "http://localhost:8080",
   })
   .constant("DATE", {
     "SERVER_FORMAT": "YYYY-MM-DD[T]HH:mm:ss",
