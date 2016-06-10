@@ -1,5 +1,6 @@
 package com.excilys.shooflers.dashboard.server.config;
 
+import com.excilys.shooflers.dashboard.server.exception.ResourceNotFoundException;
 import com.excilys.shooflers.dashboard.server.exception.ValidationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,5 +32,11 @@ public class ExceptionMapper {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseEntity<?> illegalArgumentException(IllegalArgumentException e) {
         return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(ResourceNotFoundException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ResponseEntity<?> resourceNotFoundException(IllegalArgumentException e) {
+        return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
     }
 }
