@@ -73,7 +73,7 @@ public class MediaServiceImpl implements MediaService {
     @Override
     public boolean delete(String uuid, String uuidBundle) {
         MediaMetadata media = mediaDao.get(uuid, uuidBundle);
-        new File(props.getBaseResources() + "/" + uuidBundle + "/" + uuid + MediaType.getExtension(media.getMediaType().getMimeType())).delete();
+        new File(props.getBaseResources() + "/" + uuidBundle + "/" + uuid + MediaType.getMediaType(media.getMediaType().getMimeType()).getExtension()).delete();
 
         return mediaDao.delete(uuid, uuidBundle);
     }

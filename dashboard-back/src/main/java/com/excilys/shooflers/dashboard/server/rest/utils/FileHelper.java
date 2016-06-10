@@ -31,7 +31,7 @@ public class FileHelper {
             byte[] bytes = file.getBytes();
 
             // File name for the media : uuid + extension
-            String fileName = mediaMetadataDto.getUuid() + MediaType.getExtension(file.getContentType());
+            String fileName = mediaMetadataDto.getUuid() + MediaType.getMediaType(file.getContentType()).getExtension();
 
             // File is stored in media folder. Media contains bundle folder
             String dirBundleDest = FOLDER_MEDIA + "/" + mediaMetadataDto.getUuidBundle() + "/" + fileName;
