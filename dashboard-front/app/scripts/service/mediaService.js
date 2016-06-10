@@ -10,8 +10,8 @@ angular
     this.getAllByBundle = getAllByBundle;
     this.getById = getById;
     this.removeById = removeById;
-    this.uploadMedia = uploadMedia;
-    this.addWebContent = addWebContent;
+    this.saveMedia = saveMedia;
+    this.saveWebMedia = saveWebMedia;
 
     /*
     this.update = update;
@@ -19,28 +19,28 @@ angular
     */
 
     function getAllByBundle(bundleId) {
-      return $http.get(API.BASE_URL + "/media/list.js")
+      return $http.get(API.BASE_URL + "media/" + bundleId)
         .then(function(success) {
           return formatDateTime(success.data);
         });
     }
 
-    function getById(mediaId) {
-      return $http.get(API.BASE_URL + "/media/media.js")
+    function getById(mediaId, bundleId) {
+      return $http.get(API.BASE_URL + "media/"+ bundleId + "/" + mediaId)
         .then(function(success) {
           return success.data;
         });
     }
 
-    function removeById(id) {
-      return $http.delete(API.BASE_URL + "medias/" + id)
+    function removeById(mediaId, bundleId) {
+      return $http.delete(API.BASE_URL + "media/"+ bundleId + "/" + mediaId)
         .then(function(success){
           return success;
         })
     }
 
-    function addWebContent(media) {
-      return $http.post(API.BASE_URL + "medias", media, {
+    function saveWebMedia(media) {
+      return $http.post(API.BASE_URL + "media", media, {
           headers : {
            'Content-Type': 'application/json',
            'Accept': 'application/json',
@@ -50,14 +50,16 @@ angular
         });
     }
 
-    function uploadMedia(media, file) {
+    function saveMedia(media, file) {
       var fileForm = new FormData();
+      console.log(media);
       fileForm.append('file', file);
+      fileForm.append('media', JSON.stringify(media));
+      //fileForm.append('media', media);
 
-      return $http.post(API.BASE_URL + "medias", fileForm, {
+      return $http.post(API.BASE_URL + "media", fileForm, {
           headers: {
                 'Content-Type': undefined,
-                'Content': JSON.stringify($scope.content)
           }
         }).then(function(response) {
           return response;

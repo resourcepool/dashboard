@@ -5,14 +5,15 @@
 
 angular
   .module('dashboardFrontApp')
-  .controller('BundleEditController', 
-    ['$scope', '$http', '$routeParams', '$window', 'DATE', 'bundleService', 'dateService', 
-    function ($scope, $http, $routeParams, $window, DATE, bundleService, dateService) {
+  .controller('BundleEditController',
+    ['$scope', '$http', '$routeParams', '$window', 'DATE', 'bundleService', 'dateService', 'firewallService',
+    function ($scope, $http, $routeParams, $window, DATE, bundleService, dateService, firewallService) {
 
     var id = $routeParams.bundleId;
 
     $scope.bundle = {};
     $scope.title = "Edit";
+    firewallService.isAuthenticated();
 
     bundleService.getById(id).then(function(data){
       $scope.bundle = data;
@@ -24,7 +25,7 @@ angular
     $scope.submit = function (isValid) {
       if (isValid  && dateService.validateDates($scope.bundle.validity.start, $scope.bundle.validity.end, $scope)) {
         $scope.loading = true;
-        bundleService.update($scope.bundle).then(function (success) {
+        bundleService.save($scope.bundle).then(function (success) {
           $window.location.href = '#/dashboard';
         }, function (error) {
           $scope.loading = false;

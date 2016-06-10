@@ -11,11 +11,16 @@
 
 var dashboardFrontApp = angular.module('dashboardFrontApp', [
  'ngRoute',
+  'ngCookies'
  ]);
 
 dashboardFrontApp.config(['$routeProvider',
 	function($routeProvider) {
 		$routeProvider.
+    when('/login', {
+      templateUrl: 'partials/login.html',
+      controller: 'LoginController'
+    }).
 		when('/home', {
 			templateUrl: 'partials/home.html',
 			controller: 'HomeController'

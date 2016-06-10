@@ -8,42 +8,41 @@ angular
   .service('bundleService', ['$http', 'API', 'DATE', function ($http, API, DATE) {
 
     this.getById = getById;
-    this.update = update;
+    this.save = save;
     this.removeById = removeById;
     this.getAll = getAll;
-    this.create = create;
     this.formatDateTime = formatDateTime;
 
+
     function getById(id) {
-      return $http.get(API.BASE_URL + "/bundle/bundle.js").then(function(success) {
+      return $http.get(API.BASE_URL + "bundle/" + id, {
+      }).then(function(success) {
         return success.data;
       });
     }
 
-    function update(bundle) {
-      return $http.post(API.BASE_URL + "/bundle/bundle.js", bundle).then(function(success) {
+    function save(bundle) {
+      return $http.post(API.BASE_URL + "bundle", bundle, {
+      })
+        .then(function(success) {
         return success.data;
       });
     }
 
     function removeById(id) {
-      return $http.delete(API.BASE_URL + "slideshows/" + id)
-        .then(function(success){
+      return $http.delete(API.BASE_URL + "bundle/" + id, {
+      })
+        .then(function(success) {
           return success;
         })
     }
 
     function getAll() {
-      return $http.get(API.BASE_URL + "/bundle/list.js")
-        .then(function(success) {
-          return formatDateTime(success.data);
-        });
-    }
-
-    function create(bundle) {
-      return $http.post(API.BASE_URL + "slideshow/add", bundle).then(function(success){
-        return success;
+      return $http.get(API.BASE_URL + "bundle", {
       })
+      .then(function(success) {
+          return formatDateTime(success.data);
+      });
     }
 
     function formatDateTime(bundles) {
