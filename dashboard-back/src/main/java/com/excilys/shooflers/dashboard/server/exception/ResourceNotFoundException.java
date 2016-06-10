@@ -1,7 +1,9 @@
 package com.excilys.shooflers.dashboard.server.exception;
 
 /**
- * Created by Mickael on 10/06/2016.
+ * A global 404 error on REST Api
+ *
+ * @author Mickael
  */
 @SuppressWarnings("unused")
 public class ResourceNotFoundException extends RuntimeException {

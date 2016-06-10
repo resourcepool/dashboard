@@ -1,22 +1,14 @@
 package com.excilys.shooflers.dashboard.server;
 
-import com.excilys.shooflers.dashboard.server.dao.BundleDao;
 import com.excilys.shooflers.dashboard.server.dao.MediaDao;
 import com.excilys.shooflers.dashboard.server.dto.BundleMetadataDto;
 import com.excilys.shooflers.dashboard.server.dto.MediaMetadataDto;
-import com.excilys.shooflers.dashboard.server.dto.ValidityDto;
-import com.excilys.shooflers.dashboard.server.dto.mapper.ValidityDtoMapperImpl;
 import com.excilys.shooflers.dashboard.server.model.Revision;
-import com.excilys.shooflers.dashboard.server.property.DashboardProperties;
 import com.excilys.shooflers.dashboard.server.rest.MediaController;
-import com.excilys.shooflers.dashboard.server.securityTest.RequireValidUserTest;
 import com.excilys.shooflers.dashboard.server.service.BundleService;
 import com.excilys.shooflers.dashboard.server.service.MediaService;
-import com.excilys.shooflers.dashboard.server.service.RevisionService;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.apache.commons.codec.binary.Base64;
-import org.apache.commons.io.FileUtils;
 import org.hamcrest.Matchers;
 import org.hamcrest.collection.IsCollectionWithSize;
 import org.junit.Before;
@@ -25,48 +17,34 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
-import org.springframework.http.MediaType;
-import org.springframework.http.converter.HttpMessageConverter;
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
-import org.springframework.mock.http.MockHttpInputMessage;
-import org.springframework.mock.http.MockHttpOutputMessage;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
-import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
-import org.springframework.test.web.servlet.request.MockMultipartHttpServletRequestBuilder;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.web.context.WebApplicationContext;
 
 import java.io.File;
-import java.io.IOException;
 import java.net.URI;
 import java.time.LocalDateTime;
-import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
 import static org.junit.Assert.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
- * Created by Mickael on 07/06/2016.
+ * @author Mickael
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(DashboardApplication.class)
 @WebAppConfiguration
-public class MediaControllerTest {
+public class MediaControllerTest extends BaseControllerTest {
 
     // ============================================================
     //	Attributes
     // ============================================================
-
-    @Autowired
-    private RevisionService revisionService;
 
     @Autowired
     private MediaService mediaService;
@@ -74,132 +52,21 @@ public class MediaControllerTest {
     @Autowired
     private BundleService bundleService;
 
-    @Autowired
-    private DashboardProperties props;
-
-    @Autowired
-    private WebApplicationContext webApplicationContext;
-
     /**
-     * Client Rest
+     * GlobalBund
      */
-    private MockMvc mockMvc;
-
-    /**
-     * Converter of Json &lt;-&gt; Java Object
-     */
-    private HttpMessageConverter mappingJackson2HttpMessageConverter;
-
-    private BundleMetadataDto globalBundleMetadataDto;
-
-    // ============================================================
-    //	Methods utils
-    // ============================================================
-
-    /**
-     * @return Content of header to authenticate to the API REST with default admin credentials.
-     * (withtout the key work Basic at the start)
-     */
-    private String getHeaderAuthenticationContent() {
-        return getHeaderAuthenticationContent(props.getAdminLogin(), props.getAdminPassword());
-    }
-
-    /**
-     * Content of header to authenticate to the API REST with default admin credentials.
-     *
-     * @param login    Login to login
-     * @param password Password to use
-     * @return Content of the header Authentication
-     */
-    private static String getHeaderAuthenticationContent(String login, String password) {
-        return "Basic " + Base64.encodeBase64String((login + ":" + password).getBytes());
-    }
-
-    /**
-     * Map an object to JSON
-     *
-     * @param o object to map
-     * @return JSON result
-     */
-    private String toJson(Object o) throws IOException {
-        MockHttpOutputMessage mockHttpOutputMessage = new MockHttpOutputMessage();
-        //noinspection unchecked
-        mappingJackson2HttpMessageConverter.write(
-                o, MediaType.APPLICATION_JSON, mockHttpOutputMessage);
-        return mockHttpOutputMessage.getBodyAsString();
-    }
-
-    /**
-     * MAp a JSON string to an Java Object
-     *
-     * @param txt    String to parse
-     * @param aClass Class to convert
-     * @param <T>    Generic type
-     * @return Object mapped
-     */
-    private <T> T fromJson(String txt, Class<T> aClass) throws IOException {
-        MockHttpInputMessage mockHttpInputMessage = new MockHttpInputMessage(txt.getBytes());
-        //noinspection unchecked
-        return (T) this.mappingJackson2HttpMessageConverter.read(aClass, mockHttpInputMessage);
-    }
-
-
-    @Autowired
-    void setConverters(HttpMessageConverter<?>[] converters) {
-        //noinspection OptionalGetWithoutIsPresent
-        mappingJackson2HttpMessageConverter = Arrays.asList(converters).stream().filter(
-                hmc -> hmc instanceof MappingJackson2HttpMessageConverter).findAny().get();
-
-        assertNotNull("the JSON message converter must not be null",
-                this.mappingJackson2HttpMessageConverter);
-    }
-
-    private MockHttpServletRequestBuilder postAuthenticated(String path) {
-        return post(URI.create(path)).header(RequireValidUserTest.HEADER_AUTHORIZATION, getHeaderAuthenticationContent());
-    }
-
-    private MockHttpServletRequestBuilder getAuthenticated(String path) {
-        return get(URI.create(path)).header(RequireValidUserTest.HEADER_AUTHORIZATION, getHeaderAuthenticationContent());
-    }
-
-    private MockHttpServletRequestBuilder putAuthenticated(String path) {
-        return put(URI.create(path)).header(RequireValidUserTest.HEADER_AUTHORIZATION, getHeaderAuthenticationContent());
-    }
-
-    private MockHttpServletRequestBuilder deleteAuthenticated(String path) {
-        return delete(URI.create(path)).header(RequireValidUserTest.HEADER_AUTHORIZATION, getHeaderAuthenticationContent());
-    }
-
-    private MockMultipartHttpServletRequestBuilder fileUploadAuthenticated(String path) {
-        return (MockMultipartHttpServletRequestBuilder) fileUpload(URI.create(path)).header(RequireValidUserTest.HEADER_AUTHORIZATION, getHeaderAuthenticationContent());
-    }
-
-    private void resetBundles() throws IOException {
-        File bundleFolder = new File(props.getBasePath() + "/" + BundleDao.ENTITY_NAME);
-        File bundleExampleFolder = new File(props.getBasePath() + "/" + BundleDao.ENTITY_NAME + "Example");
-
-        FileUtils.deleteDirectory(bundleFolder);
-        FileUtils.copyDirectory(bundleExampleFolder, bundleFolder);
-    }
-
-    private static ValidityDto makeValidityDto(LocalDateTime start, LocalDateTime end) {
-        return new ValidityDto(
-                start == null ? null : ValidityDtoMapperImpl.FORMATTER.format(start),
-                end == null ? null : ValidityDtoMapperImpl.FORMATTER.format(end));
-    }
-
-    private static LocalDateTime toLocalDateTime(String txt) {
-        return LocalDateTime.from(ValidityDtoMapperImpl.FORMATTER.parse(txt));
-    }
+    private static BundleMetadataDto globalBundleMetadataDto;
 
     // ============================================================
     //	Callback for Tests
     // ============================================================
-
     @Before
+    @Override
     public void setUp() throws Exception {
-        mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
-        globalBundleMetadataDto = bundleService.save(new BundleMetadataDto.Builder().name("Bundle").build());
+        super.setUp();
+        if (globalBundleMetadataDto == null) {
+            globalBundleMetadataDto = bundleService.save(new BundleMetadataDto.Builder().name("Bundle").build());
+        }
     }
 
     // ============================================================
@@ -835,7 +702,7 @@ public class MediaControllerTest {
         assertEquals(revision.getResult(), null);
     }
 
-//
+    //
 //    @Test
 //    public void bundleCreateFailedStartAfterEnd() throws Exception {
 //        final String name = "Bouikbouik";
@@ -980,19 +847,217 @@ public class MediaControllerTest {
 //    }
 //
 //
-//    @Test
-//    public void deleteUnknown() throws Exception {
-//        final long previousSize = mediaService.getAll().size();
-//        final long previousRevision = revisionService.getLatest();
-//
-//        mockMvc.perform(deleteAuthenticated("/bundle/wronguuid"))
-//                .andExpect(status().isNotFound())
-//        ;
-//
+    @Test
+    public void mediaDeleteByUuidBundleFailed() throws Exception {
+//        final long previousSize = ;
+        final long previousRevision = revisionService.getLatest();
+
+        mockMvc.perform(deleteAuthenticated("/media/" + globalBundleMetadataDto.getUuid()))
+                .andExpect(status().isMethodNotAllowed())
+        ;
+
 //        assertEquals(previousSize, mediaService.getAll().size());
-//        assertEquals(previousRevision, revisionService.getLatest());
-//    }
-//
+        assertEquals(previousRevision, revisionService.getLatest());
+    }
+
+    @Test
+    public void mediaDeleteByUuidBundleFailed2() throws Exception {
+//        final long previousSize = ;
+        final long previousRevision = revisionService.getLatest();
+
+        mockMvc.perform(deleteAuthenticated("/media/epzirpeoi"))
+                .andExpect(status().isMethodNotAllowed())
+        ;
+
+//        assertEquals(previousSize, mediaService.getAll().size());
+        assertEquals(previousRevision, revisionService.getLatest());
+    }
+
+    @Test
+    public void mediaDeleteFailedWithUnknownUuidMedia() throws Exception {
+//        final long previousSize = ;
+        final long previousRevision = revisionService.getLatest();
+
+        mockMvc.perform(deleteAuthenticated("/media/" + globalBundleMetadataDto.getUuid() + "/wronguuid"))
+                .andExpect(status().isNotFound())
+        ;
+
+//        assertEquals(previousSize, mediaService.getAll().size());
+        assertEquals(previousRevision, revisionService.getLatest());
+    }
+
+    @Test
+    public void mediaWebDeleteSuccess() throws Exception {
+        final String name = "Cagole";
+        final com.excilys.shooflers.dashboard.server.model.type.MediaType mediaType = com.excilys.shooflers.dashboard.server.model.type.MediaType.WEB_SITE;
+        final String url = "http://google.fr";
+        final MediaMetadataDto mediaMetadataDto = mediaService.save(new MediaMetadataDto.Builder()
+                .uuidBundle(globalBundleMetadataDto.getUuid())
+                .url(url)
+                .name(name)
+                .mediaType(mediaType)
+                .build());
+//        final long previousSize = mediaService.getAll().size();
+        final long previousRevision = revisionService.getLatest();
+
+        mockMvc.perform(getAuthenticated("/media/" + globalBundleMetadataDto.getUuid() + "/" + mediaMetadataDto.getUuid()))
+                .andExpect(status().isOk())
+        ;
+
+        mockMvc.perform(deleteAuthenticated("/media/" + globalBundleMetadataDto.getUuid() + "/" + mediaMetadataDto.getUuid()))
+                .andDo(print())
+                .andExpect(status().isOk())
+        ;
+        mockMvc.perform(deleteAuthenticated("/media/" + globalBundleMetadataDto.getUuid() + "/" + mediaMetadataDto.getUuid()))
+                .andExpect(status().isNotFound())
+        ;
+
+        mockMvc.perform(getAuthenticated("/media/" + globalBundleMetadataDto.getUuid() + "/" + mediaMetadataDto.getUuid()))
+                .andExpect(status().isNotFound())
+        ;
+
+//        assertEquals(previousSize, mediaService.getAll().size());
+        assertEquals(previousRevision + 1, revisionService.getLatest());
+
+        List<Revision> revisions = revisionService.getDiffs(previousRevision);
+        assertThat(revisions, IsCollectionWithSize.hasSize(1));
+
+        Revision revision = revisions.get(0);
+        assertEquals(revision.getAction(), Revision.Action.DELETE);
+        assertEquals(((long) revision.getRevision()), previousRevision + 1);
+        assertEquals(revision.getType(), Revision.Type.MEDIA);
+        assertEquals(revision.getTarget(), mediaMetadataDto.getUuid());
+        assertEquals(revision.getResult(), null);
+
+    }
+
+    @Test
+    public void mediaImageDeleteSuccess() throws Exception {
+        final String name = "Kurapika";
+        final com.excilys.shooflers.dashboard.server.model.type.MediaType mediaType = com.excilys.shooflers.dashboard.server.model.type.MediaType.NONE;
+        final String contentFile = "{json:null}";
+        final MockMultipartFile jsonFile = new MockMultipartFile("file", "texte.jpg", com.excilys.shooflers.dashboard.server.model.type.MediaType.IMAGE_JPG.getMimeType(), contentFile.getBytes());
+        final MediaMetadataDto mediaMetadataDto = new MediaMetadataDto.Builder()
+                .name(name)
+                .mediaType(mediaType)
+                .uuidBundle(globalBundleMetadataDto.getUuid())
+                .build();
+
+        // Also check if mediatype in mediametadata is overriden by the mediatype in the file in the multipartform if its none
+        assertNotEquals(mediaType.toString(), jsonFile.getContentType());
+
+        MediaMetadataDto newMediaMetadataDto = fromJson(mockMvc.perform(fileUploadAuthenticated("/media")
+                .file(jsonFile)
+                .param("media", toJson(mediaMetadataDto))
+        )
+                .andExpect(status().isOk()).andReturn().getResponse().getContentAsString(), MediaMetadataDto.class);
+
+
+        final long previousRevision = revisionService.getLatest();
+
+        File file = new File(props.getBasePath() + "/" + MediaDao.ENTITY_NAME + "/" + newMediaMetadataDto.getUuidBundle() + "/" + newMediaMetadataDto.getUuid() + ".yaml");
+        assertTrue(file.isFile());
+
+        file = new File(props.getBaseResources() + newMediaMetadataDto.getUrl());
+        assertTrue(file.isFile());
+
+        mockMvc.perform(get(URI.create("/public" + newMediaMetadataDto.getUrl())))
+                .andExpect(status().isOk())
+                .andExpect(content().string(contentFile));
+
+        mockMvc.perform(getAuthenticated("/media/" + globalBundleMetadataDto.getUuid() + "/" + newMediaMetadataDto.getUuid()))
+                .andExpect(status().isOk())
+        ;
+
+        mockMvc.perform(deleteAuthenticated("/media/" + globalBundleMetadataDto.getUuid() + "/" + newMediaMetadataDto.getUuid()))
+                .andDo(print())
+                .andExpect(status().isOk())
+        ;
+
+        mockMvc.perform(getAuthenticated("/media/" + globalBundleMetadataDto.getUuid() + "/" + newMediaMetadataDto.getUuid()))
+                .andExpect(status().isNotFound())
+        ;
+
+        file = new File(props.getBasePath() + "/" + MediaDao.ENTITY_NAME + "/" + newMediaMetadataDto.getUuidBundle() + "/" + newMediaMetadataDto.getUuid() + ".yaml");
+        assertFalse(file.exists());
+
+        file = new File(props.getBaseResources() + newMediaMetadataDto.getUrl());
+        assertFalse(file.isFile());
+
+        mockMvc.perform(get(URI.create("/public" + newMediaMetadataDto.getUrl())))
+                .andExpect(status().isNotFound())
+                .andExpect(content().string(""));
+
+//        assertEquals(previousSize, mediaService.getAll().size());
+        assertEquals(previousRevision + 1, revisionService.getLatest());
+
+        List<Revision> revisions = revisionService.getDiffs(previousRevision);
+        assertThat(revisions, IsCollectionWithSize.hasSize(1));
+
+        Revision revision = revisions.get(0);
+        assertEquals(revision.getAction(), Revision.Action.DELETE);
+        assertEquals(((long) revision.getRevision()), previousRevision + 1);
+        assertEquals(revision.getType(), Revision.Type.MEDIA);
+        assertEquals(revision.getTarget(), newMediaMetadataDto.getUuid());
+        assertEquals(revision.getResult(), null);
+
+    }
+
+    @Test
+    public void mediaImageDeleteFailedBecauseIoException() throws Exception {
+        final String name = "Kurapika";
+        final com.excilys.shooflers.dashboard.server.model.type.MediaType mediaType = com.excilys.shooflers.dashboard.server.model.type.MediaType.NONE;
+        final String contentFile = "{json:null}";
+        final MockMultipartFile jsonFile = new MockMultipartFile("file", "texte.jpg", com.excilys.shooflers.dashboard.server.model.type.MediaType.IMAGE_JPG.getMimeType(), contentFile.getBytes());
+        final MediaMetadataDto mediaMetadataDto = new MediaMetadataDto.Builder()
+                .name(name)
+                .mediaType(mediaType)
+                .uuidBundle(globalBundleMetadataDto.getUuid())
+                .build();
+
+        // Also check if mediatype in mediametadata is overriden by the mediatype in the file in the multipartform if its none
+        assertNotEquals(mediaType.toString(), jsonFile.getContentType());
+
+        MediaMetadataDto newMediaMetadataDto = fromJson(mockMvc.perform(fileUploadAuthenticated("/media")
+                .file(jsonFile)
+                .param("media", toJson(mediaMetadataDto))
+        )
+                .andExpect(status().isOk()).andReturn().getResponse().getContentAsString(), MediaMetadataDto.class);
+
+
+        final long previousRevision = revisionService.getLatest();
+
+        File file = new File(props.getBasePath() + "/" + MediaDao.ENTITY_NAME + "/" + newMediaMetadataDto.getUuidBundle() + "/" + newMediaMetadataDto.getUuid() + ".yaml");
+        assertTrue(file.isFile());
+
+        file = new File(props.getBaseResources() + newMediaMetadataDto.getUrl());
+        assertTrue(file.isFile());
+        assertTrue(file.delete());
+
+        mockMvc.perform(get(URI.create("/public" + newMediaMetadataDto.getUrl())))
+                .andExpect(status().isNotFound())
+                .andExpect(content().string(""));
+
+
+        mockMvc.perform(getAuthenticated("/media/" + globalBundleMetadataDto.getUuid() + "/" + newMediaMetadataDto.getUuid()))
+                .andExpect(status().isOk())
+        ;
+
+        mockMvc.perform(deleteAuthenticated("/media/" + globalBundleMetadataDto.getUuid() + "/" + newMediaMetadataDto.getUuid()))
+                .andExpect(status().isInternalServerError())
+        ;
+
+        mockMvc.perform(getAuthenticated("/media/" + globalBundleMetadataDto.getUuid() + "/" + newMediaMetadataDto.getUuid()))
+                .andExpect(status().isOk())
+        ;
+
+        file = new File(props.getBasePath() + "/" + MediaDao.ENTITY_NAME + "/" + newMediaMetadataDto.getUuidBundle() + "/" + newMediaMetadataDto.getUuid() + ".yaml");
+        assertTrue(file.exists());
+
+//        assertEquals(previousSize, mediaService.getAll().size());
+        assertEquals(previousRevision, revisionService.getLatest());
+    }
+
 //    @Test
 //    public void deleteBundle() throws Exception {
 //        mediaService.create(new BundleMetadataDto.Builder().name("ToDelete").build());

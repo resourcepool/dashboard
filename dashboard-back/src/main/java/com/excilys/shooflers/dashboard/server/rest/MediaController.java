@@ -54,6 +54,9 @@ public class MediaController {
     @Autowired
     private BundleService bundleService;
 
+    /**
+     * UrlValidator to validate URL of media, if they are not empty
+     */
     private UrlValidator urlValidator = new UrlValidator(new String[]{"http", "https"});
 
     @RequireValidApiKey
@@ -111,8 +114,6 @@ public class MediaController {
                 throw new IllegalArgumentException(MESSAGE_MEDIA_TYPE_NOT_FOUND);
             }
 
-            System.out.println(mediaType);
-            System.out.println(mediaTypeFile);
             if (mediaType != MediaType.NONE && mediaType != mediaTypeFile) {
                 throw new IllegalArgumentException(MESSAGE_NOT_CORRESPONDING_MEDIA_TYPE);
             }
@@ -130,12 +131,23 @@ public class MediaController {
 
     @RequestMapping(value = "{uuidbundle}/{uuid}", method = RequestMethod.DELETE)
     public void delete(@PathVariable("uuidbundle") String uuidBundle, @PathVariable("uuid") String uuid) {
+        if (mediaService.get(uuid, uuidBundle) == null) {
+            throw new ResourceNotFoundException(MESSAGE_MEDIA_NOT_FOUND);
+        }
+
         if (mediaService.delete(uuid, uuidBundle)) {
             // Create a new revision
             revisionService.add(Revision.Action.DELETE, uuid, Revision.Type.MEDIA, null);
         }
     }
 
+    /**
+     * Validate an MediaMetadataDto
+     * * Check if every compulsory field is set
+     * * if uuidBundle and mediaType are valid
+     *
+     * @param mediaMetadataDto Media to validate
+     */
     private void assertValisationMediaMetadataDto(MediaMetadataDto mediaMetadataDto) {
         if (mediaMetadataDto.getName() == null || mediaMetadataDto.getName().isEmpty() ||
                 mediaMetadataDto.getUuidBundle() == null || mediaMetadataDto.getUuidBundle().isEmpty() ||
