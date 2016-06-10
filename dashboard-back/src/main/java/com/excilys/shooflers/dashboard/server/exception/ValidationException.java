@@ -5,6 +5,7 @@ package com.excilys.shooflers.dashboard.server.exception;
  *
  * @author Mickael
  */
+@SuppressWarnings("unused")
 public class ValidationException extends RuntimeException {
     public ValidationException() {
         super();

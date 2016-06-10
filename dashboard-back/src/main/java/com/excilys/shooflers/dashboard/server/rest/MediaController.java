@@ -1,6 +1,7 @@
 package com.excilys.shooflers.dashboard.server.rest;
 
 import com.excilys.shooflers.dashboard.server.dto.MediaMetadataDto;
+import com.excilys.shooflers.dashboard.server.exception.ResourceNotFoundException;
 import com.excilys.shooflers.dashboard.server.model.Revision;
 import com.excilys.shooflers.dashboard.server.model.type.MediaType;
 import com.excilys.shooflers.dashboard.server.property.DashboardProperties;
@@ -10,7 +11,6 @@ import com.excilys.shooflers.dashboard.server.security.annotation.RequireValidUs
 import com.excilys.shooflers.dashboard.server.service.BundleService;
 import com.excilys.shooflers.dashboard.server.service.MediaService;
 import com.excilys.shooflers.dashboard.server.service.RevisionService;
-import com.excilys.shooflers.dashboard.server.service.exception.BundleNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -30,6 +30,15 @@ import java.util.UUID;
 @RequestMapping("/media")
 public class MediaController {
 
+    public static final String MESSAGE_MEDIA_NOT_FOUND = "Media not found";
+    public static final String MESSAGE_BUNDLE_NOT_FOUND = "Bundle not found for this media";
+    public static final String MESSAGE_COMPULSORY_FIELD = "The following field can't be empty : name, uuidBundle, mediaType";
+    public static final String MESSAGE_MEDIA_TYPE_NOT_FOUND = "MediaType not allowed.";
+    public static final String MESSAGE_EXTENSION_NAME = "Extension filename not allowed.";
+    public static final String MESSAGE_NEED_FILE = "Need file with this type of media \"%s\".";
+    public static final String MESSAGE_NEED_FILE_WHEN_NO_MEDIA_TYPE = "Need file when you don't specify a mediatype.";
+    public static final String MESSAGE_NOT_CORRESPONDING_MEDIA_TYPE = "Provided MediaType differnete of Provided mediatype in the file";
+
     @Autowired
     private RevisionService revisionService;
 
@@ -45,40 +54,66 @@ public class MediaController {
     @RequireValidApiKey
     @RequestMapping(value = "{uuidbundle}/{uuid}", method = RequestMethod.GET)
     public MediaMetadataDto get(@PathVariable("uuidbundle") String uuidBundle, @PathVariable("uuid") String uuid) {
-        return mediaService.get(uuid, uuidBundle);
+        MediaMetadataDto result = mediaService.get(uuid, uuidBundle);
+        if (result == null) {
+            throw new ResourceNotFoundException(MESSAGE_MEDIA_NOT_FOUND);
+        } else {
+            return result;
+        }
     }
 
     @RequireValidApiKey
     @RequestMapping(value = "{uuidbundle}", method = RequestMethod.GET)
     public List<MediaMetadataDto> getAllByBundle(@PathVariable("uuidbundle") String uuidBundle) {
+        if (bundleService.get(uuidBundle) == null) {
+            throw new ResourceNotFoundException(MESSAGE_BUNDLE_NOT_FOUND);
+        }
         return mediaService.getByBundle(uuidBundle);
     }
 
     @RequestMapping(method = RequestMethod.POST)
-    public MediaMetadataDto save(@RequestParam("media") String json, @RequestParam("file") MultipartFile multipartFile) {
-        MediaMetadataDto media = mediaService.fromJson(json);
+    public MediaMetadataDto save(@RequestParam("media") String json, @RequestParam(value = "file", required = false) MultipartFile multipartFile) {
+        MediaMetadataDto mediaMetadataDto = mediaService.fromJson(json);
+        mediaMetadataDto.setUuid(null);
+
+        // Check Validation of MediaMetadataDto
+        assertValisationMediaMetadataDto(mediaMetadataDto);
 
         // Save media
-        MediaType mediaType = MediaType.getMediaType(media.getMediaType());
+        MediaType mediaType = MediaType.getMediaType(mediaMetadataDto.getMediaType());
 
-        // If bundle doesn't exist, abort
-        if (bundleService.get(media.getUuidBundle()) == null) {
-            throw new BundleNotFoundException("Bundle not found, media not added");
-        }
-
-        // Not expected a file to save, directly create media with url set
+        // Not expected a file to save, directly save media with url set
         if (mediaType == MediaType.WEB_SITE || mediaType == MediaType.WEB_VIDEO) {
-            media = mediaService.save(media);
+            mediaMetadataDto = mediaService.save(mediaMetadataDto);
         } else {
-            media.setUuid(UUID.randomUUID().toString());
-            if (FileHelper.saveFile(multipartFile, media, props.getBaseUrl())) {
-                media = mediaService.save(media);
+            if (multipartFile == null) {
+                if (mediaType == MediaType.NONE) {
+                    throw new IllegalArgumentException(MESSAGE_NEED_FILE_WHEN_NO_MEDIA_TYPE);
+                } else {
+                    throw new IllegalArgumentException(String.format(MESSAGE_NEED_FILE, mediaType.getMimeType()));
+                }
+            }
+
+            MediaType mediaTypeFile = MediaType.getMediaType(multipartFile.getContentType());
+            if (mediaTypeFile == MediaType.NONE) {
+                throw new IllegalArgumentException(MESSAGE_MEDIA_TYPE_NOT_FOUND);
+            }
+
+            System.out.println(mediaType);
+            System.out.println(mediaTypeFile);
+            if (mediaType != MediaType.NONE && mediaType != mediaTypeFile) {
+                throw new IllegalArgumentException(MESSAGE_NOT_CORRESPONDING_MEDIA_TYPE);
+            }
+
+            mediaMetadataDto.setUuid(UUID.randomUUID().toString());
+            if (FileHelper.saveFile(multipartFile, mediaMetadataDto, props.getBaseUrl())) {
+                mediaMetadataDto = mediaService.save(mediaMetadataDto);
             }
         }
 
         // Create a new revision
-        media.setRevision(revisionService.add(Revision.Action.ADD, media.getUuid(), Revision.Type.MEDIA, null).getRevision());
-        return media;
+        mediaMetadataDto.setRevision(revisionService.add(Revision.Action.ADD, mediaMetadataDto.getUuid(), Revision.Type.MEDIA, null).getRevision());
+        return mediaMetadataDto;
     }
 
     @RequestMapping(value = "{uuidbundle}/{uuid}", method = RequestMethod.DELETE)
@@ -86,6 +121,22 @@ public class MediaController {
         if (mediaService.delete(uuid, uuidBundle)) {
             // Create a new revision
             revisionService.add(Revision.Action.DELETE, uuid, Revision.Type.MEDIA, null);
+        }
+    }
+
+    private void assertValisationMediaMetadataDto(MediaMetadataDto mediaMetadataDto) {
+        if (mediaMetadataDto.getName() == null || mediaMetadataDto.getName().isEmpty() ||
+                mediaMetadataDto.getUuidBundle() == null || mediaMetadataDto.getUuidBundle().isEmpty() ||
+                mediaMetadataDto.getMediaType() == null || mediaMetadataDto.getMediaType().isEmpty()) {
+            throw new IllegalArgumentException(MESSAGE_COMPULSORY_FIELD);
+        }
+
+        if (bundleService.get(mediaMetadataDto.getUuidBundle()) == null) {
+            throw new IllegalArgumentException(MESSAGE_BUNDLE_NOT_FOUND);
+        }
+
+        if (MediaType.getMediaType(mediaMetadataDto.getMediaType()) == null) {
+            throw new IllegalArgumentException(MESSAGE_MEDIA_NOT_FOUND);
         }
     }
 }

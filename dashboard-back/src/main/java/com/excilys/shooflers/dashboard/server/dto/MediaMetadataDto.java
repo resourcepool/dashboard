@@ -14,10 +14,6 @@ public class MediaMetadataDto {
 
     private String mediaType;
 
-    private String mimeType;
-
-    private String extension;
-
     private ValidityDto validity;
 
     private String url;
@@ -32,12 +28,14 @@ public class MediaMetadataDto {
         this.uuid = uuid;
         this.name = name;
         this.duration = duration;
-        this.mediaType = mediaType.getGlobalType();
+        if (mediaType != null) {
+            this.mediaType = mediaType.getMimeType();
+        } else {
+            this.mediaType = MediaType.NONE.getMimeType();
+        }
         this.validity = validity;
         this.url = url;
         this.uuidBundle = uuidBundle;
-        this.mimeType = mediaType.getMimeType();
-        this.extension = mediaType.getExtension();
     }
 
     public static class Builder {
@@ -148,31 +146,15 @@ public class MediaMetadataDto {
         return uuidBundle;
     }
 
+    public void setUuidBundle(String uuidBundle) {
+        this.uuidBundle = uuidBundle;
+    }
+
     public long getRevision() {
         return revision;
     }
 
     public void setRevision(long revision) {
         this.revision = revision;
-    }
-
-    public String getMimeType() {
-        return mimeType;
-    }
-
-    public void setMimeType(String mimeType) {
-        this.mimeType = mimeType;
-    }
-
-    public void setUuidBundle(String uuidBundle) {
-        this.uuidBundle = uuidBundle;
-    }
-
-    public String getExtension() {
-        return extension;
-    }
-
-    public void setExtension(String extension) {
-        this.extension = extension;
     }
 }
