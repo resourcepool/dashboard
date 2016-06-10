@@ -35,8 +35,8 @@ public class ExceptionMapper {
     }
 
     @ExceptionHandler(ResourceNotFoundException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ResponseEntity<?> resourceNotFoundException(IllegalArgumentException e) {
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ResponseEntity<?> resourceNotFoundException(ResourceNotFoundException e) {
         return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
     }
 }

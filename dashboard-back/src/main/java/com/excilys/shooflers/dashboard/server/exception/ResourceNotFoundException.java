@@ -3,6 +3,7 @@ package com.excilys.shooflers.dashboard.server.exception;
 /**
  * Created by Mickael on 10/06/2016.
  */
+@SuppressWarnings("unused")
 public class ResourceNotFoundException extends RuntimeException {
     public ResourceNotFoundException() {
         super();
