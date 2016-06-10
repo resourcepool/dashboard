@@ -8,6 +8,8 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 /**
+ * Validator of an {@link ValidityDto}
+ *
  * @author Mickael
  */
 @Component

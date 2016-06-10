@@ -3,8 +3,8 @@ package com.excilys.shooflers.dashboard.server.service.impl;
 import com.excilys.shooflers.dashboard.server.dao.MediaDao;
 import com.excilys.shooflers.dashboard.server.dto.MediaMetadataDto;
 import com.excilys.shooflers.dashboard.server.dto.mapper.MediaDtoMapperImpl;
+import com.excilys.shooflers.dashboard.server.exception.ResourceIoException;
 import com.excilys.shooflers.dashboard.server.model.metadata.MediaMetadata;
-import com.excilys.shooflers.dashboard.server.model.type.MediaType;
 import com.excilys.shooflers.dashboard.server.property.DashboardProperties;
 import com.excilys.shooflers.dashboard.server.service.MediaService;
 import com.excilys.shooflers.dashboard.server.service.exception.JsonMalformedException;
@@ -31,6 +31,7 @@ public class MediaServiceImpl implements MediaService {
 
     /**
      * Map a json to a media data dto
+     *
      * @param json Json to map
      * @return media metadata dto
      */
@@ -73,7 +74,9 @@ public class MediaServiceImpl implements MediaService {
     @Override
     public boolean delete(String uuid, String uuidBundle) {
         MediaMetadata media = mediaDao.get(uuid, uuidBundle);
-        new File(props.getBaseResources() + "/" + uuidBundle + "/" + uuid + MediaType.getMediaType(media.getMediaType().getMimeType()).getExtension()).delete();
+        if (media.hasFile() && !new File(props.getBaseResources() + media.getUrl()).delete()) {
+            throw new ResourceIoException("Error when deleting the resource file");
+        }
 
         return mediaDao.delete(uuid, uuidBundle);
     }

@@ -7,7 +7,9 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
- * Created by Mickael on 07/06/2016.
+ * Just to make the root redirect to a doc of the API Rest
+ *
+ * @author Mickael
  */
 @RestController
 public class RootController {

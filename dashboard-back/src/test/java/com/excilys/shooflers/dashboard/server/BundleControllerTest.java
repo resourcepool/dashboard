@@ -2,192 +2,46 @@ package com.excilys.shooflers.dashboard.server;
 
 import com.excilys.shooflers.dashboard.server.dao.BundleDao;
 import com.excilys.shooflers.dashboard.server.dto.BundleMetadataDto;
-import com.excilys.shooflers.dashboard.server.dto.ValidityDto;
-import com.excilys.shooflers.dashboard.server.dto.mapper.ValidityDtoMapperImpl;
 import com.excilys.shooflers.dashboard.server.model.Revision;
 import com.excilys.shooflers.dashboard.server.model.metadata.BundleMetadata;
-import com.excilys.shooflers.dashboard.server.property.DashboardProperties;
-import com.excilys.shooflers.dashboard.server.securityTest.RequireValidUserTest;
 import com.excilys.shooflers.dashboard.server.service.BundleService;
-import com.excilys.shooflers.dashboard.server.service.RevisionService;
-import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.FileUtils;
 import org.exparity.hamcrest.date.LocalDateTimeMatchers;
 import org.hamcrest.Matchers;
 import org.hamcrest.collection.IsCollectionWithSize;
-import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.http.MediaType;
-import org.springframework.http.converter.HttpMessageConverter;
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
-import org.springframework.mock.http.MockHttpInputMessage;
-import org.springframework.mock.http.MockHttpOutputMessage;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
-import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.web.context.WebApplicationContext;
 
 import java.io.File;
-import java.io.IOException;
-import java.net.URI;
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
 import static org.hamcrest.CoreMatchers.allOf;
 import static org.junit.Assert.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
+ * TODO check the message returned by an 400 error
+ *
  * @author Mickael
- *         <p>
- *         TODO check the message returned by an 400 error
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(DashboardApplication.class)
 @WebAppConfiguration
-public class BundleControllerTest {
-
-    @Autowired
-    private RevisionService revisionService;
+public class BundleControllerTest extends BaseControllerTest {
 
     @Autowired
     private BundleService bundleService;
-
-    // ============================================================
-    //	Attributes
-    // ============================================================
-
-    /**
-     * Client Rest
-     */
-    private MockMvc mockMvc;
-
-    /**
-     * Converter of Json &lt;-&gt; Java Object
-     */
-    private HttpMessageConverter mappingJackson2HttpMessageConverter;
-
-    @Autowired
-    private DashboardProperties props;
-
-    @Autowired
-    private WebApplicationContext webApplicationContext;
-
-    // ============================================================
-    //	Methods utils
-    // ============================================================
-
-    /**
-     * @return Content of header to authenticate to the API REST with default admin credentials.
-     * (withtout the key work Basic at the start)
-     */
-    private String getHeaderAuthenticationContent() {
-        return getHeaderAuthenticationContent(props.getAdminLogin(), props.getAdminPassword());
-    }
-
-    /**
-     * Content of header to authenticate to the API REST with default admin credentials.
-     *
-     * @param login    Login to login
-     * @param password Password to use
-     * @return Content of the header Authentication
-     */
-    private static String getHeaderAuthenticationContent(String login, String password) {
-        return "Basic " + Base64.encodeBase64String((login + ":" + password).getBytes());
-    }
-
-    /**
-     * Map an object to JSON
-     *
-     * @param o object to map
-     * @return JSON result
-     */
-    private String toJson(Object o) throws IOException {
-        MockHttpOutputMessage mockHttpOutputMessage = new MockHttpOutputMessage();
-        //noinspection unchecked
-        mappingJackson2HttpMessageConverter.write(
-                o, MediaType.APPLICATION_JSON, mockHttpOutputMessage);
-        return mockHttpOutputMessage.getBodyAsString();
-    }
-
-    /**
-     * MAp a JSON string to an Java Object
-     * @param txt String to parse
-     * @param aClass Class to convert
-     * @param <T> Generic type
-     * @return Object mapped
-     */
-    private <T> T fromJson(String txt, Class<T> aClass) throws IOException {
-        MockHttpInputMessage mockHttpInputMessage = new MockHttpInputMessage(txt.getBytes());
-        //noinspection unchecked
-        return (T) this.mappingJackson2HttpMessageConverter.read(aClass, mockHttpInputMessage);
-    }
-
-
-    @Autowired
-    void setConverters(HttpMessageConverter<?>[] converters) {
-        //noinspection OptionalGetWithoutIsPresent
-        mappingJackson2HttpMessageConverter = Arrays.asList(converters).stream().filter(
-                hmc -> hmc instanceof MappingJackson2HttpMessageConverter).findAny().get();
-
-        assertNotNull("the JSON message converter must not be null",
-                this.mappingJackson2HttpMessageConverter);
-    }
-
-    private MockHttpServletRequestBuilder postAuthenticated(String path) {
-        return post(URI.create(path)).header(RequireValidUserTest.HEADER_AUTHORIZATION, getHeaderAuthenticationContent());
-    }
-
-    private MockHttpServletRequestBuilder getAuthenticated(String path) {
-        return get(URI.create(path)).header(RequireValidUserTest.HEADER_AUTHORIZATION, getHeaderAuthenticationContent());
-    }
-
-    private MockHttpServletRequestBuilder putAuthenticated(String path) {
-        return put(URI.create(path)).header(RequireValidUserTest.HEADER_AUTHORIZATION, getHeaderAuthenticationContent());
-    }
-
-    private MockHttpServletRequestBuilder deleteAuthenticated(String path) {
-        return delete(URI.create(path)).header(RequireValidUserTest.HEADER_AUTHORIZATION, getHeaderAuthenticationContent());
-    }
-
-    private void resetBundles() throws IOException {
-        File bundleFolder = new File(props.getBasePath() + "/" + BundleDao.ENTITY_NAME);
-        File bundleExampleFolder = new File(props.getBasePath() + "/" + BundleDao.ENTITY_NAME + "Example");
-
-        FileUtils.deleteDirectory(bundleFolder);
-        FileUtils.copyDirectory(bundleExampleFolder, bundleFolder);
-    }
-
-    private static ValidityDto makeValidityDto(LocalDateTime start, LocalDateTime end) {
-        return new ValidityDto(
-                start == null ? null : ValidityDtoMapperImpl.FORMATTER.format(start),
-                end == null ? null : ValidityDtoMapperImpl.FORMATTER.format(end));
-    }
-
-    private static LocalDateTime toLocalDateTime(String txt) {
-        return LocalDateTime.from(ValidityDtoMapperImpl.FORMATTER.parse(txt));
-    }
-
-    // ============================================================
-    //	Callback for Tests
-    // ============================================================
-
-    @Before
-    public void setUp() throws Exception {
-        this.mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
-    }
 
     // ============================================================
     //	Tests

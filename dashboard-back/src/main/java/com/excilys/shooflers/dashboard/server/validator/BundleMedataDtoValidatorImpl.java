@@ -6,7 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
- * Created by Mickael on 09/06/2016.
+ * Validator of an {@link BundleMetadataDto}
+ *
+ * @author Mickael
  */
 @Component
 public class BundleMedataDtoValidatorImpl implements Validator<BundleMetadataDto> {

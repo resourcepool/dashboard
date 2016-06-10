@@ -3,12 +3,19 @@ package com.excilys.shooflers.dashboard.server.model.metadata;
 import com.excilys.shooflers.dashboard.server.model.Validity;
 import com.excilys.shooflers.dashboard.server.model.type.MediaType;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.UUID;
 
 /**
  * A media represent a file in memory (a file can be an image, a pdf, a video or a website).
  */
 public class MediaMetadata {
+
+    /**
+     * MediaType that no need a file to upload
+     */
+    public static final List<MediaType> MEDIA_TYPES_NO_FILE = Arrays.asList(MediaType.WEB_SITE, MediaType.WEB_VIDEO);
 
     private String uuid;
 
@@ -149,5 +156,9 @@ public class MediaMetadata {
 
     public void setBundleTag(String bundleTag) {
         this.bundleTag = bundleTag;
+    }
+
+    public boolean hasFile() {
+        return !MEDIA_TYPES_NO_FILE.contains(mediaType);
     }
 }

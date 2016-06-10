@@ -1,5 +1,6 @@
 package com.excilys.shooflers.dashboard.server.config;
 
+import com.excilys.shooflers.dashboard.server.exception.ResourceIoException;
 import com.excilys.shooflers.dashboard.server.exception.ResourceNotFoundException;
 import com.excilys.shooflers.dashboard.server.exception.ValidationException;
 import org.springframework.http.HttpStatus;
@@ -11,7 +12,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import java.time.format.DateTimeParseException;
 
 /**
- * Created by Mickael on 09/06/2016.
+ * @author Mickael
  */
 @ControllerAdvice
 public class ExceptionMapper {
@@ -38,5 +39,11 @@ public class ExceptionMapper {
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ResponseEntity<?> resourceNotFoundException(ResourceNotFoundException e) {
         return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(ResourceIoException.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public ResponseEntity<?> resourceIoException(ResourceIoException e) {
+        return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }
