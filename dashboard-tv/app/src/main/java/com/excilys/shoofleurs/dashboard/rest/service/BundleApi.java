@@ -10,9 +10,9 @@ import retrofit2.http.GET;
 import retrofit2.http.Path;
 
 public interface BundleApi {
-    @GET("bundle")
+    @GET("/bundle")
     Call<List<BundleDto>> getBundles();
 
-    @GET("media/{bundleUuid}")
+    @GET("/media/{bundleUuid}")
     Call<List<MediaDto>> getMedias(@Path("bundleUuid") String bundleUuid);
 }

@@ -38,7 +38,7 @@ public enum MediaType {
             case "image/png":
                 mediaType = IMAGE_PNG;
                 break;
-            case "image/jpg":
+            case "image/jpeg":
                 mediaType = IMAGE_JPG;
                 break;
             case "image/gif":
@@ -86,7 +86,7 @@ public enum MediaType {
             case "image/png":
                 extension = ".png";
                 break;
-            case "image/jpg":
+            case "image/jpeg":
                 extension = ".jpg";
                 break;
             case "image/gif":
