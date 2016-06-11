@@ -19,8 +19,6 @@ import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
-import java.io.File;
-
 /**
  * Configuration SpringBoot.
  */
@@ -36,7 +34,6 @@ public class DashboardApplication extends WebMvcConfigurerAdapter {
      * @param args the command args
      */
     public static void main(String[] args) {
-        initDb();
         SpringApplication.run(DashboardApplication.class, args);
     }
 
@@ -91,18 +88,6 @@ public class DashboardApplication extends WebMvcConfigurerAdapter {
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/public/**").addResourceLocations("file:public/");
-    }
-
-    private static void initDb() {
-        File dirDb = new File(System.getProperty("user.dir") + "/db");
-        if (!dirDb.exists()) {
-            dirDb.mkdir();
-        }
-
-        File dirResources = new File(System.getProperty("user.dir") + "/public");
-        if (!dirResources.exists()) {
-            dirResources.mkdir();
-        }
     }
 
 }

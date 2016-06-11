@@ -24,13 +24,33 @@ public class DaoInitializer {
     @Autowired
     private DashboardProperties props;
 
+    /**
+     * Create base directories if not exist.
+     */
     @PostConstruct
     public void init() {
         Path dbPath = Paths.get(props.getBasePath());
         if (!Files.exists(dbPath)) {
-            String err = "The bundle database path does not exist. Please check your application properties";
-            LOGGER.error(err);
-            throw new IllegalStateException(err);
+            try {
+                LOGGER.warn("Dashboard database path does not exist: {}. It will be created.", dbPath.toString());
+                Files.createDirectories(dbPath);
+            } catch (IOException e) {
+                String err = "The dashboard database path does not exist. Please check your application properties";
+                LOGGER.error(err);
+                throw new IllegalStateException(err);
+            }
+        }
+        
+        Path dbRes = Paths.get(props.getBaseResources());
+        if (!Files.exists(dbRes)) {
+            try {
+                LOGGER.warn("Dashboard resources path does not exist: {}. It will be created.", dbRes.toString());
+                Files.createDirectories(dbRes);
+            } catch (IOException e) {
+                String err = "The dashboard resources path does not exist. Please check your application properties";
+                LOGGER.error(err);
+                throw new IllegalStateException(err);
+            }
         }
 
         createEntityDbs(dbPath, BundleDao.ENTITY_NAME);
