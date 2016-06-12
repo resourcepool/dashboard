@@ -2,8 +2,9 @@ package com.excilys.shoofleurs.dashboard.ui;
 
 import android.app.Application;
 
-import com.excilys.shoofleurs.dashboard.database.DatabaseController;
+import com.excilys.shoofleurs.dashboard.database.DatabaseManager;
 import com.excilys.shoofleurs.dashboard.rest.service.BundleService;
+import com.excilys.shoofleurs.dashboard.rest.service.DashboardService;
 import com.excilys.shoofleurs.dashboard.rest.service.NewsService;
 import com.facebook.drawee.backends.pipeline.Fresco;
 
@@ -15,8 +16,9 @@ import org.greenrobot.eventbus.EventBus;
 public class DashboardApplication extends Application {
     private BundleService mBundleService;
     private NewsService mNewsService;
+    private DashboardService mDashboardService;
     private EventBus mEventBus;
-    private DatabaseController mDatabaseController;
+    private DatabaseManager mDatabaseManager;
 
     @Override
     public void onCreate() {
@@ -24,7 +26,8 @@ public class DashboardApplication extends Application {
         mEventBus = EventBus.getDefault();
         mBundleService = new BundleService(mEventBus);
         mNewsService = new NewsService(mEventBus);
-        mDatabaseController = new DatabaseController(getApplicationContext(), mEventBus);
+        mDashboardService = new DashboardService(mEventBus);
+        mDatabaseManager = new DatabaseManager(getApplicationContext(), mEventBus);
         Fresco.initialize(getApplicationContext());
     }
 
@@ -40,7 +43,11 @@ public class DashboardApplication extends Application {
         return mEventBus;
     }
 
-    public DatabaseController getDatabaseController() {
-        return mDatabaseController;
+    public DashboardService getDashboardService() {
+        return mDashboardService;
+    }
+
+    public DatabaseManager getDatabaseManager() {
+        return mDatabaseManager;
     }
 }

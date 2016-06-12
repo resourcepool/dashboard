@@ -35,7 +35,7 @@ public class BundleService {
 
     }
 
-    public void getBundles() {
+    public void getAllBundles() {
         Call<List<BundleDto>> call = mBundleApi.getBundles();
         call.enqueue(new Callback<List<BundleDto>>() {
             @Override
@@ -43,13 +43,13 @@ public class BundleService {
                 if (response.isSuccessful()) {
                     mEventBus.post(new GetBundleResponseEvent(BundleDtoMapper.toBundles(response.body())));
                 } else {
-                    Log.e(TAG, "getBundles: Error " + response.code() + ": " + response.message());
+                    Log.e(TAG, "getAllBundles: Error " + response.code() + ": " + response.message());
                 }
             }
 
             @Override
             public void onFailure(Call<List<BundleDto>> call, Throwable t) {
-                Log.e(TAG, "getBundles onFailure: " + t.toString());
+                Log.e(TAG, "getAllBundles onFailure: " + t.toString());
             }
         });
     }

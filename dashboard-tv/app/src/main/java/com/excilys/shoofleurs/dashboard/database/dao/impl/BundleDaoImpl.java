@@ -43,7 +43,8 @@ public class BundleDaoImpl implements BundleDao {
         bundleBook.write(bundle.getUuid(), bundle);
     }
 
-    public void save(List<Bundle> bundles) {
+    @Override
+    public void saveAll(List<Bundle> bundles) {
         if (bundles != null) {
             for (Bundle bundle : bundles) {
                 save(bundle);

@@ -16,7 +16,7 @@ android {
     buildTypes {
         debug {
             buildConfigField "String", "API_KEY", loadPropertiesFile("conf.properties").getProperty("apiKey")
-            buildConfigField "String", "API_URL", '"http://192.168.10.143:8080"'
+            buildConfigField "String", "API_URL", '"http://192.168.0.15:8080"'
         }
 
         release {
@@ -75,6 +75,9 @@ dependencies {
     /*Test dependencies*/
     testCompile 'junit:junit:4.12'
     testCompile 'org.mockito:mockito-core:1.10.19'
+
+    /*DB Inspector*/
+    debugCompile 'im.dino:dbinspector:3.2.4@aar'
 }
 
 apply plugin: 'checkstyle'

@@ -21,7 +21,7 @@ public class DashboardController {
 
     @Autowired
     private RevisionServiceImpl revisionService;
-
+    
     /**
      * Get the number of the latest revision
      * @return long representing latest revision

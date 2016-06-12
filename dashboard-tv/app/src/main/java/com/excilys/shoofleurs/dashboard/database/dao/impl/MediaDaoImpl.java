@@ -37,7 +37,8 @@ public class MediaDaoImpl implements MediaDao {
         mediaBook.write(media.getUuid(), media);
     }
 
-    public void save(List<Media> medias) {
+    @Override
+    public void saveAll(List<Media> medias) {
         if (medias != null) {
             for (Media media : medias) {
                 save(media);

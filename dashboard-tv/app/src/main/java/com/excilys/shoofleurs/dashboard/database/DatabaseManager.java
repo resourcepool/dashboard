@@ -13,19 +13,21 @@ import com.excilys.shoofleurs.dashboard.model.entities.Media;
 
 import org.greenrobot.eventbus.EventBus;
 
+import java.util.List;
+
 import io.paperdb.Paper;
 
 /**
  * @author Tommy Buonomo on 10/06/16.
  */
-public class DatabaseController {
+public class DatabaseManager {
+    public static final String REVISION_KEY = "revision";
     private final EventBus mEventBus;
     private BundleDao mBundleDao;
     private MediaDao mMediaDao;
 
-    public DatabaseController(Context context, EventBus eventBus) {
+    public DatabaseManager(Context context, EventBus eventBus) {
         this.mEventBus = eventBus;
-        //mEventBus.register(this);
 
         Paper.init(context);
         Paper.addSerializer(Bundle.class, new BundleSerializer());
@@ -33,5 +35,17 @@ public class DatabaseController {
 
         mBundleDao = new BundleDaoImpl();
         mMediaDao = new MediaDaoImpl();
+    }
+
+    public Long readLocalRevision() {
+        return Paper.book().read(REVISION_KEY);
+    }
+
+    public void saveLocalRevision(Long revision) {
+        Paper.book().write(REVISION_KEY, revision);
+    }
+
+    public void saveBundles(List<Bundle> bundles) {
+        mBundleDao.saveAll(bundles);
     }
 }

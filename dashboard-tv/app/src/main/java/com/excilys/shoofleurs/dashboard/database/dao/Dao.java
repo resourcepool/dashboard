@@ -30,6 +30,13 @@ public interface Dao<T> {
     void save(T t);
 
     /**
+     * Save all ts into DB.
+     *
+     * @param ts the bundle meta data
+     */
+    void saveAll(List<T> ts);
+
+    /**
      * Delete t from DB.
      *
      * @param id The t id
