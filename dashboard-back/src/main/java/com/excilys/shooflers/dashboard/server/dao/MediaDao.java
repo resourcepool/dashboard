@@ -17,7 +17,7 @@ public interface MediaDao {
      * @param uuid the media uuid
      * @return the retrieved media or null if no match
      */
-    MediaMetadata get(String uuid, String uuidBundle);
+    MediaMetadata get(String uuid);
 
     /**
      * Retrieve all medias from DB.
@@ -25,6 +25,13 @@ public interface MediaDao {
      * @return the retrieved medias or empty
      */
     List<MediaMetadata> getAll();
+
+    /**
+     * Retrieve all medias matching a bundle from DB.
+     * @param bundleUuid the bundle Uuid
+     * @return null if bundle doesn't exist, empty if bundle is empty, and entries if non-empty
+     */
+    List<MediaMetadata> getByBundle(String bundleUuid);
 
     /**
      * Save a media into DB.
@@ -36,7 +43,7 @@ public interface MediaDao {
     /**
      * Delete a media from DB.
      *
-     * @param uuid The bundle uuid
+     * @param uuid The media uuid
      */
-    boolean delete(String uuid, String uuidBundle);
+    boolean delete(String uuid);
 }

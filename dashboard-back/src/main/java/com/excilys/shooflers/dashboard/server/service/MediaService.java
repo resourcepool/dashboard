@@ -25,18 +25,15 @@ public interface MediaService {
     /**
      * Delete a media by uuid.
      * @param uuid uuid to delete
-     * @param uuidBundle uuid bundle of the media
-     * @return result of the operation
      */
-    boolean delete(String uuid, String uuidBundle);
+    void delete(String uuid);
 
     /**
      * Get a media by uuid.
      * @param uuid uuid to find
-     * @param uuidBundle uuid bundle of the media
      * @return media found or null
      */
-    MediaMetadataDto get(String uuid, String uuidBundle);
+    MediaMetadataDto get(String uuid);
 
     /**
      * Get all media by bundle.
@@ -44,4 +41,10 @@ public interface MediaService {
      * @return list of media
      */
     List<MediaMetadataDto> getByBundle(String uuidBundle);
+
+    /**
+     * Get all media.
+     * @return list of media
+     */
+    List<MediaMetadataDto> getAll();
 }

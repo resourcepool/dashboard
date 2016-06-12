@@ -60,9 +60,9 @@ public class MediaController {
     private UrlValidator urlValidator = new UrlValidator(new String[]{"http", "https"});
 
     @RequireValidApiKey
-    @RequestMapping(value = "{uuidbundle}/{uuid}", method = RequestMethod.GET)
-    public MediaMetadataDto get(@PathVariable("uuidbundle") String uuidBundle, @PathVariable("uuid") String uuid) {
-        MediaMetadataDto result = mediaService.get(uuid, uuidBundle);
+    @RequestMapping(value = "{uuid}", method = RequestMethod.GET)
+    public MediaMetadataDto get(@PathVariable("uuid") String uuid) {
+        MediaMetadataDto result = mediaService.get(uuid);
         if (result == null) {
             throw new ResourceNotFoundException(MESSAGE_MEDIA_NOT_FOUND);
         } else {
@@ -70,13 +70,18 @@ public class MediaController {
         }
     }
 
+    /**
+     * Retrieve medias
+     * @param bundleUuid an optional filter request parameter "bundle"
+     * @return the list of medias matching the query and optional filters
+     */
     @RequireValidApiKey
-    @RequestMapping(value = "{uuidbundle}", method = RequestMethod.GET)
-    public List<MediaMetadataDto> getAllByBundle(@PathVariable("uuidbundle") String uuidBundle) {
-        if (bundleService.get(uuidBundle) == null) {
-            throw new ResourceNotFoundException(MESSAGE_BUNDLE_NOT_FOUND);
+    @RequestMapping(method = RequestMethod.GET)
+    public List<MediaMetadataDto> getAll(@RequestParam(name = "bundle", required = false) String bundleUuid) {
+        if (bundleUuid != null) {
+            return mediaService.getByBundle(bundleUuid);
         }
-        return mediaService.getByBundle(uuidBundle);
+        else return mediaService.getAll();
     }
 
     @RequestMapping(method = RequestMethod.POST)
@@ -129,16 +134,13 @@ public class MediaController {
         return mediaMetadataDto;
     }
 
-    @RequestMapping(value = "{uuidbundle}/{uuid}", method = RequestMethod.DELETE)
-    public void delete(@PathVariable("uuidbundle") String uuidBundle, @PathVariable("uuid") String uuid) {
-        if (mediaService.get(uuid, uuidBundle) == null) {
+    @RequestMapping(value = "{uuid}", method = RequestMethod.DELETE)
+    public void delete(@PathVariable("uuid") String uuid) {
+        if (mediaService.get(uuid) == null) {
             throw new ResourceNotFoundException(MESSAGE_MEDIA_NOT_FOUND);
         }
-
-        if (mediaService.delete(uuid, uuidBundle)) {
-            // Create a new revision
-            revisionService.add(Revision.Action.DELETE, uuid, Revision.Type.MEDIA, null);
-        }
+        
+        mediaService.delete(uuid);
     }
 
     /**

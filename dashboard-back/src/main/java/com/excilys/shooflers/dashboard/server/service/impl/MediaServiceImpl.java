@@ -3,18 +3,16 @@ package com.excilys.shooflers.dashboard.server.service.impl;
 import com.excilys.shooflers.dashboard.server.dao.MediaDao;
 import com.excilys.shooflers.dashboard.server.dto.MediaMetadataDto;
 import com.excilys.shooflers.dashboard.server.dto.mapper.MediaDtoMapperImpl;
-import com.excilys.shooflers.dashboard.server.exception.ResourceIoException;
-import com.excilys.shooflers.dashboard.server.model.metadata.MediaMetadata;
+import com.excilys.shooflers.dashboard.server.model.Revision;
 import com.excilys.shooflers.dashboard.server.property.DashboardProperties;
 import com.excilys.shooflers.dashboard.server.service.MediaService;
+import com.excilys.shooflers.dashboard.server.service.RevisionService;
 import com.excilys.shooflers.dashboard.server.service.exception.JsonMalformedException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 @Component
@@ -22,6 +20,9 @@ public class MediaServiceImpl implements MediaService {
 
     @Autowired
     private MediaDao mediaDao;
+    
+    @Autowired
+    private RevisionService revisionService;
 
     @Autowired
     private MediaDtoMapperImpl mapper;
@@ -48,36 +49,33 @@ public class MediaServiceImpl implements MediaService {
     }
 
     @Override
-    public MediaMetadataDto get(String uuid, String uuidBundle) {
-        return mapper.toDto(mediaDao.get(uuid, uuidBundle));
+    public MediaMetadataDto get(String uuid) {
+        return mapper.toDto(mediaDao.get(uuid));
     }
 
+
+    @Override
+    public List<MediaMetadataDto> getAll() {
+        return mapper.toListDto(mediaDao.getAll());
+    }
+    
     @Override
     public List<MediaMetadataDto> getByBundle(String uuidBundle) {
-        // Get all media in bundle folder
-        File dirBundle = new File(props.getBasePath() + "/media/" + uuidBundle);
-        List<MediaMetadataDto> medias = new ArrayList<>();
-        File[] files = dirBundle.listFiles();
-        if (files != null) {
-            for (File file : files) {
-                medias.add(mapper.toDto(mediaDao.get(file.getName().substring(0, file.getName().lastIndexOf(".")), uuidBundle)));
-            }
-        }
-        return medias;
+       return mapper.toListDto(mediaDao.getByBundle(uuidBundle));
     }
 
     @Override
     public MediaMetadataDto save(MediaMetadataDto media) {
+        // TODO IDK where the file blob is stored...
         return mapper.toDto(mediaDao.save(mapper.fromDto(media)));
     }
 
     @Override
-    public boolean delete(String uuid, String uuidBundle) {
-        MediaMetadata media = mediaDao.get(uuid, uuidBundle);
-        if (media.hasFile() && !new File(props.getBaseResources() + media.getUrl()).delete()) {
-            throw new ResourceIoException("Error when deleting the resource file");
+    public void delete(String uuid) {
+        if(mediaDao.delete(uuid)) {
+            // TODO IDK where the file blobs are removed
+            // Create a new revision
+            revisionService.add(Revision.Action.DELETE, uuid, Revision.Type.MEDIA, null);
         }
-
-        return mediaDao.delete(uuid, uuidBundle);
     }
 }

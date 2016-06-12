@@ -1,6 +1,9 @@
 package com.excilys.shooflers.dashboard.server.dao;
 
+import com.excilys.shooflers.dashboard.server.dao.util.MediaReverseIndex;
 import com.excilys.shooflers.dashboard.server.dao.util.YamlUtils;
+import com.excilys.shooflers.dashboard.server.exception.ResourceIoException;
+import com.excilys.shooflers.dashboard.server.exception.ResourceNotFoundException;
 import com.excilys.shooflers.dashboard.server.model.metadata.MediaMetadata;
 import com.excilys.shooflers.dashboard.server.property.DashboardProperties;
 import org.slf4j.Logger;
@@ -10,6 +13,7 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import java.io.File;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.LinkedList;
@@ -25,23 +29,46 @@ public class MediaDaoImpl implements MediaDao {
     private DashboardProperties props;
 
     private Path mediaDatabasePath;
+    private Path mediaResourcesPath;
+    
+    private MediaReverseIndex mri = new MediaReverseIndex();
 
     @PostConstruct
     public void init() {
         mediaDatabasePath = Paths.get(props.getBasePath(), ENTITY_NAME);
+        // Refresh reverse index
+        mri.refreshDataset(getAll());
     }
 
     @Override
-    public MediaMetadata get(String uuid, String uuidBundle) {
-        File dataFile = getMediaFile(uuidBundle + "/" + uuid);
-        return readBundleFromFile(dataFile);
+    public MediaMetadata get(String uuid) {
+        String bundleUuid = mri.getBundleUuid(uuid);
+        File dataFile = getMediaFile(bundleUuid + "/" + uuid);
+        return readMediaFromFile(dataFile);
     }
 
     @Override
     public List<MediaMetadata> getAll() {
         List<MediaMetadata> mediaMetadatas = new LinkedList<>();
-        for (File b : mediaDatabasePath.toFile().listFiles(File::isFile)) {
-            mediaMetadatas.add(readBundleFromFile(b));
+        // Get all media in bundle folder
+        for (File bundle : mediaDatabasePath.toFile().listFiles(File::isDirectory)) {
+            for (File media : bundle.listFiles(File::isFile)) {
+                mediaMetadatas.add(readMediaFromFile(media));
+            }
+        }
+        return mediaMetadatas;
+    }
+
+    @Override
+    public List<MediaMetadata> getByBundle(String bundleUuid) {
+        List<MediaMetadata> mediaMetadatas = new LinkedList<>();
+        // Get all media in bundle folder
+        Path bundle = mediaDatabasePath.resolve(bundleUuid);
+        if (!Files.exists(bundle) || Files.isDirectory(bundle)) {
+            return null;
+        }
+        for (File media : bundle.toFile().listFiles(File::isFile)) {
+            mediaMetadatas.add(readMediaFromFile(media));
         }
         return mediaMetadatas;
     }
@@ -53,12 +80,29 @@ public class MediaDaoImpl implements MediaDao {
         }
         File dest = getMediaFile(mediaMetadata.getBundleTag() + "/" + mediaMetadata.getUuid());
         YamlUtils.store(mediaMetadata, dest);
+        // Refresh Reverse index
+        refreshReverseIndex();
         return mediaMetadata;
     }
 
     @Override
-    public boolean delete(String uuid, String uuidBundle) {
-        return YamlUtils.delete(mediaDatabasePath.resolve(uuidBundle + "/" + uuid + ".yaml").toFile());
+    public boolean delete(String uuid) {
+        String bundleUuid = mri.getBundleUuid(uuid);
+        if (bundleUuid == null) {
+            throw new ResourceNotFoundException();
+        }
+        boolean result = YamlUtils.delete(mediaDatabasePath.resolve(bundleUuid + "/" + uuid + ".yaml").toFile());
+        // Refresh Reverse index
+        refreshReverseIndex();
+        if (!result) {
+            throw new ResourceIoException();
+        }
+        return result;
+    }
+    
+    private void refreshReverseIndex() {
+        mri.invalidate();
+        mri.refreshDataset(getAll());
     }
 
     private File getMediaFile(String uuid) {
@@ -67,7 +111,7 @@ public class MediaDaoImpl implements MediaDao {
     }
 
 
-    private MediaMetadata readBundleFromFile(File dataFile) {
+    private MediaMetadata readMediaFromFile(File dataFile) {
         return YamlUtils.read(dataFile, MediaMetadata.class);
     }
 }
