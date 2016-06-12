@@ -6,30 +6,34 @@
 angular
   .module('dashboardFrontApp')
   .controller('BundleEditController',
-    ['$scope', '$http', '$routeParams', '$window', 'DATE', 'bundleService', 'dateService', 'firewallService',
-    function ($scope, $http, $routeParams, $window, DATE, bundleService, dateService, firewallService) {
+    ['$scope', '$routeParams', '$location', 'DATE', 'MSG', 'bundleService', 'dateService', 'firewallService', 'responseService',
+    function ($scope, $routeParams, $location, DATE, MSG, bundleService, dateService, firewallService, responseService) {
 
     var id = $routeParams.bundleId;
-
     $scope.bundle = {};
     $scope.title = "Edit";
+
     firewallService.isAuthenticated();
 
-    bundleService.getById(id).then(function(data){
-      $scope.bundle = data;
-      $scope.nav = $scope.bundle.name;
+    bundleService.getById(id).then(function(response) {
+      if (responseService.isResponseOk($scope, response)) {
+        $scope.bunde = response.data;
+        $scope.nav = $scope.bundle.name
+      }
     }, function(error) {
-      $scope.error = "Cannot get bundle";
+      $scope.error = MSG.ERR.SERVER;
     });
 
     $scope.submit = function (isValid) {
       if (isValid  && dateService.validateDates($scope.bundle.validity.start, $scope.bundle.validity.end, $scope)) {
         $scope.loading = true;
         bundleService.save($scope.bundle).then(function (success) {
-          $window.location.href = '#/dashboard';
+          if (responseService.isResponseOk($scope, response)) {
+            $location.path("/");
+          }
         }, function (error) {
           $scope.loading = false;
-          $scope.error = "Cannot get bundle";
+          $scope.error = MSG.ERR.SERVER;
         });
       }
     }

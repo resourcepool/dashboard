@@ -5,9 +5,9 @@
 
 angular
   .module('dashboardFrontApp')
-  .controller('MediaAddController',[
-    '$scope', '$http', '$routeParams', '$window', 'API', 'DATE', 'MSG', 'bundleService', 'mediaService', 'firewallService',
-    function ($scope, $http, $routeParams, $window, API, DATE, MSG, bundleService, mediaService, firewallService ) {
+  .controller('MediaAddController',
+    ['$scope', '$routeParams', '$location', 'DATE', 'MSG', 'bundleService', 'mediaService', 'firewallService', 'responseService',
+    function ($scope, $routeParams, $location, DATE, MSG, bundleService, mediaService, firewallService, responseService ) {
 
       var bundleId = $routeParams.bundleId;
       var mediaId = $routeParams.mediaId;
@@ -18,19 +18,19 @@ angular
       $scope.media = {};
       $scope.media.validity = {};
       $scope.regexDate = DATE.REGEXP;
-      //$scope.revision = 0;
 
       $scope.media.uuidBundle = bundleId;
       $scope.file = {};
       $scope.nav = "Add a media";
       $scope.title = "Add";
-      $scope.loading = false;
 
       // On récupère le bundle correspondant
-      bundleService.getById(bundleId).then(function(data) {
-        $scope.bundle = data;
+      bundleService.getById(bundleId).then(function(response) {
+        if (responseService.isResponseOk($scope, response)) {
+          $scope.bundle = response.data;
+        }
       }, function(error) {
-        $scope.error = MSG.ERR.GET_BUNDLE;
+        $scope.error = MSG.ERR.SERVER;
       });
 
       // on définit la fonction de submit
@@ -38,20 +38,25 @@ angular
         if (isValid) {
           $scope.loading = true;
           console.log($scope.media);
-          if ($scope.media.mediaType == 'image' || $scope.media.mediaType == 'video') {
-            mediaService.saveMedia($scope.media, $scope.file).then(function(response) {
-              console.log(response);
-              $window.location.href = '#/bundle/' + bundleId;
-            }, function(error){
-              $scope.error = MSG.ERR.UPLOAD_MEDIA;
-            });
-          }
-          else {
+          if ($scope.media.mediaType == 'web') {
             mediaService.saveWebMedia($scope.media).then(function(response) {
               console.log(response);
-              $window.location.href = '#/bundle/' + bundleId;
+              if (responseService.isResponseOk($scope, response)) {
+                $location.path('/bundle/' + bundleId);
+              }
             }, function(error){
-              $scope.error = MSG.ERR.UPLOAD_MEDIA;
+              $scope.error = MSG.ERR.SERVER;
+            });
+            
+          }
+          else {
+            mediaService.saveMedia($scope.media, $scope.file).then(function(response) {
+              console.log(response);
+              if (responseService.isResponseOk($scope, response)) {
+                $location.path('/bundle/' + bundleId);
+              }
+            }, function(error) {
+              $scope.error = MSG.ERR.SERVER;
             });
           }
         }

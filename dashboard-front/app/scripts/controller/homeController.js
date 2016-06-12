@@ -6,23 +6,24 @@
 angular
   .module('dashboardFrontApp')
   .controller('HomeController',
-    [ '$scope', '$cookieStore','DATE', 'MSG', 'bundleService', 'firewallService', 'messageService',
-      function ($scope, $cookieStore, DATE, MSG, bundleService, firewallService, messageService) {
+    [ '$scope', '$cookieStore','DATE', 'MSG', 'bundleService', 'firewallService', 'responseService',
+      function ($scope, $cookieStore, DATE, MSG, bundleService, firewallService, responseService) {
 
         $scope.bundles = {};
 
         firewallService.isAuthenticated();
 
-        // on récupère tous les bundles
         function getBundles() {
           bundleService.getAll().then(function(response) {
             console.log(response);
-            messageService.checkResponse($scope, response);
-            $scope.bundles = response.data;
+            if (responseService.isResponseOK($scope, response)) {
+            	$scope.bundles = response.data;
+            }
           }, function(error) {
             $scope.error = MSG.ERR.GET_MEDIAS;
           });
         }
+        // on récupère tous les bundles
         getBundles();
 
 
@@ -31,9 +32,9 @@ angular
           if (confirm(MSG.CONF.DELETE_BUNDLE)) {
             bundleService.removeById(id).then(
               function (response) {
-                messageService.checkResponse($scope, response);
-                console.log(response);
-                getBundles()
+                if (responseService.isResponseOK($scope, response)) {
+                	getBundles();
+                }
               },
               function (response) {
                 $scope.error = MSG.CONF.ERR.DELETE_BUNDLE;

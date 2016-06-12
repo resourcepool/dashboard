@@ -20,7 +20,10 @@ angular
       "GET_MEDIAS": "Cannot get metdas",
       "DELETE_BUNDLE": "Cannot delete bundle",
       "DELETE_MEDIA": "Cannot delete media",
-      "UPLOAD_MEDIA": "Error when trying to upload media"
+      "UPLOAD_MEDIA": "Error when trying to upload media",
+      "ADD_BUNDLE": "Cannot create bundle",
+      "ADD_MEDIA" : "Cannot create media",
+      "SERVER": "Problem to connect with the server"
     },
     "SUCC" : {
       "ADD_BUNDLE" : "Bundle created with success",

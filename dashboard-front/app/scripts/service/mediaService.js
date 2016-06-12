@@ -20,22 +20,29 @@ angular
 
     function getAllByBundle(bundleId) {
       return $http.get(API.BASE_URL + "media/" + bundleId)
-        .then(function(success) {
-          return formatDateTime(success.data);
+        .then(function(response) {
+          return response;
+          //return formatDateTime(success.data);
+        }, function (error){
+          return error;
         });
     }
 
     function getById(mediaId, bundleId) {
       return $http.get(API.BASE_URL + "media/"+ bundleId + "/" + mediaId)
-        .then(function(success) {
-          return success.data;
+        .then(function(response) {
+          return response;
+        }, function (error) {
+          return error;
         });
     }
 
     function removeById(mediaId, bundleId) {
       return $http.delete(API.BASE_URL + "media/"+ bundleId + "/" + mediaId)
-        .then(function(success){
-          return success;
+        .then(function(response){
+          return response;
+        }, function (error) {
+          return error;
         })
     }
 
@@ -47,6 +54,8 @@ angular
           }
         }).then(function(response) {
           return response;
+        }, function (error){
+          return error;
         });
     }
 
@@ -63,9 +72,11 @@ angular
           }
         }).then(function(response) {
           return response;
+        }, function (error) {
+          return error;
         });
     }
-
+    /*
     function formatDateTime(medias) {
       for (var media of medias) {
         media.validity.start = moment(media.validity.start, DATE.SERVER_FORMAT).format(DATE.DISPLAY_FORMAT);
@@ -73,6 +84,7 @@ angular
       }
       return medias;
     }
+    */
 
   }]);
 

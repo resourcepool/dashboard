@@ -13,9 +13,10 @@
           <legend>{{ title }}
             <span ng-if="media.mediaType == 'image'" class="glyphicon glyphicon-picture"></span>
             <span ng-if="media.mediaType == 'video'" class="glyphicon glyphicon-film"></span>
-            <span ng-if="media.mediaType == 'application/web-site || application/web-video'" class="glyphicon glyphicon-link"></span>
+            <span ng-if="media.mediaType == 'web-site'" class="glyphicon glyphicon-link"></span>
             {{  media.name }}
           </legend>
+
           <p ng-show="loading">Sending ... <img src="images/loader.gif"></p>
 
           <div class="form-group">
@@ -25,41 +26,37 @@
           </div>
 
           <div class="form-group">
-            <label for="contentType">Content Type</label>
-            <select id="contentType" name="contentType" class="form-control" required ng-model="media.mediaType">
+            <label for="mediaType">Content Type</label>
+            <select id="mediaType" name="mediaType" class="form-control" required ng-model="media.mediaType">
               <option value="">Select a Type</option>
               <option value="image" ng-selected="media.mediaType == 'image'">Image</option>
               <option value="video" ng-selected="media.mediaType == 'video'">Video</option>
-              <option value="application/web-site" ng-selected="media.mediaType == 'application/web-site'">Web site</option>
-              <option value="application/web-video" ng-selected="media.mediaType == 'application/web-video'">Web video</option>
+              <option value="web" ng-selected="media.mediaType == 'web'">Web</option>
             </select>
-            <div ng-show="form.$submitted && form.contentType.$error.required" class="alert alert-danger">The field must not be empty</div>
+            <div ng-show="form.$submitted && form.mediaType.$error.required" class="alert alert-danger">The field must not be empty</div>
           </div>
 
-          <div ng-show="media.mediaType == 'application/web-site' || media.mediaType == 'application/web-video'" class="form-group">
+          <div ng-show="media.mediaType == 'web'" class="form-group">
             <label for="url">URL</label>
-            <input name="url" id="url" type="text" class="form-control" ng-required="media.mediaType == 'WebContent'" placeholder="URL" ng-model="media.url">
+            <input name="url" id="url" type="text" class="form-control" ng-required="media.mediaType == 'web'" placeholder="URL" ng-model="media.url">
             <div ng-show="form.$submitted && form.url.$error.required" class="alert alert-danger">The field must not be empty</div>
           </div>
 
           <div class="form-group">
-            <label for="durationInSlideShow">Duration (seconds)</label>
-            <input name="durationInSlideShow" id="durationInSlideShow" type="text" class="form-control" placeholder="Duration (seconds)" ng-model="media.duration">
+            <label for="duration">Duration (seconds)</label>
+            <input name="duration" id="duration" type="text" class="form-control" placeholder="Duration (seconds)" ng-model="media.duration">
           </div>
 
           <div class="form-group">
             <label for="mediaValidityStart">Start Datetime</label>
-            <input id="mediaValidityStart" name="mediaStartDateTime" ng-pattern="regexDate" required type="text" date-picker="start" class="datetimepicker form-control" placeholder="media start datetime" ng-model="media.validity.start">
-            <div class="alert-danger alert" ng-show="form.$submitted && form.mediaValidityStart.$error.required" class="help-block">The field must not be empty</div>
+            <input id="mediaValidityStart" name="mediaStartDateTime" ng-pattern="regexDate" type="text" date-picker="start" class="datetimepicker form-control" placeholder="media start datetime" ng-model="media.validity.start">
           </div>
-          <pre>{{ media.validity.start }}</pre>
           <div class="form-group">
             <label for="mediaValidityEnd">End Datetime</label>
-            <input id="mediaValidityEnd" name="bundleValidityEnd" required type="text" class="datetimepicker form-control" placeholder="media end datetime" date-picker="end" ng-model="media.validity.end">
-            <div class="alert-danger alert" ng-show="form.$submitted && form.mediaValidityEnd.$error.required" class="help-block">The field must not be empty</div>
+            <input id="mediaValidityEnd" name="bundleValidityEnd" type="text" class="datetimepicker form-control" placeholder="media end datetime" date-picker="end" ng-model="media.validity.end">
           </div>
 
-          <div class="box" ng-show="media.mediaType == 'image' || media.mediaType == 'video'">
+          <div class="box" ng-show="media.mediaType != 'web'">
             <input name="file "type="file" required valid-file="file" file-model="file" />
             <div ng-show="form.$submitted && form.file.$error.required" class="alert alert-danger">The field must not be empty</div>
 
