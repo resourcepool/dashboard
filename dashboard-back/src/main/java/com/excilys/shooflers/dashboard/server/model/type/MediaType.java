@@ -19,9 +19,8 @@ public enum MediaType {
             new String[]{"video/x-msvideo", ".avi"},
             new String[]{"video/x-flv", ".flv"}),
     DOCUMENT(new String[]{"application/vnd.ms-powerpoint", ".pptx"},
-            new String[]{"application/vnd.ms-powerpoint", ".ppt"},
             new String[]{"application/pdf", ".pdf"}),
-    WEB(new String[]{"application/web-site", null});
+    WEB(new String[]{"application/web-site", ""});
 
     private Map<String, String> mimeTypes;
 

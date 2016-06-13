@@ -107,7 +107,7 @@ public class MediaServiceImpl implements MediaService {
      */
     private String computeUrl(Media media) {
         if (media.getContent() == null) {
-            return null;
+            return media.getMetadata().getUrl();
         }
         return new StringBuilder(props.getBaseUrl())
                 .append("/file/")

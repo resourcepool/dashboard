@@ -78,7 +78,7 @@ public class MediaDaoImpl implements MediaDao {
         List<MediaMetadata> mediaMetadatas = new LinkedList<>();
         // Get all media in bundle folder
         Path bundle = mediaDatabasePath.resolve(bundleTag);
-        if (!Files.exists(bundle) || Files.isDirectory(bundle)) {
+        if (!Files.exists(bundle) || !Files.isDirectory(bundle)) {
             return mediaMetadatas;
         }
         for (File media : bundle.toFile().listFiles(File::isFile)) {
@@ -94,12 +94,12 @@ public class MediaDaoImpl implements MediaDao {
         
         File dest = getMediaFile(mediaMetadata.getBundleTag(), mediaMetadata.getUuid());
         YamlUtils.store(mediaMetadata, dest);
-
+        
         MultipartFile content = media.getContent();
-        String ext = mediaType.getExtension(content.getContentType());
         
         // TODO implement some kind of rollback if second content write fails
         if (content != null) {
+            String ext = mediaType.getExtension(content.getContentType());
             dest = getResourceFile(mediaMetadata.getBundleTag(), mediaMetadata.getUuid(), ext);
             try {
                 FileCopyUtils.copy(content.getBytes(), dest);

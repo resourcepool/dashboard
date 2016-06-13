@@ -54,7 +54,6 @@ public class BundleServiceImpl implements BundleService {
         String originalUuid = bundle.getUuid();
         BundleMetadata dbBundle = bundleDao.get(originalUuid);
 
-
         // Keep original bundle tag if not valid
         if (bundle.getTag() == null || bundle.getTag().trim().isEmpty()) {
             bundle.setTag(dbBundle.getTag());
@@ -70,8 +69,7 @@ public class BundleServiceImpl implements BundleService {
         if (!dbBundle.getTag().equals(bundle.getTag())) {
             // If yes, we are in trouble. We need to:
             // Change all references to the bundle in medias
-            // Move the folder in media entity
-            // TODO
+            // Update all medias
             List<MediaMetadata> medias = mediaService.getByBundleTag(dbBundle.getTag());
             medias.forEach(mediaMetadata -> {
                 mediaMetadata.setBundleTag(bundle.getTag());
