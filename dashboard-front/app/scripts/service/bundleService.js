@@ -7,13 +7,13 @@ angular
   .module("dashboardFrontApp")
   .service('bundleService', ['$http', 'API', 'DATE', function ($http, API, DATE) {
 
-    this.getById = getById;
+    this.getByTag = getByTag;
     this.save = save;
     this.removeById = removeById;
     this.getAll = getAll;
 
-    function getById(id) {
-      return $http.get(API.BASE_URL + "/bundle/" + id).then(function(response) {
+    function getByTag(tag) {
+      return $http.get(API.BASE_URL + "/bundle/" + tag).then(function(response) {
         return response;
       }, function(error) {
         return error;
@@ -21,8 +21,15 @@ angular
     }
 
     function save(bundle) {
-      return $http.post(API.BASE_URL + "/bundle", bundle)
-        .then(function(response) {
+      var p;
+      if (bundle.uuid) {
+        // If update, use PUT method
+        p = $http.put(API.BASE_URL + "/bundle", bundle);
+      } else {
+        // If new, use POST method
+        p = $http.post(API.BASE_URL + "/bundle", bundle);
+      }
+      return p.then(function(response) {
         return response;
       }, function(error) {
         return error;

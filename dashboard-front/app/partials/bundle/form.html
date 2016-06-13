@@ -15,7 +15,7 @@
           <div ng-if="error" class="alert alert-danger">{{ error }}</div>
 
           <div class="form-group">
-            <label for="title">Name</label>
+            <label for="title">Name (Required)</label>
             <input id="title" name="title" type="text" placeholder="Enter a title" class="form-control" minlength="2" maxlength="30" required ng-model="bundle.name">
             <div class="alert-danger alert" ng-show="form.$submitted && form.title.$error.required" class="help-block">The field must not be empty</div>
             <div class="alert-danger alert" ng-show="form.$submitted && form.title.$error.minlength" class="help-block">The value must have at least 2 characters</div>
@@ -26,7 +26,6 @@
             <label for="bundleStartDateTime">Start Datetime</label>
             <input id="bundleStartDateTime" name="bundleStartDateTime" ng-pattern="regexDate" type="text" date-picker="start" class="datetimepicker form-control" placeholder="bundle start datetime"  ng-model="bundle.validity.start">
           </div>
-          <pre>{{ bundle.validity.start }}</pre>
           <div class="form-group">
             <label for="bundleValidityEnd">End Datetime</label>
             <input id="bundleValidityEnd" name="bundleValidityEnd" type="text" class="datetimepicker form-control" placeholder="bundle end datetime" date-picker="end" ng-model="bundle.validity.end">

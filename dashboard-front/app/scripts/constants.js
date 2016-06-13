@@ -23,7 +23,7 @@ angular
       "UPLOAD_MEDIA": "Error when trying to upload media",
       "ADD_BUNDLE": "Cannot create bundle",
       "ADD_MEDIA" : "Cannot create media",
-      "SERVER": "Problem to connect with the server"
+      "SERVER": "Internal server error occured. Please try again later."
     },
     "SUCC" : {
       "ADD_BUNDLE" : "Bundle created with success",

@@ -23,12 +23,12 @@
       </thead>
       <tbody>
       <tr ng-repeat="bundle in bundles">
-        <td><a href="#/bundle/medias/{{ bundle.uuid }}"><span aria-hidden="true" class="glyphicon glyphicon-folder-close"></span> {{ bundle.name }} </a></td>
+        <td><a href="#/bundle/{{ bundle.tag }}/media"><span aria-hidden="true" class="glyphicon glyphicon-folder-close"></span> {{ bundle.name }} </a></td>
         <td>{{ bundle.validity.start }}</td>
         <td>{{ bundle.validity.end }}</td>
         <td>
           <button class="btn-default btn btn-sm" ng-click="remove(bundle.uuid);" ><span aria-hidden="true" class="glyphicon glyphicon-remove"></span></button>
-          <a class="btn-default btn btn-sm" href="#/bundle/edit/{{ bundle.uuid }}" ><span aria-hidden="true" class="glyphicon glyphicon-edit"></span></a>
+          <a class="btn-default btn btn-sm" href="#/bundle/edit/{{ bundle.tag }}" ><span aria-hidden="true" class="glyphicon glyphicon-edit"></span></a>
         </td>
       </tr>
       </tbody>

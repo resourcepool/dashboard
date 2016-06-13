@@ -18,16 +18,17 @@ angular
         firewallService.isAuthenticated();
 
         $scope.submit = function (isValid) {
-          if (isValid && dateService.validateDates($scope.bundle.validity.start, $scope.bundle.validity.end, $scope) ) {
+          if (isValid && dateService.validateDates($scope.bundle.validity.start, $scope.bundle.validity.end, $scope)) {
             $scope.loading = true;
             bundleService.save($scope.bundle).then(
-              function(response) {
-                if (responseService.isResponseOk($scope, response)) {
+              function (response) {
+                if (responseService.isResponseOK($scope, response)) {
+                  $scope.loading = false;
                   $location.path("/");
+                } else {
+                  $scope.loading = false;
+                  $scope.error = MSG.ERR.SERVER;
                 }
-              }, function(response) {
-                $scope.loading = false;
-                $scope.error = MSG.ERR.SERVER;
               });
           }
         }

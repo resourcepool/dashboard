@@ -8,9 +8,9 @@ angular
   .controller('MediaListController',
     [ '$scope', '$location', '$routeParams', 'DATE', 'MSG', 'mediaService', 'bundleService', 'firewallService', 'responseService', 'dateService',
       function ($scope, $location, $routeParams, DATE, MSG, mediaService, bundleService, firewallService, responseService, dateService) {
- 
-        var bundleId = $routeParams.bundleId;
-        $scope.bundle = {}
+
+        var bundleTag = $routeParams.bundleTag;
+        $scope.bundle = {};
         $scope.medias = {};
         this.getMedias = getMedias;
 
@@ -18,8 +18,8 @@ angular
         getMedias();
 
         // on récupère tous les medias pour le bundle precisé
-        bundleService.getById(bundleId).then(function(response) {
-          if (responseService.isResponseOk($scope, response)) {
+        bundleService.getByTag(bundleTag).then(function(response) {
+          if (responseService.isResponseOK($scope, response)) {
             $scope.bundle = response.data;
           }
         }, function(error) {
@@ -28,9 +28,9 @@ angular
 
         function getMedias() {
           // on récupère tous les medias pour le bundle precisé
-          mediaService.getAllByBundle(bundleId).then(function(response) {
+          mediaService.getAllByBundle(bundleTag).then(function(response) {
             console.log(response);
-            if (responseService.isResponseOk($scope, response)) {
+            if (responseService.isResponseOK($scope, response)) {
               $scope.medias = dateService.formatDates(response.data);
             }
           }, function(error) {
@@ -41,10 +41,10 @@ angular
         // on bind la fonction de suppression
         $scope.remove = function(id) {
           if (confirm(MSG.CONF.DELETE_MEDIA)) {
-            mediaService.removeById(id, bundleId).then(
+            mediaService.removeById(id, bundleTag).then(
               function (response) {
                 console.log(response);
-                if (responseService.isResponseOk($scope, response)) {
+                if (responseService.isResponseOK($scope, response)) {
                   getMedias();
                 }
               },

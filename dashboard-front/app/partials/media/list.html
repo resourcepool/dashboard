@@ -6,7 +6,7 @@
 
     <div class="pull-right">
       <h4>
-        <a href="#/bundle/{{ bundle.uuid }}/media/add"> Add Media <span aria-hidden="true" class="glyphicon glyphicon-upload"></span></a>
+        <a href="#/bundle/{{bundle.tag}}/media/add"> Add Media <span aria-hidden="true" class="glyphicon glyphicon-upload"></span></a>
       </h4>
     </div>
   </div>
@@ -33,10 +33,10 @@
       		</a>
       	</td>
         <td>{{ media.validity.start }}</td>
-        <td>{{ media.validity.start }}</td>
+        <td>{{ media.validity.end }}</td>
         <td>
           <button class="btn-default btn btn-sm" ng-click="remove(media.uuid);" ><span aria-hidden="true" class="glyphicon glyphicon-remove"></span></button>
-          <a class="btn-default btn btn-sm" href="#/bundle/{{ bundle.uuid }}/media/edit/{{ media.uuid }}" ><span aria-hidden="true" class="glyphicon glyphicon-edit"></span></a>
+          <a class="btn-default btn btn-sm" href="#/bundle/{{ bundle.tag }}/media/edit/{{ media.uuid }}" ><span aria-hidden="true" class="glyphicon glyphicon-edit"></span></a>
         </td>
       </tr>
       </tbody>

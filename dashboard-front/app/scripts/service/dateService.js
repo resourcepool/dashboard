@@ -17,14 +17,21 @@ angular
           $scope.error = "Start datetime must be before End datetime";
           return bool;
         }
-        return true;
       }
+      return true;
     }
 
     function formatDates(entities) {
-      for (var entity of entities) {
-        entity.validity.start = moment(entity.validity.start, DATE.SERVER_FORMAT).format(DATE.DISPLAY_FORMAT);
-        entity.validity.end = moment(entity.validity.end, DATE.SERVER_FORMAT).format(DATE.DISPLAY_FORMAT);
+      for (var entity in entities) {
+        if (!entity.validity) {
+          continue;
+        }
+        if (entity.validity.start) {
+          entity.validity.start = moment(entity.validity.start, DATE.SERVER_FORMAT).format(DATE.DISPLAY_FORMAT);
+        }
+        if (entity.validity.end) {
+          entity.validity.end = moment(entity.validity.end, DATE.SERVER_FORMAT).format(DATE.DISPLAY_FORMAT);
+        }
       }
       return entities;
     }

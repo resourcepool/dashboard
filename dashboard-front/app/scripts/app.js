@@ -29,22 +29,21 @@ dashboardFrontApp.config(['$routeProvider',
 			templateUrl: 'partials/bundle/form.html',
 			controller: 'BundleAddController'
 		}).
-    when('/bundle/medias/:bundleId', {
+    when('/bundle/:bundleTag/media', {
       templateUrl: 'partials/media/list.html',
       controller: 'MediaListController'
     }).
-		when('/bundle/edit/:bundleId', {
+		when('/bundle/edit/:bundleTag', {
 			templateUrl: 'partials/bundle/form.html',
 			controller: 'BundleEditController'
 		}).
-		when('/bundle/:bundleId/media/add/', {
+		when('/bundle/:bundleTag/media/add', {
 			templateUrl: 'partials/media/form.html',
 			controller: 'MediaAddController'
-		}).when('/bundle/:bundleId/media/edit/:mediaId', {
+		}).when('/bundle/:bundleTag/media/edit/:mediaId', {
 			templateUrl: 'partials/media/form.html',
 			controller: 'MediaEditController'
-		}).
-		otherwise({
+		}).otherwise({
 			redirectTo: '/home'
 		});
 	}]);

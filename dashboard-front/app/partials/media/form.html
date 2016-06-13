@@ -11,9 +11,9 @@
       <form name="form" ng-submit="submit(form.$valid)" novalidate>
         <fieldset>
           <legend>{{ title }}
-            <span ng-if="media.mediaType == 'image'" class="glyphicon glyphicon-picture"></span>
-            <span ng-if="media.mediaType == 'video'" class="glyphicon glyphicon-film"></span>
-            <span ng-if="media.mediaType == 'web-site'" class="glyphicon glyphicon-link"></span>
+            <span ng-if="media.mediaType == 'IMAGE'" class="glyphicon glyphicon-picture"></span>
+            <span ng-if="media.mediaType == 'VIDEO'" class="glyphicon glyphicon-film"></span>
+            <span ng-if="media.mediaType == 'WEB'" class="glyphicon glyphicon-link"></span>
             {{  media.name }}
           </legend>
 
@@ -29,16 +29,16 @@
             <label for="mediaType">Content Type</label>
             <select id="mediaType" name="mediaType" class="form-control" required ng-model="media.mediaType">
               <option value="">Select a Type</option>
-              <option value="image" ng-selected="media.mediaType == 'image'">Image</option>
-              <option value="video" ng-selected="media.mediaType == 'video'">Video</option>
-              <option value="web" ng-selected="media.mediaType == 'web'">Web</option>
+              <option value="IMAGE" ng-selected="media.mediaType === 'IMAGE'">Image</option>
+              <option value="VIDEO" ng-selected="media.mediaType === 'VIDEO'">Video</option>
+              <option value="WEB" ng-selected="media.mediaType === 'WEB'">Web</option>
             </select>
             <div ng-show="form.$submitted && form.mediaType.$error.required" class="alert alert-danger">The field must not be empty</div>
           </div>
 
-          <div ng-show="media.mediaType == 'web'" class="form-group">
+          <div ng-show="media.mediaType == 'WEB'" class="form-group">
             <label for="url">URL</label>
-            <input name="url" id="url" type="text" class="form-control" ng-required="media.mediaType == 'web'" placeholder="URL" ng-model="media.url">
+            <input name="url" id="url" type="text" class="form-control" ng-required="media.mediaType === 'WEB'" placeholder="URL" ng-model="media.url">
             <div ng-show="form.$submitted && form.url.$error.required" class="alert alert-danger">The field must not be empty</div>
           </div>
 
@@ -56,19 +56,14 @@
             <input id="mediaValidityEnd" name="bundleValidityEnd" type="text" class="datetimepicker form-control" placeholder="media end datetime" date-picker="end" ng-model="media.validity.end">
           </div>
 
-          <div class="box" ng-show="media.mediaType != 'web'">
+          <div class="box" ng-show="media.mediaType != 'WEB'">
             <input name="file "type="file" required valid-file="file" file-model="file" />
             <div ng-show="form.$submitted && form.file.$error.required" class="alert alert-danger">The field must not be empty</div>
-
-            <!--
-            <input style="display:none;" type="file" id="file-2" class="inputfile inputfile-2" file-model="file" />
-            <label for="file-2"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="17" viewBox="0 0 20 17"><path d="M10 0l-5.2 4.9h3.3v5.1h3.8v-5.1h3.3l-5.2-4.9zm9.3 11.5l-3.2-2.1h-2l3.4 2.6h-3.5c-.1 0-.2.1-.2.1l-.8 2.3h-6l-.8-2.2c-.1-.1-.1-.2-.2-.2h-3.6l3.4-2.6h-2l-3.2 2.1c-.4.3-.7 1-.6 1.5l.6 3.1c.1.5.7.9 1.2.9h16.3c.6 0 1.1-.4 1.3-.9l.6-3.1c.1-.5-.2-1.2-.7-1.5z"/></svg> <span>Choose a file&hellip;</span></label>
-             -->
           </div>
         </fieldset>
         <div class="actions pull-right">
           <input type="submit" class="btn btn-primary" value="Send">
-          or <a href="#/home" class="btn btn-default"  ng-click="reset()">Cancel</a>
+          or <a href="#/bundle/{{bundle.tag}}/media" class="btn btn-default"  ng-click="reset()">Cancel</a>
         </div>
       </form>
     </div>
