@@ -18,7 +18,6 @@ import java.nio.file.Paths;
 @Component
 public class ADaoInitializer {
 
-
     private static final Logger LOGGER = LoggerFactory.getLogger(ADaoInitializer.class);
 
     @Autowired
@@ -40,7 +39,7 @@ public class ADaoInitializer {
                 throw new IllegalStateException(err);
             }
         }
-        
+
         Path dbRes = Paths.get(props.getBaseResources());
         if (!Files.exists(dbRes)) {
             try {

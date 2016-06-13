@@ -53,5 +53,5 @@ public class MediaDtoMapperImpl implements MediaDtoMapper {
         }
         return mediaMetadataDto;
     }
-    
+
 }

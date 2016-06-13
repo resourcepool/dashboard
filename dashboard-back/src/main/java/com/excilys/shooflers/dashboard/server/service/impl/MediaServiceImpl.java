@@ -54,22 +54,22 @@ public class MediaServiceImpl implements MediaService {
         revisionService.add(Revision.Type.MEDIA, Revision.Action.ADD, media.getMetadata().getUuid());
 
     }
-    
+
     @Override
     public void update(Media media) {
         String originalUuid = media.getMetadata().getUuid();
         // Save is ALWAYS a new UUID as media is immutable
         media.getMetadata().setUuid(UUID.randomUUID().toString());
-        
+
         // Did we upload a new content?
         if (media.getContent() != null) {
             // Yes: Compute content Url
-            media.getMetadata().setUrl(computeUrl(media));    
+            media.getMetadata().setUrl(computeUrl(media));
         } else {
             // No: Keep previous Url
             media.getMetadata().setUrl(get(originalUuid).getUrl());
         }
-        
+
         // This is an update of a media. Delete previous and add new update
         mediaDao.delete(originalUuid);
         mediaDao.save(media);

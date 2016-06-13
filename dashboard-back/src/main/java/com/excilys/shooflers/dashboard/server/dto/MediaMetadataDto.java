@@ -20,8 +20,6 @@ public class MediaMetadataDto {
 
     private String bundleTag;
 
-    private long revision;
-
     public MediaMetadataDto() { }
 
     private MediaMetadataDto(String uuid, String name, int duration, MediaType mediaType, ValidityDto validity, String url, String bundleTag) {
@@ -144,13 +142,5 @@ public class MediaMetadataDto {
 
     public void setBundleTag(String bundleTag) {
         this.bundleTag = bundleTag;
-    }
-
-    public long getRevision() {
-        return revision;
-    }
-
-    public void setRevision(long revision) {
-        this.revision = revision;
     }
 }

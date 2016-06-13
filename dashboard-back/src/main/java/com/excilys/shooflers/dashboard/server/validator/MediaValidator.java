@@ -6,7 +6,14 @@ import org.apache.commons.validator.routines.UrlValidator;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
-import static com.excilys.shooflers.dashboard.server.rest.MediaController.*;
+import static com.excilys.shooflers.dashboard.server.rest.MediaController.MESSAGE_COMPULSORY_FIELD;
+import static com.excilys.shooflers.dashboard.server.rest.MediaController.MESSAGE_MALFORMED_URL;
+import static com.excilys.shooflers.dashboard.server.rest.MediaController.MESSAGE_MEDIA_NOT_FOUND;
+import static com.excilys.shooflers.dashboard.server.rest.MediaController.MESSAGE_NEED_FILE;
+import static com.excilys.shooflers.dashboard.server.rest.MediaController.MESSAGE_NEED_FILE_WHEN_NO_MEDIA_TYPE;
+import static com.excilys.shooflers.dashboard.server.rest.MediaController.MESSAGE_NEED_URL;
+import static com.excilys.shooflers.dashboard.server.rest.MediaController.MESSAGE_NOT_CORRESPONDING_MEDIA_TYPE;
+
 
 /**
  * @author Loïc Ortola on 13/06/2016.
@@ -51,7 +58,7 @@ public class MediaValidator {
             }
             return;
         }
-        
+
         // File expected
         if (multipartFile == null) {
             if (mediaType == null) {
@@ -65,6 +72,6 @@ public class MediaValidator {
         if (!mediaType.supports(multipartFile.getContentType())) {
             throw new IllegalArgumentException(MESSAGE_NOT_CORRESPONDING_MEDIA_TYPE);
         }
-        
+
     }
 }

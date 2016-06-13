@@ -11,10 +11,15 @@ public interface BundleDao {
 
     String ENTITY_NAME = "bundle";
 
+    /**
+     * Retrieve bundle from DB using its id.
+     * @param uuid the bundle uuid
+     * @return the retrieved bundle or null if no match
+     */
     BundleMetadata get(String uuid);
 
     /**
-     * Retrieve bundle from DB.
+     * Retrieve bundle from DB using its tag.
      *
      * @param uuid the bundle tag
      * @return the retrieved bundle or null if no match
@@ -42,5 +47,5 @@ public interface BundleDao {
      */
     BundleMetadata delete(String uuid);
 
-    
+
 }

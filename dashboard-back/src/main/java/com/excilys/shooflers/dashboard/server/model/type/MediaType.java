@@ -9,7 +9,7 @@ import java.util.stream.Collectors;
  * Type of a media.
  */
 public enum MediaType {
-    
+
     IMAGE(new String[]{"image/png", ".png"},
             new String[]{"image/jpg", ".jpg"},
             new String[]{"image/jpeg", ".jpg"},
@@ -72,7 +72,7 @@ public enum MediaType {
     public String getExtension(String mimeType) {
         return mimeTypes.get(mimeType);
     }
-    
+
     public Collection<String> getValidMimeTypes() {
         return mimeTypes.keySet();
     }

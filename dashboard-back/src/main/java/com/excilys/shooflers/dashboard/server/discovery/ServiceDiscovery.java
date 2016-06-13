@@ -25,7 +25,7 @@ public class ServiceDiscovery implements ApplicationListener<EmbeddedServletCont
 
     @Autowired
     DashboardProperties props;
-    
+
     private JmDNS jmDNS;
 
     private ServiceInfo serviceInfo;

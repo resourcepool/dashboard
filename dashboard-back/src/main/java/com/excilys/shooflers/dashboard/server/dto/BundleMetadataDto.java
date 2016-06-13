@@ -6,7 +6,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 public class BundleMetadataDto {
 
     private String uuid;
-    
+
     private String tag;
 
     private String name;
@@ -26,7 +26,7 @@ public class BundleMetadataDto {
 
     public static class Builder {
         private String uuid;
-        
+
         private String name;
 
         private ValidityDto validityDto;
@@ -37,7 +37,7 @@ public class BundleMetadataDto {
             this.uuid = uuid;
             return this;
         }
-        
+
         public Builder tag(String tag) {
             this.tag = tag;
             return this;

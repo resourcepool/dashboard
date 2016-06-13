@@ -35,7 +35,7 @@ public class MediaDaoImpl implements MediaDao {
 
     private Path mediaDatabasePath;
     private Path mediaResourcesPath;
-    
+
     private MediaReverseIndex mri = new MediaReverseIndex();
 
     @PostConstruct
@@ -91,32 +91,32 @@ public class MediaDaoImpl implements MediaDao {
     public void save(Media media) {
         MediaMetadata mediaMetadata = media.getMetadata();
         MediaType mediaType = mediaMetadata.getMediaType();
-        
+
         File dest = getMediaFile(mediaMetadata.getBundleTag(), mediaMetadata.getUuid());
         YamlUtils.store(mediaMetadata, dest);
-        
+
         MultipartFile content = media.getContent();
-        
+
         // TODO implement some kind of rollback if second content write fails
         if (content != null) {
             String ext = mediaType.getExtension(content.getContentType());
             dest = getResourceFile(mediaMetadata.getBundleTag(), mediaMetadata.getUuid(), ext);
             try {
                 FileCopyUtils.copy(content.getBytes(), dest);
-                
+
             } catch (IOException e) {
                 LOGGER.warn("Error while writing file.", e);
                 throw new IllegalStateException(e);
             }
         }
-        
+
         // Refresh Reverse index
         refreshReverseIndex();
     }
 
     @Override
     public void deleteByBundle(String bundleTag) {
-        
+
         if (bundleTag == null) {
             throw new ResourceNotFoundException();
         }
@@ -147,7 +147,7 @@ public class MediaDaoImpl implements MediaDao {
         // Refresh Reverse index
         refreshReverseIndex();
     }
-    
+
     private void refreshReverseIndex() {
         mri.invalidate();
         mri.refreshDataset(getAll());
@@ -155,6 +155,7 @@ public class MediaDaoImpl implements MediaDao {
 
     /**
      * Retrieve media file from bundle tag and media tag
+     *
      * @param bundleTag
      * @param uuid
      * @return
@@ -163,7 +164,7 @@ public class MediaDaoImpl implements MediaDao {
         String dataFileName = uuid + ".yaml";
         return mediaDatabasePath.resolve(bundleTag + "/" + dataFileName).toFile();
     }
-    
+
     private File getResourceFile(String bundleTag, String uuid, String ext) {
         String dataFileName = uuid + (ext.startsWith(".") ? ext : "." + ext);
         return mediaResourcesPath.resolve(bundleTag + "/" + dataFileName).toFile();

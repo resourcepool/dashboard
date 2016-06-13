@@ -9,7 +9,11 @@ import com.excilys.shooflers.dashboard.server.security.annotation.RequireValidUs
 import com.excilys.shooflers.dashboard.server.service.BundleService;
 import com.excilys.shooflers.dashboard.server.validator.BundleMedataDtoValidator;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
@@ -29,7 +33,7 @@ public class BundleController {
 
     @Autowired
     private BundleDtoMapper mapper;
-    
+
     /**
      * Get all Bundle.
      *
@@ -81,14 +85,14 @@ public class BundleController {
     @RequestMapping(method = RequestMethod.PUT)
     public BundleMetadataDto update(@RequestBody BundleMetadataDto bundleMetadataDto) {
         validator.validate(bundleMetadataDto);
-        
+
         if (bundleMetadataDto.getUuid() == null) {
             throw new IllegalArgumentException("A valid uuid is required to edit a bundle.");
         }
         BundleMetadata bundle = mapper.fromDto(bundleMetadataDto);
-        
+
         bundleService.update(bundle);
-        
+
         return mapper.toDto(bundle);
     }
 

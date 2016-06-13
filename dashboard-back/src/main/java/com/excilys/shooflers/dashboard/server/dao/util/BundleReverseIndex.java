@@ -25,7 +25,7 @@ public class BundleReverseIndex {
     public String getBundleUuid(String bundleTag) {
         return reverseIndex.get(bundleTag);
     }
-    
+
     public boolean containsTag(String bundleTag) {
         return reverseIndex.containsKey(bundleTag);
     }

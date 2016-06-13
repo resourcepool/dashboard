@@ -9,16 +9,17 @@ import java.util.UUID;
  * Slideshow contains a list of media to display.
  */
 public class BundleMetadata {
-    
+
     private String uuid;
-    
+
     private String tag;
 
     private String name;
 
     private Validity validity;
 
-    public BundleMetadata() { }
+    public BundleMetadata() {
+    }
 
     private BundleMetadata(String uuid, String tag, String name, Validity validity) {
         this.uuid = uuid;
@@ -28,9 +29,9 @@ public class BundleMetadata {
     }
 
     public static class Builder {
-        
+
         private String uuid;
-        
+
         private String name;
 
         private Validity validity;
@@ -41,7 +42,7 @@ public class BundleMetadata {
             this.uuid = uuid;
             return this;
         }
-        
+
         public Builder tag(String tag) {
             this.tag = tag;
             return this;

@@ -27,11 +27,10 @@ public class Media {
     }
 
 
-
     public static Builder builder() {
         return new Builder();
     }
-    
+
     public static final class Builder {
         private MediaMetadata metadata;
         private MultipartFile content;

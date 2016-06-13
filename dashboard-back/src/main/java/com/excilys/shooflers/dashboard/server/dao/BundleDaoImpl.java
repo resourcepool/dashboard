@@ -31,7 +31,7 @@ public class BundleDaoImpl implements BundleDao {
     private DashboardProperties props;
 
     private BundleReverseIndex bri = new BundleReverseIndex();
-    
+
     private Path bundleDatabasePath;
 
     @PostConstruct
@@ -94,7 +94,7 @@ public class BundleDaoImpl implements BundleDao {
         return YamlUtils.read(dataFile, BundleMetadata.class);
     }
 
-    
+
     private void refreshReverseIndex() {
         bri.invalidate();
         bri.refreshDataset(getAll());

@@ -9,7 +9,11 @@ import com.excilys.shooflers.dashboard.server.security.annotation.RequireValidUs
 import com.excilys.shooflers.dashboard.server.service.MediaService;
 import com.excilys.shooflers.dashboard.server.validator.MediaValidator;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -32,13 +36,13 @@ public class MediaController {
     public static final String MESSAGE_NOT_CORRESPONDING_MEDIA_TYPE = "Provided MediaType differnete of Provided mediatype in the file";
     public static final String MESSAGE_NEED_URL = "This mediatype %s need an url.";
     public static final String MESSAGE_MALFORMED_URL = "The url provided is malformed";
-    
+
     @Autowired
     private MediaService mediaService;
 
     @Autowired
     private MediaDtoMapper mapper;
-    
+
     @Autowired
     private MediaValidator validator;
 
@@ -55,6 +59,7 @@ public class MediaController {
 
     /**
      * Retrieve medias
+     *
      * @param bundleUuid an optional filter request parameter "bundle"
      * @return the list of medias matching the query and optional filters
      */
@@ -63,8 +68,9 @@ public class MediaController {
     public List<MediaMetadataDto> getAll(@RequestParam(name = "bundle", required = false) String bundleUuid) {
         if (bundleUuid != null) {
             return mapper.toListDto(mediaService.getByBundleTag(bundleUuid));
+        } else {
+            return mapper.toListDto(mediaService.getAll());
         }
-        else return mapper.toListDto(mediaService.getAll());
     }
 
     @RequestMapping(method = RequestMethod.POST)
@@ -80,12 +86,12 @@ public class MediaController {
                 .metadata(mapper.fromDto(mediaMetadataDto))
                 .content(multipartFile)
                 .build();
-        
+
         mediaService.save(media);
-        
+
         // Get generated Uuid
         mediaMetadataDto.setUuid(media.getMetadata().getUuid());
-        
+
         return mediaMetadataDto;
     }
 
@@ -116,7 +122,7 @@ public class MediaController {
         if (mediaService.get(uuid) == null) {
             throw new ResourceNotFoundException(MESSAGE_MEDIA_NOT_FOUND);
         }
-        
+
         mediaService.delete(uuid);
     }
 

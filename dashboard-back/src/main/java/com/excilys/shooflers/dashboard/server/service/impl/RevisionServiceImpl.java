@@ -47,7 +47,7 @@ public class RevisionServiceImpl implements RevisionService {
                     // If previous target is in the map, simply removeFromDiffs the record (operations cancel each other).
                     // Else, it means original target has either not been parsed yet, or is simply beyond scope (in a previous revision for instance).
                     // in this case, create a "DELETE" action. It will be either cancelled later by the ADD rule, or applied to older revisions client-side.
-                    
+
                     // Remove old object
                     if (shouldRemoveFromDiffs(diffs, rev.getTarget())) {
                         // The antagonist operation exists. ADD + DELETE cancel each other (whatever the order)

@@ -58,13 +58,13 @@ public class BundleServiceImpl implements BundleService {
         if (bundle.getTag() == null || bundle.getTag().trim().isEmpty()) {
             bundle.setTag(dbBundle.getTag());
         }
-        
+
         // This is an update of a bundle. Delete previous and add new update
         bundleDao.delete(originalUuid);
         // Save is ALWAYS a new UUID as bundle is immutable
         bundle.setUuid(UUID.randomUUID().toString());
         bundleDao.save(bundle);
-        
+
         // Did we change the tag?
         if (!dbBundle.getTag().equals(bundle.getTag())) {
             // If yes, we are in trouble. We need to:
@@ -91,7 +91,7 @@ public class BundleServiceImpl implements BundleService {
         BundleMetadata dbBundle = bundleDao.delete(tag);
         // Create a new revision
         revisionService.add(Revision.Type.BUNDLE, Revision.Action.DELETE, dbBundle.getUuid());
-        
+
     }
 
 }

@@ -31,7 +31,8 @@ public class MediaMetadata {
 
     private String bundleTag;
 
-    public MediaMetadata() { }
+    public MediaMetadata() {
+    }
 
     private MediaMetadata(String uuid, String name, int duration, MediaType mediaType, Validity validity, String url, String bundleTag) {
         this.uuid = uuid;
@@ -46,7 +47,7 @@ public class MediaMetadata {
     public static Builder builder() {
         return new Builder();
     }
-    
+
     public static class Builder {
 
         private String name;
@@ -62,7 +63,7 @@ public class MediaMetadata {
         private String url;
 
         private String bundleTag;
-        
+
         private Builder() {
         }
 
