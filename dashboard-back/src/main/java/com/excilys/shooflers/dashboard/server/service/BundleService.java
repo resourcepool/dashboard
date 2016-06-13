@@ -42,7 +42,7 @@ public interface BundleService {
     /**
      * Delete bundle from DB.
      *
-     * @param tag The bundle tag
+     * @param uuid The bundle uuid
      */
-    void delete(String tag);
+    void delete(String uuid);
 }

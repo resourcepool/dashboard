@@ -3,8 +3,6 @@ package com.excilys.shooflers.dashboard.server.model.metadata;
 
 import com.excilys.shooflers.dashboard.server.model.Validity;
 
-import java.util.UUID;
-
 /**
  * Slideshow contains a list of media to display.
  */
@@ -59,9 +57,6 @@ public class BundleMetadata {
         }
 
         public BundleMetadata build() {
-            if (tag == null) {
-                tag = UUID.randomUUID().toString();
-            }
             return new BundleMetadata(uuid, tag, name, validity);
         }
     }

@@ -8,6 +8,7 @@ import com.excilys.shooflers.dashboard.server.model.metadata.MediaMetadata;
 import com.excilys.shooflers.dashboard.server.service.BundleService;
 import com.excilys.shooflers.dashboard.server.service.MediaService;
 import com.excilys.shooflers.dashboard.server.service.RevisionService;
+import com.excilys.shooflers.dashboard.server.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -41,6 +42,9 @@ public class BundleServiceImpl implements BundleService {
     public void save(BundleMetadata bundle) {
         if (getByTag(bundle.getTag()) != null) {
             throw new IllegalArgumentException("This tag already exists");
+        }
+        if (bundle.getTag() == null) {
+            bundle.setTag(StringUtils.normalize(bundle.getName()));
         }
         // Save is ALWAYS a new UUID as bundle is immutable
         bundle.setUuid(UUID.randomUUID().toString());
@@ -83,12 +87,12 @@ public class BundleServiceImpl implements BundleService {
     }
 
     @Override
-    public void delete(String tag) {
-
+    public void delete(String uuid) {
+        BundleMetadata metadata = bundleDao.get(uuid);
         // Step 1: delete all media related to bundle:
-        mediaService.deleteByBundleTag(tag);
+        mediaService.deleteByBundleTag(metadata.getTag());
         // Step 2: delete bundle
-        BundleMetadata dbBundle = bundleDao.delete(tag);
+        BundleMetadata dbBundle = bundleDao.delete(uuid);
         // Create a new revision
         revisionService.add(Revision.Type.BUNDLE, Revision.Action.DELETE, dbBundle.getUuid());
 

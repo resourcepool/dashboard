@@ -24,6 +24,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 @Component
 public class MediaDaoImpl implements MediaDao {
@@ -123,7 +124,11 @@ public class MediaDaoImpl implements MediaDao {
         // FIXME for now, we chose not to delete files when media is destroyed.
         try {
             // Delete each media of bundle tag
-            mri.getMedias(bundleTag).forEach(this::delete);
+            Set<String> medias = mri.getMedias(bundleTag);
+            if (medias == null) {
+                return;
+            }
+            medias.forEach(this::delete);
             // Remove parent directory
             FileUtils.deleteDirectory(mediaDatabasePath.resolve(bundleTag).toFile());
         } catch (IOException e) {
