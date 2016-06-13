@@ -3,8 +3,12 @@ package com.excilys.shooflers.dashboard.server.dto.mapper;
 import com.excilys.shooflers.dashboard.server.dto.MediaMetadataDto;
 import com.excilys.shooflers.dashboard.server.model.metadata.MediaMetadata;
 import com.excilys.shooflers.dashboard.server.model.type.MediaType;
+import com.excilys.shooflers.dashboard.server.service.exception.JsonMalformedException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import java.io.IOException;
 
 @Component
 public class MediaDtoMapperImpl implements MediaDtoMapper {
@@ -37,4 +41,17 @@ public class MediaDtoMapperImpl implements MediaDtoMapper {
                 .bundleTag(dto.getUuidBundle())
                 .build() : null;
     }
+
+    @Override
+    public MediaMetadataDto toDto(String json) {
+        ObjectMapper objectMapper = new ObjectMapper();
+        MediaMetadataDto mediaMetadataDto;
+        try {
+            mediaMetadataDto = objectMapper.readValue(json, MediaMetadataDto.class);
+        } catch (IOException e) {
+            throw new JsonMalformedException("JSON malformed");
+        }
+        return mediaMetadataDto;
+    }
+    
 }

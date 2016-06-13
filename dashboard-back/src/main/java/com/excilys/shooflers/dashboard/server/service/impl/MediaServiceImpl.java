@@ -2,8 +2,9 @@ package com.excilys.shooflers.dashboard.server.service.impl;
 
 import com.excilys.shooflers.dashboard.server.dao.MediaDao;
 import com.excilys.shooflers.dashboard.server.dto.MediaMetadataDto;
-import com.excilys.shooflers.dashboard.server.dto.mapper.MediaDtoMapperImpl;
+import com.excilys.shooflers.dashboard.server.model.Media;
 import com.excilys.shooflers.dashboard.server.model.Revision;
+import com.excilys.shooflers.dashboard.server.model.metadata.MediaMetadata;
 import com.excilys.shooflers.dashboard.server.property.DashboardProperties;
 import com.excilys.shooflers.dashboard.server.service.MediaService;
 import com.excilys.shooflers.dashboard.server.service.RevisionService;
@@ -20,12 +21,9 @@ public class MediaServiceImpl implements MediaService {
 
     @Autowired
     private MediaDao mediaDao;
-    
-    @Autowired
-    private RevisionService revisionService;
 
     @Autowired
-    private MediaDtoMapperImpl mapper;
+    private RevisionService revisionService;
 
     @Autowired
     private DashboardProperties props;
@@ -49,30 +47,38 @@ public class MediaServiceImpl implements MediaService {
     }
 
     @Override
-    public MediaMetadataDto get(String uuid) {
-        return mapper.toDto(mediaDao.get(uuid));
+    public MediaMetadata get(String uuid) {
+        return mediaDao.get(uuid);
     }
 
 
     @Override
-    public List<MediaMetadataDto> getAll() {
-        return mapper.toListDto(mediaDao.getAll());
-    }
-    
-    @Override
-    public List<MediaMetadataDto> getByBundle(String uuidBundle) {
-       return mapper.toListDto(mediaDao.getByBundle(uuidBundle));
+    public List<MediaMetadata> getAll() {
+        return mediaDao.getAll();
     }
 
     @Override
-    public MediaMetadataDto save(MediaMetadataDto media) {
+    public List<MediaMetadata> getByBundle(String uuidBundle) {
+        return mediaDao.getByBundle(uuidBundle);
+    }
+
+    @Override
+    public MediaMetadata save(Media media) {
+
+        mediaDao.save(media.getMetadata());
+
+        if (media.getContent() != null) {
+            //TODO
+            //FileHelper.saveFile(file, media, props.getBaseUrl());
+        }
+
         // TODO IDK where the file blob is stored...
-        return mapper.toDto(mediaDao.save(mapper.fromDto(media)));
+        return media.getMetadata();
     }
 
     @Override
     public void delete(String uuid) {
-        if(mediaDao.delete(uuid)) {
+        if (mediaDao.delete(uuid)) {
             // TODO IDK where the file blobs are removed
             // Create a new revision
             revisionService.add(Revision.Action.DELETE, uuid, Revision.Type.MEDIA, null);
