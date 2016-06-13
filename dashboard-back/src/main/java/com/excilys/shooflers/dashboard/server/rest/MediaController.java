@@ -60,14 +60,14 @@ public class MediaController {
     /**
      * Retrieve medias
      *
-     * @param bundleUuid an optional filter request parameter "bundle"
+     * @param bundleTag an optional filter request parameter "bundle"
      * @return the list of medias matching the query and optional filters
      */
     @RequireValidApiKey
     @RequestMapping(method = RequestMethod.GET)
-    public List<MediaMetadataDto> getAll(@RequestParam(name = "bundle", required = false) String bundleUuid) {
-        if (bundleUuid != null) {
-            return mapper.toListDto(mediaService.getByBundleTag(bundleUuid));
+    public List<MediaMetadataDto> getAll(@RequestParam(name = "bundle", required = false) String bundleTag) {
+        if (bundleTag != null) {
+            return mapper.toListDto(mediaService.getByBundleTag(bundleTag));
         } else {
             return mapper.toListDto(mediaService.getAll());
         }
