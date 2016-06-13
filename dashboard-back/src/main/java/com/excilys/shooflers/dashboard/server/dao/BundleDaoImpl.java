@@ -1,6 +1,8 @@
 package com.excilys.shooflers.dashboard.server.dao;
 
+import com.excilys.shooflers.dashboard.server.dao.util.BundleReverseIndex;
 import com.excilys.shooflers.dashboard.server.dao.util.YamlUtils;
+import com.excilys.shooflers.dashboard.server.exception.ResourceIoException;
 import com.excilys.shooflers.dashboard.server.model.metadata.BundleMetadata;
 import com.excilys.shooflers.dashboard.server.property.DashboardProperties;
 import org.slf4j.Logger;
@@ -28,15 +30,25 @@ public class BundleDaoImpl implements BundleDao {
     @Autowired
     private DashboardProperties props;
 
+    private BundleReverseIndex bri = new BundleReverseIndex();
+    
     private Path bundleDatabasePath;
 
     @PostConstruct
     public void init() {
         bundleDatabasePath = Paths.get(props.getBasePath(), ENTITY_NAME);
+        bri.refreshDataset(getAll());
     }
 
     @Override
     public BundleMetadata get(String uuid) {
+        File dataFile = getBundleFile(uuid);
+        return readBundleFromFile(dataFile);
+    }
+
+    @Override
+    public BundleMetadata getByTag(String tag) {
+        String uuid = bri.getBundleUuid(tag);
         File dataFile = getBundleFile(uuid);
         return readBundleFromFile(dataFile);
     }
@@ -57,12 +69,19 @@ public class BundleDaoImpl implements BundleDao {
         }
         File dest = getBundleFile(bundle.getUuid());
         YamlUtils.store(bundle, dest);
+        refreshReverseIndex();
         return bundle;
     }
 
     @Override
-    public boolean delete(String uuid) {
-        return YamlUtils.delete(bundleDatabasePath.resolve(uuid + ".yaml").toFile());
+    public BundleMetadata delete(String uuid) {
+        BundleMetadata result = get(uuid);
+        boolean success = YamlUtils.delete(bundleDatabasePath.resolve(uuid + ".yaml").toFile());
+        if (!success) {
+            throw new ResourceIoException();
+        }
+        refreshReverseIndex();
+        return result;
     }
 
     private File getBundleFile(String uuid) {
@@ -75,4 +94,9 @@ public class BundleDaoImpl implements BundleDao {
         return YamlUtils.read(dataFile, BundleMetadata.class);
     }
 
+    
+    private void refreshReverseIndex() {
+        bri.invalidate();
+        bri.refreshDataset(getAll());
+    }
 }

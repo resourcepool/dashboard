@@ -17,11 +17,11 @@ public class Revision {
     private Long revision;
     private Action action;
     private Type type;
-    // Target represents the target uuid
+    // Target represents the target tag
     private String target;
     // The result is used only when action = update.
     // As content is immutable, updates actually wrap a content deletion, and a new content.
-    // The result represents the "resulting" uuid (the new one which was added)
+    // The result represents the "resulting" tag (the new one which was added)
     private String result;
 
     public Long getRevision() {
@@ -121,11 +121,11 @@ public class Revision {
         private Long revision;
         private Action action;
         private Type type;
-        // Target represents the target uuid
+        // Target represents the target tag
         private String target;
         // The result is used only when action = update.
         // As content is immutable, updates actually wrap a content deletion, and a new content.
-        // The result represents the "resulting" uuid (the new one which was added)
+        // The result represents the "resulting" tag (the new one which was added)
         private String result;
 
         private Builder() {

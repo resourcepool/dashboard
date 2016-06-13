@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
  * @author Mickael
  */
 @Component
-public class BundleMedataDtoValidatorImpl implements Validator<BundleMetadataDto> {
+public class BundleMedataDtoValidator implements Validator<BundleMetadataDto> {
 
     @Autowired
     private ValidityDtoValidatorImpl validityDtoValidator;

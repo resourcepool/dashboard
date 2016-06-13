@@ -18,24 +18,20 @@ public class MediaMetadataDto {
 
     private String url;
 
-    private String uuidBundle;
+    private String bundleTag;
 
     private long revision;
 
     public MediaMetadataDto() { }
 
-    private MediaMetadataDto(String uuid, String name, int duration, MediaType mediaType, ValidityDto validity, String url, String uuidBundle) {
+    private MediaMetadataDto(String uuid, String name, int duration, MediaType mediaType, ValidityDto validity, String url, String bundleTag) {
         this.uuid = uuid;
         this.name = name;
         this.duration = duration;
-        if (mediaType != null) {
-            this.mediaType = mediaType.getMimeType();
-        } else {
-            this.mediaType = MediaType.NONE.getMimeType();
-        }
+        this.mediaType = mediaType.toString();
         this.validity = validity;
         this.url = url;
-        this.uuidBundle = uuidBundle;
+        this.bundleTag = bundleTag;
     }
 
     public static class Builder {
@@ -52,7 +48,7 @@ public class MediaMetadataDto {
 
         private String url;
 
-        private String uuidBundle;
+        private String bundleTag;
 
         public Builder uuid(String uuid) {
             this.uuid = uuid;
@@ -84,13 +80,13 @@ public class MediaMetadataDto {
             return this;
         }
 
-        public Builder uuidBundle(String uuidBundle) {
-            this.uuidBundle = uuidBundle;
+        public Builder bundleTag(String bundleTag) {
+            this.bundleTag = bundleTag;
             return this;
         }
 
         public MediaMetadataDto build() {
-            return new MediaMetadataDto(uuid, name, duration, mediaType, validityDto, url, uuidBundle);
+            return new MediaMetadataDto(uuid, name, duration, mediaType, validityDto, url, bundleTag);
         }
     }
 
@@ -142,12 +138,12 @@ public class MediaMetadataDto {
         this.url = url;
     }
 
-    public String getUuidBundle() {
-        return uuidBundle;
+    public String getBundleTag() {
+        return bundleTag;
     }
 
-    public void setUuidBundle(String uuidBundle) {
-        this.uuidBundle = uuidBundle;
+    public void setBundleTag(String bundleTag) {
+        this.bundleTag = bundleTag;
     }
 
     public long getRevision() {

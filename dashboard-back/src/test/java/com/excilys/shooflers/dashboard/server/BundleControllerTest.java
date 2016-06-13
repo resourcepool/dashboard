@@ -658,7 +658,7 @@ public class BundleControllerTest extends BaseControllerTest {
     @Test
     public void editBundleCreateFailedIfUnknownProperty() throws Exception {
         mockMvc.perform(putAuthenticated(("/bundle"))
-                .content("{uuid:null, unknown:null}")
+                .content("{tag:null, unknown:null}")
                 .contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().string(""))

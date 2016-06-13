@@ -6,31 +6,40 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 public class BundleMetadataDto {
 
     private String uuid;
+    
+    private String tag;
 
     private String name;
 
     private ValidityDto validity;
 
-    private long revision;
-
     @SuppressWarnings("unused")
-    public BundleMetadataDto() { }
+    public BundleMetadataDto() {
+    }
 
-    private BundleMetadataDto(String uuid, String name, ValidityDto validity) {
+    private BundleMetadataDto(String uuid, String tag, String name, ValidityDto validity) {
         this.uuid = uuid;
+        this.tag = tag;
         this.name = name;
         this.validity = validity;
     }
 
     public static class Builder {
+        private String uuid;
+        
         private String name;
 
         private ValidityDto validityDto;
 
-        private String uuid;
+        private String tag;
 
         public Builder uuid(String uuid) {
             this.uuid = uuid;
+            return this;
+        }
+        
+        public Builder tag(String tag) {
+            this.tag = tag;
             return this;
         }
 
@@ -45,7 +54,7 @@ public class BundleMetadataDto {
         }
 
         public BundleMetadataDto build() {
-            return new BundleMetadataDto(uuid, name, validityDto);
+            return new BundleMetadataDto(uuid, tag, name, validityDto);
         }
     }
 
@@ -55,6 +64,14 @@ public class BundleMetadataDto {
 
     public void setUuid(String uuid) {
         this.uuid = uuid;
+    }
+
+    public String getTag() {
+        return tag;
+    }
+
+    public void setTag(String tag) {
+        this.tag = tag;
     }
 
     public String getName() {
@@ -73,11 +90,4 @@ public class BundleMetadataDto {
         this.validity = validity;
     }
 
-    public long getRevision() {
-        return revision;
-    }
-
-    public void setRevision(Long revision) {
-        this.revision = revision;
-    }
 }

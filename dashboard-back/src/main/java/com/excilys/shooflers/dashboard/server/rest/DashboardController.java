@@ -16,7 +16,7 @@ import java.util.List;
 @RestController
 @RequireValidUser
 @RequireValidApiKey
-@RequestMapping(value = "dashboard")
+@RequestMapping(value = "/revision")
 public class DashboardController {
 
     @Autowired
@@ -26,12 +26,12 @@ public class DashboardController {
      * Get the number of the latest revision
      * @return long representing latest revision
      */
-    @RequestMapping(value = "revision", method = RequestMethod.GET)
+    @RequestMapping(method = RequestMethod.GET)
     public long getDiffs() {
         return revisionService.getLatest();
     }
 
-    @RequestMapping(value = "{revision}", method = RequestMethod.GET)
+    @RequestMapping(value = "/{revision}", method = RequestMethod.GET)
     public List<Revision> getDiffs(@PathVariable("revision") long revision) {
         return revisionService.getDiffs(revision);
     }

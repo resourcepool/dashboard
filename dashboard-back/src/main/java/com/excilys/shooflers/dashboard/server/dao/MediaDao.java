@@ -1,7 +1,9 @@
 package com.excilys.shooflers.dashboard.server.dao;
 
+import com.excilys.shooflers.dashboard.server.model.Media;
 import com.excilys.shooflers.dashboard.server.model.metadata.MediaMetadata;
 
+import java.io.File;
 import java.util.List;
 
 /**
@@ -14,10 +16,17 @@ public interface MediaDao {
     /**
      * Retrieve media from DB.
      *
-     * @param uuid the media uuid
+     * @param uuid the media tag
      * @return the retrieved media or null if no match
      */
     MediaMetadata get(String uuid);
+
+    /**
+     * Retrieve content of a media from DB.
+     * @param uuid the media tag
+     * @return the retrieved media content or null if no match
+     */
+    File getContent(String uuid);
 
     /**
      * Retrieve all medias from DB.
@@ -36,14 +45,16 @@ public interface MediaDao {
     /**
      * Save a media into DB.
      *
-     * @param media the media meta data
+     * @param media the media
      */
-    MediaMetadata save(MediaMetadata media);
+    void save(Media media);
+
+    void deleteByBundle(String bundleTag);
 
     /**
      * Delete a media from DB.
      *
-     * @param uuid The media uuid
+     * @param uuid The media tag
      */
-    boolean delete(String uuid);
+    void delete(String uuid);
 }

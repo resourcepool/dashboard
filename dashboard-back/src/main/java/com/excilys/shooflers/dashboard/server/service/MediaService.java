@@ -9,34 +9,47 @@ import java.util.List;
 public interface MediaService {
 
     /**
-     * Persist a media.
+     * Persist a new media.
+     *
      * @param media the media to persist
-     * @return media persisted
      */
-    MediaMetadata save(Media media);
+    void save(Media media);
 
     /**
-     * Delete a media by uuid.
-     * @param uuid uuid to delete
+     * Update an existing media.
+     *
+     * @param media the media to persist
+     */
+    void update(Media media);
+
+    void deleteByBundleTag(String bundleTag);
+
+    /**
+     * Delete a media by tag.
+     *
+     * @param uuid tag to delete
      */
     void delete(String uuid);
 
     /**
-     * Get a media by uuid.
-     * @param uuid uuid to find
+     * Get a media by tag.
+     *
+     * @param uuid tag to find
      * @return media found or null
      */
     MediaMetadata get(String uuid);
 
     /**
      * Get all media by bundle.
-     * @param uuidBundle uuid bundle
+     *
+     * @param bundleTag tag bundle
      * @return list of media
      */
-    List<MediaMetadata> getByBundle(String uuidBundle);
+    List<MediaMetadata> getByBundleTag(String bundleTag);
 
     /**
      * Get all media.
+     *
      * @return list of media
      */
     List<MediaMetadata> getAll();

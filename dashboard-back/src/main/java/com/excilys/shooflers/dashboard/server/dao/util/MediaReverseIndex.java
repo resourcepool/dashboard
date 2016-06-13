@@ -15,11 +15,20 @@ public class MediaReverseIndex {
     }
 
     /**
-     * Retrieve BundleUuid of a media.
-     * @param uuid the media uuid
-     * @return uuid
+     * Retrieve the media uuids associated with a bundle tag.
+     * @param bundleTag the bundle tag
+     * @return null if no match, the set otherwise
      */
-    public String getBundleUuid(String uuid) {
+    public Set<String> getMedias(String bundleTag) {
+        return reverseIndex.get(bundleTag);
+    }
+    
+    /**
+     * Retrieve the bundle tag of a media.
+     * @param uuid the media tag
+     * @return tag
+     */
+    public String getBundleTag(String uuid) {
         Map.Entry<String, Set<String>> entry = reverseIndex.entrySet().stream()
                 .filter(e -> e.getValue().contains(uuid))
                 .findFirst()
@@ -27,11 +36,11 @@ public class MediaReverseIndex {
         return entry == null ? null : entry.getKey();
     }
     
-    public void addEntry(String bundleUuid, String uuid) {
-        Set<String> medias = reverseIndex.get(bundleUuid);
+    public void addEntry(String bundleTag, String uuid) {
+        Set<String> medias = reverseIndex.get(bundleTag);
         if (medias == null) {
             medias = new HashSet<>();
-            reverseIndex.put(bundleUuid, medias);
+            reverseIndex.put(bundleTag, medias);
         }
         medias.add(uuid);
     }

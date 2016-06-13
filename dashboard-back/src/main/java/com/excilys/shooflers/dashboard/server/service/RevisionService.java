@@ -26,5 +26,14 @@ public interface RevisionService {
      */
     long getLatest();
 
-    Revision add(Revision.Action action, String target, Revision.Type type, String result);
+    /**
+     * Add new revision to the system.
+     *
+     * @param type   the target entity which was revised
+     * @param action the action of the revision
+     * @param target the target tag
+     * @param result the optional result uuids
+     * @return the revision performed
+     */
+    Revision add(Revision.Type type, Revision.Action action, String target, String... result);
 }

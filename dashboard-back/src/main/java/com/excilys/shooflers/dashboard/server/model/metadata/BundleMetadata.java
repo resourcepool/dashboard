@@ -9,8 +9,10 @@ import java.util.UUID;
  * Slideshow contains a list of media to display.
  */
 public class BundleMetadata {
-
+    
     private String uuid;
+    
+    private String tag;
 
     private String name;
 
@@ -18,21 +20,30 @@ public class BundleMetadata {
 
     public BundleMetadata() { }
 
-    private BundleMetadata(String uuid, String name, Validity validity) {
+    private BundleMetadata(String uuid, String tag, String name, Validity validity) {
         this.uuid = uuid;
+        this.tag = tag;
         this.name = name;
         this.validity = validity;
     }
 
     public static class Builder {
+        
+        private String uuid;
+        
         private String name;
 
         private Validity validity;
 
-        private String uuid;
+        private String tag;
 
         public Builder uuid(String uuid) {
             this.uuid = uuid;
+            return this;
+        }
+        
+        public Builder tag(String tag) {
+            this.tag = tag;
             return this;
         }
 
@@ -47,10 +58,10 @@ public class BundleMetadata {
         }
 
         public BundleMetadata build() {
-            if (uuid == null) {
-                uuid = UUID.randomUUID().toString();
+            if (tag == null) {
+                tag = UUID.randomUUID().toString();
             }
-            return new BundleMetadata(uuid, name, validity);
+            return new BundleMetadata(uuid, tag, name, validity);
         }
     }
 
@@ -58,12 +69,20 @@ public class BundleMetadata {
         return uuid;
     }
 
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
+    }
+
+    public String getTag() {
+        return tag;
+    }
+
     public String getName() {
         return name;
     }
 
-    public void setUuid(String uuid) {
-        this.uuid = uuid;
+    public void setTag(String tag) {
+        this.tag = tag;
     }
 
     public void setName(String name) {

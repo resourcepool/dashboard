@@ -15,7 +15,7 @@ public class MediaMetadata {
     /**
      * MediaType that no need a file to upload
      */
-    public static final List<MediaType> MEDIA_TYPES_NO_FILE = Arrays.asList(MediaType.WEB_SITE, MediaType.WEB_VIDEO);
+    public static final List<MediaType> MEDIA_TYPES_NO_FILE = Arrays.asList(MediaType.WEB);
 
     private String uuid;
 
@@ -43,6 +43,10 @@ public class MediaMetadata {
         this.bundleTag = bundleTag;
     }
 
+    public static Builder builder() {
+        return new Builder();
+    }
+    
     public static class Builder {
 
         private String name;
@@ -58,6 +62,9 @@ public class MediaMetadata {
         private String url;
 
         private String bundleTag;
+        
+        private Builder() {
+        }
 
         public Builder uuid(String uuid) {
             this.uuid = uuid;

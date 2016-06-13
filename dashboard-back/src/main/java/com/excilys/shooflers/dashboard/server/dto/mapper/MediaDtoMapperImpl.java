@@ -25,20 +25,20 @@ public class MediaDtoMapperImpl implements MediaDtoMapper {
                 .mediaType(model.getMediaType())
                 .validity(validityDtoMapper.toDto(model.getValidity()))
                 .url(model.getUrl())
-                .uuidBundle(model.getBundleTag())
+                .bundleTag(model.getBundleTag())
                 .build() : null;
     }
 
     @Override
     public MediaMetadata fromDto(MediaMetadataDto dto) {
-        return dto != null ? new MediaMetadata.Builder()
+        return dto != null ? MediaMetadata.builder()
                 .uuid(dto.getUuid())
                 .name(dto.getName())
                 .duration(dto.getDuration())
-                .mediaType(MediaType.getMediaType(dto.getMediaType()))
+                .mediaType(MediaType.valueOf(dto.getMediaType()))
                 .validity(validityDtoMapper.fromDto(dto.getValidity()))
                 .url(dto.getUrl())
-                .bundleTag(dto.getUuidBundle())
+                .bundleTag(dto.getBundleTag())
                 .build() : null;
     }
 

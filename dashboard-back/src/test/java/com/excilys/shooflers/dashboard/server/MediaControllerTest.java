@@ -3,7 +3,10 @@ package com.excilys.shooflers.dashboard.server;
 import com.excilys.shooflers.dashboard.server.dao.MediaDao;
 import com.excilys.shooflers.dashboard.server.dto.BundleMetadataDto;
 import com.excilys.shooflers.dashboard.server.dto.MediaMetadataDto;
+import com.excilys.shooflers.dashboard.server.model.Media;
 import com.excilys.shooflers.dashboard.server.model.Revision;
+import com.excilys.shooflers.dashboard.server.model.metadata.MediaMetadata;
+import com.excilys.shooflers.dashboard.server.model.type.MediaType;
 import com.excilys.shooflers.dashboard.server.rest.MediaController;
 import com.excilys.shooflers.dashboard.server.service.BundleService;
 import com.excilys.shooflers.dashboard.server.service.MediaService;
@@ -108,8 +111,8 @@ public class MediaControllerTest extends BaseControllerTest {
         });
         assertEquals(0, list.size());
 
-        mediaService.save(new MediaMetadataDto.Builder().name("pao").uuidBundle(bundleMetadataDto.getUuid()).build());
-        mediaService.save(new MediaMetadataDto.Builder().name("pao").uuidBundle(bundleMetadataDto.getUuid()).build());
+        mediaService.save(Media.builder().metadata(MediaMetadata.builder().name("pao").bundleTag(bundleMetadataDto.getUuid()).build()).build());
+        mediaService.save(Media.builder().metadata(MediaMetadata.builder().name("pao").bundleTag(bundleMetadataDto.getUuid()).build()).build());
         assertEquals(2, mediaService.getByBundle(bundleMetadataDto.getUuid()).size());
 
         stringResult = mockMvc.perform(getAuthenticated("/media/" + bundleMetadataDto.getUuid()))
@@ -122,7 +125,7 @@ public class MediaControllerTest extends BaseControllerTest {
         list = objectMapper.readValue(stringResult, new TypeReference<List<MediaMetadataDto>>() {
         });
 
-        // assertEquals(mediaService.getByBundle(bundleMetadataDto.getUuid()), list);
+        // assertEquals(mediaService.getByBundleTag(bundleMetadataDto.getTag()), list);
         assertEquals(2, list.size());
     }
 
@@ -151,15 +154,16 @@ public class MediaControllerTest extends BaseControllerTest {
     @Test
     public void mediaFindFound() throws Exception {
         final String name = "bundleMetadataDto";
-        final MediaMetadataDto mediaMetadataDto = mediaService.save(new MediaMetadataDto.Builder().name(name).uuidBundle(globalBundleMetadataDto.getUuid()).build());
+        Media media = Media.builder().metadata(MediaMetadata.builder().name(name).bundleTag(globalBundleMetadataDto.getUuid()).build()).build();
+        mediaService.save(media);
 
-        MvcResult result = mockMvc.perform(getAuthenticated(("/media/" + globalBundleMetadataDto.getUuid() + "/" + mediaMetadataDto.getUuid())))
+        MvcResult result = mockMvc.perform(getAuthenticated(("/media/" + globalBundleMetadataDto.getUuid() + "/" + media.getMetadata().getUuid())))
                 .andExpect(status().isOk())
                 .andReturn();
 
         MediaMetadataDto newMediaMetadataDto = fromJson(result.getResponse().getContentAsString(), MediaMetadataDto.class);
         assertEquals(name, newMediaMetadataDto.getName());
-        assertEquals(globalBundleMetadataDto.getUuid(), newMediaMetadataDto.getUuidBundle());
+        assertEquals(globalBundleMetadataDto.getUuid(), newMediaMetadataDto.getBundleTag());
         assertNull(newMediaMetadataDto.getUrl());
         assertNull(newMediaMetadataDto.getValidity());
     }
@@ -187,7 +191,7 @@ public class MediaControllerTest extends BaseControllerTest {
         final String name = "Purinsessu Keni";
 
         mockMvc.perform(fileUploadAuthenticated("/media")
-                .param("media", toJson(new MediaMetadataDto.Builder().name(name).mediaType(com.excilys.shooflers.dashboard.server.model.type.MediaType.IMAGE_PNG).build())))
+                .param("media", toJson(new MediaMetadataDto.Builder().name(name).mediaType(MediaType.IMAGE).build())))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().string(MediaController.MESSAGE_COMPULSORY_FIELD))
                 .andReturn();
@@ -198,7 +202,7 @@ public class MediaControllerTest extends BaseControllerTest {
         final String name = "UnNom";
 
         mockMvc.perform(fileUploadAuthenticated("/media")
-                .param("media", toJson(new MediaMetadataDto.Builder().name(name).mediaType(com.excilys.shooflers.dashboard.server.model.type.MediaType.IMAGE_PNG).uuidBundle("bunduru").build()))
+                .param("media", toJson(new MediaMetadataDto.Builder().name(name).mediaType(MediaType.IMAGE).bundleTag("bunduru").build()))
         )
                 .andExpect(status().isBadRequest())
                 .andExpect(content().string(MediaController.MESSAGE_BUNDLE_NOT_FOUND))
@@ -209,7 +213,7 @@ public class MediaControllerTest extends BaseControllerTest {
     @Test
     public void mediaCreateFailedWithUnvalidMediaTypeWithoutFile() throws Exception {
         final String name = "UnNom";
-        final MediaMetadataDto mediaMetadataDto = new MediaMetadataDto.Builder().name(name).uuidBundle(globalBundleMetadataDto.getUuid()).build();
+        final MediaMetadataDto mediaMetadataDto = new MediaMetadataDto.Builder().name(name).bundleTag(globalBundleMetadataDto.getUuid()).build();
         mediaMetadataDto.setMediaType("mediatype");
 
         mockMvc.perform(fileUploadAuthenticated("/media")
@@ -227,15 +231,15 @@ public class MediaControllerTest extends BaseControllerTest {
 
         final long previousRevision = revisionService.getLatest();
         final String name = "UnNom";
-        final com.excilys.shooflers.dashboard.server.model.type.MediaType mediaType = com.excilys.shooflers.dashboard.server.model.type.MediaType.IMAGE_PNG;
-        final MockMultipartFile jsonFile = new MockMultipartFile("file", "texte.png", com.excilys.shooflers.dashboard.server.model.type.MediaType.IMAGE_JPG.getMimeType(), "{json:null}".getBytes());
+        final com.excilys.shooflers.dashboard.server.model.type.MediaType mediaType = com.excilys.shooflers.dashboard.server.model.type.MediaType.IMAGE;
+        final MockMultipartFile jsonFile = new MockMultipartFile("file", "texte.png", "image/png", "{json:null}".getBytes());
 
         MvcResult result = mockMvc.perform(fileUploadAuthenticated("/media")
                 .file(jsonFile)
                 .param("media", toJson(new MediaMetadataDto.Builder()
                         .name(name)
                         .mediaType(mediaType)
-                        .uuidBundle(bundleMetadataDto.getUuid())
+                        .bundleTag(bundleMetadataDto.getUuid())
                         .build()))
         )
                 .andExpect(status().isBadRequest())
@@ -245,7 +249,7 @@ public class MediaControllerTest extends BaseControllerTest {
         MediaMetadataDto mediaMetadataDto = fromJson(result.getResponse().getContentAsString(), MediaMetadataDto.class);
 
         assertEquals(name, mediaMetadataDto.getName());
-        assertEquals(mediaType, com.excilys.shooflers.dashboard.server.model.type.MediaType.getMediaType(mediaMetadataDto.getMediaType()));
+        assertEquals(mediaType, com.excilys.shooflers.dashboard.server.model.type.MediaType.valueOf(mediaMetadataDto.getMediaType()));
         assertNull(mediaMetadataDto.getValidity());
         assertNull(mediaMetadataDto.getUrl());
         assertEquals(0, mediaMetadataDto.getDuration());
@@ -253,7 +257,7 @@ public class MediaControllerTest extends BaseControllerTest {
         assertNotNull(mediaMetadataDto.getUuid());
         assertEquals(revisionService.getLatest(), mediaMetadataDto.getRevision());
 
-        File file = new File(props.getBasePath() + "/" + MediaDao.ENTITY_NAME + "/" + mediaMetadataDto.getUuidBundle() + "/" + mediaMetadataDto.getUuid() + ".yaml");
+        File file = new File(props.getBasePath() + "/" + MediaDao.ENTITY_NAME + "/" + mediaMetadataDto.getBundleTag() + "/" + mediaMetadataDto.getUuid() + ".yaml");
         assertTrue(file.isFile());
 
         assertEquals(previousRevision + 1, revisionService.getLatest());
@@ -275,10 +279,10 @@ public class MediaControllerTest extends BaseControllerTest {
         final String contentFile = "{json:null}";
         final MediaMetadataDto mediaMetadataDto = new MediaMetadataDto.Builder()
                 .name(name)
-                .uuidBundle(globalBundleMetadataDto.getUuid())
-                .mediaType(com.excilys.shooflers.dashboard.server.model.type.MediaType.IMAGE_PNG)
+                .bundleTag(globalBundleMetadataDto.getUuid())
+                .mediaType(com.excilys.shooflers.dashboard.server.model.type.MediaType.IMAGE)
                 .build();
-        final MockMultipartFile fakeImageFile = new MockMultipartFile("file", "texte.jpg", com.excilys.shooflers.dashboard.server.model.type.MediaType.IMAGE_JPG.getMimeType(), contentFile.getBytes());
+        final MockMultipartFile fakeImageFile = new MockMultipartFile("file", "texte.jpg", "image/png", contentFile.getBytes());
 
         mockMvc.perform(fileUploadAuthenticated("/media")
                 .file(fakeImageFile)
@@ -294,8 +298,8 @@ public class MediaControllerTest extends BaseControllerTest {
     public void mediaImageCreateSuccessWithUnvalidMediaTypeInMetadataWithFile() throws Exception {
         final String name = "UnNom";
         final String contentFile = "{json:null}";
-        final MediaMetadataDto mediaMetadataDto = new MediaMetadataDto.Builder().name(name).uuidBundle(globalBundleMetadataDto.getUuid()).mediaType(com.excilys.shooflers.dashboard.server.model.type.MediaType.IMAGE_PNG).build();
-        final MockMultipartFile fakeImageFile = new MockMultipartFile("file", "texte.jpg", com.excilys.shooflers.dashboard.server.model.type.MediaType.IMAGE_JPG.getMimeType(), "{json:null}".getBytes());
+        final MediaMetadataDto mediaMetadataDto = new MediaMetadataDto.Builder().name(name).bundleTag(globalBundleMetadataDto.getUuid()).mediaType(com.excilys.shooflers.dashboard.server.model.type.MediaType.IMAGE_PNG).build();
+        final MockMultipartFile fakeImageFile = new MockMultipartFile("file", "texte.jpg", "image/jpg", "{json:null}".getBytes());
         mediaMetadataDto.setMediaType("mediatype");
 
         MvcResult result = mockMvc.perform(fileUploadAuthenticated("/media")
@@ -307,7 +311,7 @@ public class MediaControllerTest extends BaseControllerTest {
 
         MediaMetadataDto newMediaMetadataDto = fromJson(result.getResponse().getContentAsString(), MediaMetadataDto.class);
 
-        File file = new File(props.getBasePath() + "/" + MediaDao.ENTITY_NAME + "/" + newMediaMetadataDto.getUuidBundle() + "/" + newMediaMetadataDto.getUuid() + ".yaml");
+        File file = new File(props.getBasePath() + "/" + MediaDao.ENTITY_NAME + "/" + newMediaMetadataDto.getBundleTag() + "/" + newMediaMetadataDto.getUuid() + ".yaml");
         assertTrue(file.isFile());
 
         file = new File(props.getBaseResources() + newMediaMetadataDto.getUrl());
@@ -323,13 +327,13 @@ public class MediaControllerTest extends BaseControllerTest {
         final long previousRevision = revisionService.getLatest();
         final String name = "Killua Zoldik";
         final String url = "http://www.google.fr";
-        final com.excilys.shooflers.dashboard.server.model.type.MediaType mediaType = com.excilys.shooflers.dashboard.server.model.type.MediaType.WEB_SITE;
+        final com.excilys.shooflers.dashboard.server.model.type.MediaType mediaType = MediaType.WEB;
 
         MvcResult result = mockMvc.perform(fileUploadAuthenticated("/media")
                 .param("media", toJson(new MediaMetadataDto.Builder()
                         .name(name)
                         .mediaType(mediaType)
-                        .uuidBundle(globalBundleMetadataDto.getUuid())
+                        .bundleTag(globalBundleMetadataDto.getUuid())
                         .url(url)
                         .build()))
         )
@@ -339,7 +343,7 @@ public class MediaControllerTest extends BaseControllerTest {
         MediaMetadataDto mediaMetadataDto = fromJson(result.getResponse().getContentAsString(), MediaMetadataDto.class);
 
         assertEquals(name, mediaMetadataDto.getName());
-        assertEquals(mediaType, com.excilys.shooflers.dashboard.server.model.type.MediaType.getMediaType(mediaMetadataDto.getMediaType()));
+        assertEquals(mediaType, com.excilys.shooflers.dashboard.server.model.type.MediaType.valueOf(mediaMetadataDto.getMediaType()));
         assertNull(mediaMetadataDto.getValidity());
         assertEquals(url, mediaMetadataDto.getUrl());
         assertEquals(0, mediaMetadataDto.getDuration());
@@ -347,7 +351,7 @@ public class MediaControllerTest extends BaseControllerTest {
         assertNotNull(mediaMetadataDto.getUuid());
         assertEquals(revisionService.getLatest(), mediaMetadataDto.getRevision());
 
-        File file = new File(props.getBasePath() + "/" + MediaDao.ENTITY_NAME + "/" + mediaMetadataDto.getUuidBundle() + "/" + mediaMetadataDto.getUuid() + ".yaml");
+        File file = new File(props.getBasePath() + "/" + MediaDao.ENTITY_NAME + "/" + mediaMetadataDto.getBundleTag() + "/" + mediaMetadataDto.getUuid() + ".yaml");
         assertTrue(file.isFile());
 
         assertEquals(previousRevision + 1, revisionService.getLatest());
@@ -367,8 +371,8 @@ public class MediaControllerTest extends BaseControllerTest {
     public void mediaWebCreateSuccessWithFile() throws Exception {
         final long previousRevision = revisionService.getLatest();
         final String name = "Kurapika";
-        final com.excilys.shooflers.dashboard.server.model.type.MediaType mediaType = com.excilys.shooflers.dashboard.server.model.type.MediaType.WEB_SITE;
-        final MockMultipartFile jsonFile = new MockMultipartFile("file", "texte.jpg", com.excilys.shooflers.dashboard.server.model.type.MediaType.IMAGE_JPG.getMimeType(), "{json:null}".getBytes());
+        final com.excilys.shooflers.dashboard.server.model.type.MediaType mediaType = com.excilys.shooflers.dashboard.server.model.type.MediaType.WEB;
+        final MockMultipartFile jsonFile = new MockMultipartFile("file", "texte.jpg", "image/jpg", "{json:null}".getBytes());
         final String url = "http://www.google.fr";
 
         // Also check if mediatype in mediametadata is overriden by the mediatype in the file in the multipartform
@@ -380,7 +384,7 @@ public class MediaControllerTest extends BaseControllerTest {
                         .name(name)
                         .mediaType(mediaType)
                         .url(url)
-                        .uuidBundle(globalBundleMetadataDto.getUuid())
+                        .bundleTag(globalBundleMetadataDto.getUuid())
                         .build()))
         )
                 .andExpect(status().isOk())
@@ -389,14 +393,14 @@ public class MediaControllerTest extends BaseControllerTest {
         MediaMetadataDto mediaMetadataDto = fromJson(result.getResponse().getContentAsString(), MediaMetadataDto.class);
 
         assertEquals(name, mediaMetadataDto.getName());
-        assertEquals(mediaType.getMimeType(), mediaMetadataDto.getMediaType());
+        assertEquals(mediaType.getValidMimeTypes(), mediaMetadataDto.getMediaType());
         assertNull(mediaMetadataDto.getValidity());
         assertEquals(url, mediaMetadataDto.getUrl());
         assertEquals(0, mediaMetadataDto.getDuration());
         assertNotNull(mediaMetadataDto.getUuid());
         assertEquals(revisionService.getLatest(), mediaMetadataDto.getRevision());
 
-        File file = new File(props.getBasePath() + "/" + MediaDao.ENTITY_NAME + "/" + mediaMetadataDto.getUuidBundle() + "/" + mediaMetadataDto.getUuid() + ".yaml");
+        File file = new File(props.getBasePath() + "/" + MediaDao.ENTITY_NAME + "/" + mediaMetadataDto.getBundleTag() + "/" + mediaMetadataDto.getUuid() + ".yaml");
         assertTrue(file.isFile());
 
         file = new File(props.getBaseResources() + mediaMetadataDto.getUrl());
@@ -431,7 +435,7 @@ public class MediaControllerTest extends BaseControllerTest {
                 .param("media", toJson(new MediaMetadataDto.Builder()
                         .name(name)
                         .mediaType(mediaType)
-                        .uuidBundle(globalBundleMetadataDto.getUuid())
+                        .bundleTag(globalBundleMetadataDto.getUuid())
                         .build()))
         )
                 .andExpect(status().isOk())
@@ -447,7 +451,7 @@ public class MediaControllerTest extends BaseControllerTest {
         assertNotNull(mediaMetadataDto.getUuid());
         assertEquals(revisionService.getLatest(), mediaMetadataDto.getRevision());
 
-        File file = new File(props.getBasePath() + "/" + MediaDao.ENTITY_NAME + "/" + mediaMetadataDto.getUuidBundle() + "/" + mediaMetadataDto.getUuid() + ".yaml");
+        File file = new File(props.getBasePath() + "/" + MediaDao.ENTITY_NAME + "/" + mediaMetadataDto.getBundleTag() + "/" + mediaMetadataDto.getUuid() + ".yaml");
         assertTrue(file.isFile());
 
         file = new File(props.getBaseResources() + mediaMetadataDto.getUrl());
@@ -480,7 +484,7 @@ public class MediaControllerTest extends BaseControllerTest {
                 .param("media", toJson(new MediaMetadataDto.Builder()
                         .name(name)
                         .mediaType(mediaType)
-                        .uuidBundle(globalBundleMetadataDto.getUuid())
+                        .bundleTag(globalBundleMetadataDto.getUuid())
                         .build()))
         )
                 .andExpect(status().isBadRequest())
@@ -500,11 +504,11 @@ public class MediaControllerTest extends BaseControllerTest {
                 .param("media", toJson(new MediaMetadataDto.Builder()
                         .name(name)
                         .mediaType(mediaType)
-                        .uuidBundle(bundleMetadataDto.getUuid())
+                        .bundleTag(bundleMetadataDto.getUuid())
                         .build()))
         )
                 .andExpect(status().isBadRequest())
-                .andExpect(content().string(MediaController.MESSAGE_MEDIA_TYPE_NOT_FOUND))
+                .andExpect(content().string(MediaController.MESSAGE_MEDIA_TYPE_NOT_SUPPORTED))
                 .andReturn();
     }
 
@@ -518,7 +522,7 @@ public class MediaControllerTest extends BaseControllerTest {
                 .param("media", toJson(new MediaMetadataDto.Builder()
                         .name(name)
                         .mediaType(mediaType)
-                        .uuidBundle(globalBundleMetadataDto.getUuid())
+                        .bundleTag(globalBundleMetadataDto.getUuid())
                         .build()))
         )
                 .andExpect(status().isBadRequest())
@@ -539,7 +543,7 @@ public class MediaControllerTest extends BaseControllerTest {
                         .name(name)
                         .mediaType(mediaType)
                         .url(url)
-                        .uuidBundle(globalBundleMetadataDto.getUuid())
+                        .bundleTag(globalBundleMetadataDto.getUuid())
                         .build()))
         )
                 .andExpect(status().isBadRequest())
@@ -563,7 +567,7 @@ public class MediaControllerTest extends BaseControllerTest {
                         .validity(makeValidityDto(startDateTime, endDateTime))
                         .mediaType(mediaType)
                         .url(url)
-                        .uuidBundle(globalBundleMetadataDto.getUuid())
+                        .bundleTag(globalBundleMetadataDto.getUuid())
                         .build()))
         )
                 .andExpect(status().isOk())
@@ -581,7 +585,7 @@ public class MediaControllerTest extends BaseControllerTest {
         assertEquals(startDateTime, toLocalDateTime(mediaMetadataDto.getValidity().getStart()));
         assertEquals(endDateTime, toLocalDateTime(mediaMetadataDto.getValidity().getEnd()));
 
-        File file = new File(props.getBasePath() + "/" + MediaDao.ENTITY_NAME + "/" + mediaMetadataDto.getUuidBundle() + "/" + mediaMetadataDto.getUuid() + ".yaml");
+        File file = new File(props.getBasePath() + "/" + MediaDao.ENTITY_NAME + "/" + mediaMetadataDto.getBundleTag() + "/" + mediaMetadataDto.getUuid() + ".yaml");
         assertTrue(file.isFile());
 
         assertEquals(previousRevision + 1, revisionService.getLatest());
@@ -611,7 +615,7 @@ public class MediaControllerTest extends BaseControllerTest {
                         .name(name)
                         .mediaType(mediaType)
                         .url(url)
-                        .uuidBundle(globalBundleMetadataDto.getUuid())
+                        .bundleTag(globalBundleMetadataDto.getUuid())
                         .build()))
         )
                 .andExpect(status().isOk())
@@ -628,7 +632,7 @@ public class MediaControllerTest extends BaseControllerTest {
         assertNotNull(mediaMetadataDto.getUuid());
         assertEquals(revisionService.getLatest(), mediaMetadataDto.getRevision());
 
-        File file = new File(props.getBasePath() + "/" + MediaDao.ENTITY_NAME + "/" + mediaMetadataDto.getUuidBundle() + "/" + mediaMetadataDto.getUuid() + ".yaml");
+        File file = new File(props.getBasePath() + "/" + MediaDao.ENTITY_NAME + "/" + mediaMetadataDto.getBundleTag() + "/" + mediaMetadataDto.getUuid() + ".yaml");
         assertTrue(file.isFile());
 
         assertEquals(previousRevision + 1, revisionService.getLatest());
@@ -662,7 +666,7 @@ public class MediaControllerTest extends BaseControllerTest {
                         .name(name)
                         .uuid(chosenUuid)
                         .mediaType(mediaType)
-                        .uuidBundle(globalBundleMetadataDto.getUuid())
+                        .bundleTag(globalBundleMetadataDto.getUuid())
                         .build()))
         )
                 .andExpect(status().isOk())
@@ -679,7 +683,7 @@ public class MediaControllerTest extends BaseControllerTest {
         assertNotNull(mediaMetadataDto.getUuid());
         assertEquals(revisionService.getLatest(), mediaMetadataDto.getRevision());
 
-        File file = new File(props.getBasePath() + "/" + MediaDao.ENTITY_NAME + "/" + mediaMetadataDto.getUuidBundle() + "/" + mediaMetadataDto.getUuid() + ".yaml");
+        File file = new File(props.getBasePath() + "/" + MediaDao.ENTITY_NAME + "/" + mediaMetadataDto.getBundleTag() + "/" + mediaMetadataDto.getUuid() + ".yaml");
         assertTrue(file.isFile());
 
         file = new File(props.getBaseResources() + mediaMetadataDto.getUrl());
@@ -892,7 +896,7 @@ public class MediaControllerTest extends BaseControllerTest {
         final com.excilys.shooflers.dashboard.server.model.type.MediaType mediaType = com.excilys.shooflers.dashboard.server.model.type.MediaType.WEB_SITE;
         final String url = "http://google.fr";
         final MediaMetadataDto mediaMetadataDto = mediaService.save(new MediaMetadataDto.Builder()
-                .uuidBundle(globalBundleMetadataDto.getUuid())
+                .bundleTag(globalBundleMetadataDto.getUuid())
                 .url(url)
                 .name(name)
                 .mediaType(mediaType)
@@ -940,7 +944,7 @@ public class MediaControllerTest extends BaseControllerTest {
         final MediaMetadataDto mediaMetadataDto = new MediaMetadataDto.Builder()
                 .name(name)
                 .mediaType(mediaType)
-                .uuidBundle(globalBundleMetadataDto.getUuid())
+                .bundleTag(globalBundleMetadataDto.getUuid())
                 .build();
 
         // Also check if mediatype in mediametadata is overriden by the mediatype in the file in the multipartform if its none
@@ -955,7 +959,7 @@ public class MediaControllerTest extends BaseControllerTest {
 
         final long previousRevision = revisionService.getLatest();
 
-        File file = new File(props.getBasePath() + "/" + MediaDao.ENTITY_NAME + "/" + newMediaMetadataDto.getUuidBundle() + "/" + newMediaMetadataDto.getUuid() + ".yaml");
+        File file = new File(props.getBasePath() + "/" + MediaDao.ENTITY_NAME + "/" + newMediaMetadataDto.getBundleTag() + "/" + newMediaMetadataDto.getUuid() + ".yaml");
         assertTrue(file.isFile());
 
         file = new File(props.getBaseResources() + newMediaMetadataDto.getUrl());
@@ -978,7 +982,7 @@ public class MediaControllerTest extends BaseControllerTest {
                 .andExpect(status().isNotFound())
         ;
 
-        file = new File(props.getBasePath() + "/" + MediaDao.ENTITY_NAME + "/" + newMediaMetadataDto.getUuidBundle() + "/" + newMediaMetadataDto.getUuid() + ".yaml");
+        file = new File(props.getBasePath() + "/" + MediaDao.ENTITY_NAME + "/" + newMediaMetadataDto.getBundleTag() + "/" + newMediaMetadataDto.getUuid() + ".yaml");
         assertFalse(file.exists());
 
         file = new File(props.getBaseResources() + newMediaMetadataDto.getUrl());
@@ -1012,7 +1016,7 @@ public class MediaControllerTest extends BaseControllerTest {
         final MediaMetadataDto mediaMetadataDto = new MediaMetadataDto.Builder()
                 .name(name)
                 .mediaType(mediaType)
-                .uuidBundle(globalBundleMetadataDto.getUuid())
+                .bundleTag(globalBundleMetadataDto.getUuid())
                 .build();
 
         // Also check if mediatype in mediametadata is overriden by the mediatype in the file in the multipartform if its none
@@ -1027,7 +1031,7 @@ public class MediaControllerTest extends BaseControllerTest {
 
         final long previousRevision = revisionService.getLatest();
 
-        File file = new File(props.getBasePath() + "/" + MediaDao.ENTITY_NAME + "/" + newMediaMetadataDto.getUuidBundle() + "/" + newMediaMetadataDto.getUuid() + ".yaml");
+        File file = new File(props.getBasePath() + "/" + MediaDao.ENTITY_NAME + "/" + newMediaMetadataDto.getBundleTag() + "/" + newMediaMetadataDto.getUuid() + ".yaml");
         assertTrue(file.isFile());
 
         file = new File(props.getBaseResources() + newMediaMetadataDto.getUrl());
@@ -1051,7 +1055,7 @@ public class MediaControllerTest extends BaseControllerTest {
                 .andExpect(status().isOk())
         ;
 
-        file = new File(props.getBasePath() + "/" + MediaDao.ENTITY_NAME + "/" + newMediaMetadataDto.getUuidBundle() + "/" + newMediaMetadataDto.getUuid() + ".yaml");
+        file = new File(props.getBasePath() + "/" + MediaDao.ENTITY_NAME + "/" + newMediaMetadataDto.getBundleTag() + "/" + newMediaMetadataDto.getUuid() + ".yaml");
         assertTrue(file.exists());
 
 //        assertEquals(previousSize, mediaService.getAll().size());
@@ -1067,26 +1071,26 @@ public class MediaControllerTest extends BaseControllerTest {
 //
 //        assertThat(mediaService.getAll().size(), Matchers.greaterThanOrEqualTo(1));
 //
-//        BundleMetadataDto bundleMetadataDto = mediaService.getAll().get(mediaService.getAll().size() - 1);
+//        BundleMetadataDto bundleMetadataDto = mediaService.getAll().getByTag(mediaService.getAll().size() - 1);
 //
-//        assertNotNull(mediaService.get(bundleMetadataDto.getUuid()));
+//        assertNotNull(mediaService.getByTag(bundleMetadataDto.getTag()));
 //
-//        mockMvc.perform(deleteAuthenticated("/bundle/" + bundleMetadataDto.getUuid()))
+//        mockMvc.perform(deleteAuthenticated("/bundle/" + bundleMetadataDto.getTag()))
 //                .andExpect(status().isNoContent())
 //        ;
 //
-//        assertNull(mediaService.get(bundleMetadataDto.getUuid()));
+//        assertNull(mediaService.getByTag(bundleMetadataDto.getTag()));
 //        assertEquals(previousSize - 1, mediaService.getAll().size());
 //        assertEquals(previousRevision + 1, revisionService.getLatest());
 //
 //        List<Revision> revisions = revisionService.getDiffs(previousRevision);
 //        assertThat(revisions, IsCollectionWithSize.hasSize(1));
 //
-//        Revision revision = revisions.get(0);
+//        Revision revision = revisions.getByTag(0);
 //        assertEquals(revision.getAction(), Revision.Action.DELETE);
 //        assertEquals(((long) revision.getRevision()), previousRevision + 1);
 //        assertEquals(revision.getType(), Revision.Type.BUNDLE);
-//        assertEquals(revision.getTarget(), bundleMetadataDto.getUuid());
+//        assertEquals(revision.getTarget(), bundleMetadataDto.getTag());
 //        assertEquals(revision.getResult(), null);
 //    }
 //
@@ -1117,12 +1121,12 @@ public class MediaControllerTest extends BaseControllerTest {
 //        BundleMetadataDto newBundleMetadataDto = fromJson(result.getResponse().getContentAsString(), BundleMetadataDto.class);
 //        assertEquals(newName, newBundleMetadataDto.getName());
 //        assertNull(newBundleMetadataDto.getValidity());
-//        assertNotEquals(newBundleMetadataDto.getUuid(), bundleMetadataDto.getUuid());
+//        assertNotEquals(newBundleMetadataDto.getTag(), bundleMetadataDto.getTag());
 //        assertNull(newBundleMetadataDto.getValidity());
 //        assertNull(bundleMetadataDto.getValidity());
 //
-//        assertNull(mediaService.get(bundleMetadataDto.getUuid()));
-//        assertNotNull(mediaService.get(newBundleMetadataDto.getUuid()));
+//        assertNull(mediaService.getByTag(bundleMetadataDto.getTag()));
+//        assertNotNull(mediaService.getByTag(newBundleMetadataDto.getTag()));
 //        assertEquals(previousSize, mediaService.getAll().size());
 //        assertEquals(previousRevision + 1, revisionService.getLatest());
 //
@@ -1131,18 +1135,18 @@ public class MediaControllerTest extends BaseControllerTest {
 //        assertThat(revisions, Matchers.hasSize(2));
 //        System.out.println(revisions);
 //
-//        Revision revision = revisions.get(1);
+//        Revision revision = revisions.getByTag(1);
 //        assertEquals(Revision.Action.DELETE, revision.getAction());
 //        assertEquals(((long) revision.getRevision()), previousRevision + 1);
 //        assertEquals(revision.getType(), Revision.Type.BUNDLE);
-//        assertEquals(revision.getTarget(), bundleMetadataDto.getUuid());
+//        assertEquals(revision.getTarget(), bundleMetadataDto.getTag());
 //        assertEquals(revision.getResult(), null);
 //
-//        revision = revisions.get(0);
+//        revision = revisions.getByTag(0);
 //        assertEquals(Revision.Action.ADD, revision.getAction());
 //        assertEquals(((long) revision.getRevision()), previousRevision + 1);
 //        assertEquals(revision.getType(), Revision.Type.BUNDLE);
-//        assertEquals(revision.getTarget(), newBundleMetadataDto.getUuid());
+//        assertEquals(revision.getTarget(), newBundleMetadataDto.getTag());
 //        assertEquals(revision.getResult(), null);
 //    }
 //
@@ -1168,13 +1172,13 @@ public class MediaControllerTest extends BaseControllerTest {
 //        assertNotNull(bundleMetadataDto.getValidity());
 //        assertEquals(startDateTime, toLocalDateTime(bundleMetadataDto.getValidity().getStart()));
 //        assertNull(bundleMetadataDto.getValidity().getEnd());
-//        assertNotEquals(bundleMetadataDto.getUuid(), formBundleMetadataDto.getUuid());
+//        assertNotEquals(bundleMetadataDto.getTag(), formBundleMetadataDto.getTag());
 //        assertEquals(bundleMetadataDto.getValidity().getStart(), formBundleMetadataDto.getValidity().getStart());
 //        assertEquals(bundleMetadataDto.getValidity().getEnd(), formBundleMetadataDto.getValidity().getEnd());
 //        assertEquals(revisionService.getLatest(), (long) bundleMetadataDto.getRevision());
 //
-//        assertNull(mediaService.get(formBundleMetadataDto.getUuid()));
-//        assertNotNull(mediaService.get(bundleMetadataDto.getUuid()));
+//        assertNull(mediaService.getByTag(formBundleMetadataDto.getTag()));
+//        assertNotNull(mediaService.getByTag(bundleMetadataDto.getTag()));
 //        assertEquals(previousSize, mediaService.getAll().size());
 //        assertEquals(previousRevision + 1, revisionService.getLatest());
 //
@@ -1183,18 +1187,18 @@ public class MediaControllerTest extends BaseControllerTest {
 //        assertThat(revisions, Matchers.hasSize(2));
 //        System.out.println(revisions);
 //
-//        Revision revision = revisions.get(1);
+//        Revision revision = revisions.getByTag(1);
 //        assertEquals(Revision.Action.DELETE, revision.getAction());
 //        assertEquals(((long) revision.getRevision()), previousRevision + 1);
 //        assertEquals(revision.getType(), Revision.Type.BUNDLE);
-//        assertEquals(revision.getTarget(), formBundleMetadataDto.getUuid());
+//        assertEquals(revision.getTarget(), formBundleMetadataDto.getTag());
 //        assertEquals(revision.getResult(), null);
 //
-//        revision = revisions.get(0);
+//        revision = revisions.getByTag(0);
 //        assertEquals(Revision.Action.ADD, revision.getAction());
 //        assertEquals(((long) revision.getRevision()), previousRevision + 1);
 //        assertEquals(revision.getType(), Revision.Type.BUNDLE);
-//        assertEquals(revision.getTarget(), bundleMetadataDto.getUuid());
+//        assertEquals(revision.getTarget(), bundleMetadataDto.getTag());
 //        assertEquals(revision.getResult(), null);
 //    }
 //
@@ -1202,7 +1206,7 @@ public class MediaControllerTest extends BaseControllerTest {
 //    public void putWithoutUUID() throws Exception {
 //        final String name = "Babar";
 //        BundleMetadataDto bundleMetadataDto = new BundleMetadataDto.Builder().name(name).build();
-//        bundleMetadataDto.setUuid(null);
+//        bundleMetadataDto.setTag(null);
 //
 //        mockMvc.perform(putAuthenticated(("/bundle"))
 //                .content(toJson(bundleMetadataDto))
@@ -1214,8 +1218,8 @@ public class MediaControllerTest extends BaseControllerTest {
 //    @Test
 //    public void putWithWrongUuid() throws Exception {
 //        final String name = "Babar";
-//        BundleMetadataDto bundleMetadataDto = new BundleMetadataDto.Builder().uuid("random").name(name).build();
-//        bundleMetadataDto.setUuid(null);
+//        BundleMetadataDto bundleMetadataDto = new BundleMetadataDto.Builder().tag("random").name(name).build();
+//        bundleMetadataDto.setTag(null);
 //
 //        mockMvc.perform(putAuthenticated(("/bundle"))
 //                .content(toJson(bundleMetadataDto))
@@ -1361,7 +1365,7 @@ public class MediaControllerTest extends BaseControllerTest {
 //    @Test
 //    public void editBundleCreateFailedIfUnknownProperty() throws Exception {
 //        mockMvc.perform(putAuthenticated(("/bundle"))
-//                .content("{uuid:null, unknown:null}")
+//                .content("{tag:null, unknown:null}")
 //                .contentType(MediaType.APPLICATION_JSON_UTF8))
 //                .andExpect(status().isBadRequest())
 //                .andExpect(content().string(""))

@@ -1,20 +1,15 @@
 package com.excilys.shooflers.dashboard.server.rest;
 
 import com.excilys.shooflers.dashboard.server.dto.BundleMetadataDto;
+import com.excilys.shooflers.dashboard.server.dto.mapper.BundleDtoMapper;
 import com.excilys.shooflers.dashboard.server.exception.ResourceNotFoundException;
+import com.excilys.shooflers.dashboard.server.model.metadata.BundleMetadata;
 import com.excilys.shooflers.dashboard.server.security.annotation.RequireValidApiKey;
 import com.excilys.shooflers.dashboard.server.security.annotation.RequireValidUser;
 import com.excilys.shooflers.dashboard.server.service.BundleService;
-import com.excilys.shooflers.dashboard.server.service.RevisionService;
-import com.excilys.shooflers.dashboard.server.validator.BundleMedataDtoValidatorImpl;
+import com.excilys.shooflers.dashboard.server.validator.BundleMedataDtoValidator;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -30,11 +25,11 @@ public class BundleController {
     private BundleService bundleService;
 
     @Autowired
-    private RevisionService revisionService;
+    private BundleMedataDtoValidator validator;
 
     @Autowired
-    private BundleMedataDtoValidatorImpl bundleMedataDtoValidator;
-
+    private BundleDtoMapper mapper;
+    
     /**
      * Get all Bundle.
      *
@@ -43,8 +38,7 @@ public class BundleController {
     @RequestMapping(method = RequestMethod.GET)
     @RequireValidApiKey
     public List<BundleMetadataDto> getAll() {
-        List<BundleMetadataDto> bundles = bundleService.getAll();
-        bundles.forEach(b -> b.setRevision(revisionService.getLatest()));
+        List<BundleMetadataDto> bundles = mapper.toListDto(bundleService.getAll());
         return bundles;
     }
 
@@ -55,25 +49,26 @@ public class BundleController {
      */
     @RequestMapping(method = RequestMethod.POST)
     public BundleMetadataDto save(@RequestBody BundleMetadataDto bundleMetadataDto) {
-        bundleMetadataDto.setUuid(null);
-        bundleMedataDtoValidator.validate(bundleMetadataDto);
-        return bundleService.save(bundleMetadataDto);
+        validator.validate(bundleMetadataDto);
+        BundleMetadata bundle = mapper.fromDto(bundleMetadataDto);
+        bundleService.save(bundle);
+        return mapper.toDto(bundle);
     }
 
     /**
-     * Get a particular Bundle by its uuid.
+     * Get a particular Bundle by its tag.
      *
-     * @param uuid uuid to find
+     * @param tag tag to find
      * @return Bundle found if bundle exists
      */
-    @RequestMapping(value = "{uuid}", method = RequestMethod.GET)
+    @RequestMapping(value = "{tag}", method = RequestMethod.GET)
     @RequireValidApiKey
-    public BundleMetadataDto get(@PathVariable("uuid") String uuid) {
-        BundleMetadataDto result = bundleService.get(uuid);
+    public BundleMetadataDto get(@PathVariable("tag") String tag) {
+        BundleMetadata result = bundleService.getByTag(tag);
         if (result == null) {
             throw new ResourceNotFoundException("Bound not found");
         } else {
-            return result;
+            return mapper.toDto(result);
         }
     }
 
@@ -85,24 +80,25 @@ public class BundleController {
      */
     @RequestMapping(method = RequestMethod.PUT)
     public BundleMetadataDto update(@RequestBody BundleMetadataDto bundleMetadataDto) {
-        bundleMedataDtoValidator.validate(bundleMetadataDto);
-        if (bundleService.get(bundleMetadataDto.getUuid()) == null) {
-            throw new IllegalArgumentException("An UUID is need to edit an bundle.");
+        validator.validate(bundleMetadataDto);
+        
+        if (bundleMetadataDto.getUuid() == null) {
+            throw new IllegalArgumentException("A valid uuid is required to edit a bundle.");
         }
-        return bundleService.update(bundleMetadataDto);
+        BundleMetadata bundle = mapper.fromDto(bundleMetadataDto);
+        
+        bundleService.update(bundle);
+        
+        return mapper.toDto(bundle);
     }
 
     /**
-     * Delete a bundle by its uuid.
+     * Delete a bundle by its tag.
      *
-     * @param uuid uuid to delete
+     * @param uuid tag to delete
      */
     @RequestMapping(value = "{uuid}", method = RequestMethod.DELETE)
-    public ResponseEntity delete(@PathVariable("uuid") String uuid) {
-        if (bundleService.delete(uuid)) {
-            return new ResponseEntity(HttpStatus.NO_CONTENT);
-        } else {
-            throw new ResourceNotFoundException("Bound not found");
-        }
+    public void delete(@PathVariable("uuid") String uuid) {
+        bundleService.delete(uuid);
     }
 }

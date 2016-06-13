@@ -1,63 +1,80 @@
 package com.excilys.shooflers.dashboard.server.model.type;
 
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Map;
+import java.util.stream.Collectors;
+
 /**
  * Type of a media.
  */
 public enum MediaType {
-    IMAGE_PNG("image/png", ".png", "image"),
-    IMAGE_JPG("image/jpeg", ".jpg", "image"),
-    IMAGE_GIF("image/gif", ".gif", "image"),
-    VIDEO_MPEG("video/mpeg", ".mpg", "video"),
-    VIDEO_MP4("video/mp4", ".mp4", "video"),
-    VIDEO_AVI("video/x-msvideo", ".avi", "video"),
-    VIDEO_FLV("video/x-flv", ".flv", "video"),
-    PDF("application/pdf", ".pdf", "document"),
-    POWERPOINT("application/vnd.ms-powerpoint", ".pptx", "document"),
-    WEB_SITE("application/web-site", null, "web"),
-    WEB_VIDEO("application/web-video", null, "web"),
-    NONE("none", null, "none");
+    
+    IMAGE(new String[]{"image/png", ".png"},
+            new String[]{"image/jpg", ".jpg"},
+            new String[]{"image/jpeg", ".jpg"},
+            new String[]{"image/gif", ".gif"}),
+    VIDEO(new String[]{"video/mpeg", ".mpg"},
+            new String[]{"video/mp4", ".mp4"},
+            new String[]{"video/x-msvideo", ".avi"},
+            new String[]{"video/x-flv", ".flv"}),
+    DOCUMENT(new String[]{"application/vnd.ms-powerpoint", ".pptx"},
+            new String[]{"application/vnd.ms-powerpoint", ".ppt"},
+            new String[]{"application/pdf", ".pdf"}),
+    WEB(new String[]{"application/web-site", null});
 
-    private String mimeType;
+    private Map<String, String> mimeTypes;
 
-    private String extension;
-
-    private String globalType;
-
-    MediaType(String mimeType, String extension, String globalType) {
-        this.mimeType = mimeType;
-        this.extension = extension;
-        this.globalType = globalType;
+    MediaType(String[]... mimeTypes) {
+        this.mimeTypes = Arrays
+                .stream(mimeTypes)
+                .collect(Collectors.toMap(strings -> strings[0], strings -> strings[1]));
     }
 
-    public String getMimeType() {
-        return mimeType;
+    /**
+     * @param mimeType the mime type (image/png is a valid input)
+     * @return true if mime type is supported by media type, false otherwise
+     */
+    public boolean supports(String mimeType) {
+        return mimeTypes.containsKey(mimeType);
     }
 
-    public String getExtension() {
-        return extension;
-    }
-
-    public String getGlobalType() {
-        return globalType;
+    /**
+     * @param ext the extension (with or without a prefixed dot (.png or png are both valid inputs)
+     * @return true if extension is supported by media type, false otherwise
+     */
+    public boolean supportsExtension(String ext) {
+        return mimeTypes.containsValue(ext.startsWith(".") ? ext : "." + ext);
     }
 
     /**
      * MimeType to MediaType
+     *
      * @param mimeType mime type to convert
      * @return MediaType
      */
-    public static MediaType getMediaType(String mimeType) {
-        MediaType mediaType = NONE;
+    public static MediaType parseMimeType(String mimeType) {
         if (mimeType == null) {
-            return mediaType;
+            return null;
         }
 
         for (MediaType m : MediaType.values()) {
-            if (mimeType.equals(m.getMimeType())) {
-                mediaType = m;
-                break;
+            if (m.supports(mimeType)) {
+                return m;
             }
         }
-        return mediaType;
+        return null;
+    }
+
+    /**
+     * @param mimeType the mime type
+     * @return the valid extension for the mime type of current media
+     */
+    public String getExtension(String mimeType) {
+        return mimeTypes.get(mimeType);
+    }
+    
+    public Collection<String> getValidMimeTypes() {
+        return mimeTypes.keySet();
     }
 }
