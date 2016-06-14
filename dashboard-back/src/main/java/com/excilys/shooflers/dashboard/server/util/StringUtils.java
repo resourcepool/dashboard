@@ -6,9 +6,9 @@ import java.text.Normalizer;
  * @author Loïc Ortola on 13/06/2016.
  */
 public class StringUtils {
-    
+
     private static final String NON_ASCII_CHARACTERS_PATTERN = "[^\\w\\s]";
-    
+
     /**
      * Normalizes a string.
      *

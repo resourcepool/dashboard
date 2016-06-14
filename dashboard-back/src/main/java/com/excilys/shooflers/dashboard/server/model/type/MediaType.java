@@ -1,34 +1,42 @@
 package com.excilys.shooflers.dashboard.server.model.type;
 
-import java.util.Arrays;
+import com.excilys.shooflers.dashboard.server.converter.ContentConverter;
+import com.excilys.shooflers.dashboard.server.converter.PowerpointToPdfConverter;
+
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * Type of a media.
  */
 public enum MediaType {
 
-    IMAGE(new String[]{"image/png", ".png"},
-            new String[]{"image/jpg", ".jpg"},
-            new String[]{"image/jpeg", ".jpg"},
-            new String[]{"image/gif", ".gif"}),
-    VIDEO(new String[]{"video/mpeg", ".mpg"},
-            new String[]{"video/mp4", ".mp4"},
-            new String[]{"video/x-msvideo", ".avi"},
-            new String[]{"video/x-flv", ".flv"}),
-    DOCUMENT(new String[]{"application/vnd.ms-powerpoint", ".pptx"},
-            new String[]{"application/pdf", ".pdf"}),
-    WEB(new String[]{"application/web-site", ""}),
-    NEWS(new String[]{"text/plain", ""});
+    IMAGE(MediaTypeDescriptor.builder()
+            .mimeType("image/png", ".png")
+            .mimeType("image/jpeg", ".jpeg")
+            .mimeType("image/jpg", ".jpg")
+            .mimeType("image/gif", ".gif")
+            .build()),
+    VIDEO(MediaTypeDescriptor.builder()
+            .mimeType("video/mpeg", ".mpg")
+            .mimeType("video/mp4", ".mp4")
+            .mimeType("video/x-msvideo", ".avi")
+            .mimeType("video/x-flv", ".flv")
+            .build()),
+    DOCUMENT(MediaTypeDescriptor.builder()
+            .mimeType("application/pdf", ".pdf")
+            .converter(new PowerpointToPdfConverter())
+            .build()),
+    WEB(MediaTypeDescriptor.builder().build()),
+    NEWS(MediaTypeDescriptor.builder().build());
 
     private Map<String, String> mimeTypes;
+    private List<ContentConverter> converters;
 
-    MediaType(String[]... mimeTypes) {
-        this.mimeTypes = Arrays
-                .stream(mimeTypes)
-                .collect(Collectors.toMap(strings -> strings[0], strings -> strings[1]));
+    MediaType(MediaTypeDescriptor d) {
+        this.converters = d.getConverters();
+        this.mimeTypes = d.getMimeTypes();
     }
 
     /**
@@ -36,7 +44,23 @@ public enum MediaType {
      * @return true if mime type is supported by media type, false otherwise
      */
     public boolean supports(String mimeType) {
-        return mimeTypes.containsKey(mimeType);
+        return mimeTypes.containsKey(mimeType) || converters.stream().filter(contentConverter -> contentConverter.supports(mimeType)).count() > 0;
+    }
+
+    /**
+     * @param mimeType the mime type (image/png is a valid input)
+     * @return true if file should be converted, false otherwise
+     */
+    public boolean shouldConvert(String mimeType) {
+        return converters.stream().filter(contentConverter -> contentConverter.supports(mimeType)).count() > 0;
+    }
+
+    /**
+     * @param mimeType the mime type (image/png is a valid input)
+     * @return the target converter or null if no conversion is needed
+     */
+    public ContentConverter getConverter(String mimeType) {
+        return converters.stream().filter(contentConverter -> contentConverter.supports(mimeType)).findFirst().get();
     }
 
     /**
@@ -44,7 +68,8 @@ public enum MediaType {
      * @return true if extension is supported by media type, false otherwise
      */
     public boolean supportsExtension(String ext) {
-        return mimeTypes.containsValue(ext.startsWith(".") ? ext : "." + ext);
+        final String dotExt = ext.startsWith(".") ? ext : "." + ext;
+        return mimeTypes.containsValue(dotExt) || converters.stream().filter(contentConverter -> contentConverter.supportsExtension(dotExt)).count() > 0;
     }
 
     /**
@@ -71,7 +96,11 @@ public enum MediaType {
      * @return the valid extension for the mime type of current media
      */
     public String getExtension(String mimeType) {
-        return mimeTypes.get(mimeType);
+        String ext = mimeTypes.get(mimeType);
+        if (ext == null) {
+            ext = converters.stream().filter(contentConverter -> contentConverter.supports(mimeType)).findFirst().get().getOutputExtension();
+        }
+        return ext;
     }
 
     public Collection<String> getValidMimeTypes() {

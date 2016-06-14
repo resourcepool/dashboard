@@ -30,6 +30,7 @@
         <commons-io.version>2.5</commons-io.version>
         <hamcrest-date.version>2.0.1</hamcrest-date.version>
         <commons-validator.version>1.5.1</commons-validator.version>
+        <apache.poi.version>3.14</apache.poi.version>
     </properties>
 
     <dependencies>
@@ -104,6 +105,24 @@
             <artifactId>commons-io</artifactId>
             <version>${commons-io.version}</version>
         </dependency>
+        <!-- PPTX to Img converter-->
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi</artifactId>
+            <version>${apache.poi.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi-ooxml</artifactId>
+            <version>${apache.poi.version}</version>
+        </dependency>
+        <!-- Img to PDF converter -->
+        <dependency>
+            <groupId>org.apache.pdfbox</groupId>
+            <artifactId>pdfbox</artifactId>
+            <version>2.0.1</version>
+        </dependency>
+
 
 
         <!-- Spring boot -->

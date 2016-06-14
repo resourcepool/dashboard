@@ -18,13 +18,14 @@ public class MediaMetadataDto {
 
     // Used only for WEB type
     private String url;
-    
+
     // Used only for NEWS type
     private String content;
 
     private String bundleTag;
 
-    public MediaMetadataDto() { }
+    public MediaMetadataDto() {
+    }
 
     private MediaMetadataDto(String uuid, String name, int duration, MediaType mediaType, ValidityDto validity, String url, String content, String bundleTag) {
         this.uuid = uuid;
@@ -50,7 +51,7 @@ public class MediaMetadataDto {
         private String uuid;
 
         private String url;
-        
+
         private String content;
 
         private String bundleTag;

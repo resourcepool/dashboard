@@ -4,6 +4,7 @@ import com.excilys.shooflers.dashboard.server.dao.util.MediaReverseIndex;
 import com.excilys.shooflers.dashboard.server.dao.util.YamlUtils;
 import com.excilys.shooflers.dashboard.server.exception.ResourceIoException;
 import com.excilys.shooflers.dashboard.server.exception.ResourceNotFoundException;
+import com.excilys.shooflers.dashboard.server.model.Content;
 import com.excilys.shooflers.dashboard.server.model.Media;
 import com.excilys.shooflers.dashboard.server.model.metadata.MediaMetadata;
 import com.excilys.shooflers.dashboard.server.model.type.MediaType;
@@ -14,10 +15,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.FileCopyUtils;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.PostConstruct;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -58,7 +59,7 @@ public class MediaDaoImpl implements MediaDao {
     public File getContent(String filename) {
         String uuid = filename.substring(0, filename.indexOf("."));
         String ext = filename.substring(uuid.length());
-        File dataFile = getResourceFile(mri.getBundleTag(uuid), uuid, ext);
+        File dataFile = getResourceFile(uuid, ext);
         return dataFile;
     }
 
@@ -96,15 +97,15 @@ public class MediaDaoImpl implements MediaDao {
         File dest = getMediaFile(mediaMetadata.getBundleTag(), mediaMetadata.getUuid());
         YamlUtils.store(mediaMetadata, dest);
 
-        MultipartFile content = media.getContent();
+        Content content = media.getContent();
 
         // TODO implement some kind of rollback if second content write fails
         if (content != null) {
             String ext = mediaType.getExtension(content.getContentType());
-            dest = getResourceFile(mediaMetadata.getBundleTag(), mediaMetadata.getUuid(), ext);
+            dest = getResourceFile(mediaMetadata.getUuid(), ext);
             try {
-                FileCopyUtils.copy(content.getBytes(), dest);
-
+                dest.createNewFile();
+                FileCopyUtils.copy(content.getInputStream(), new FileOutputStream(dest));
             } catch (IOException e) {
                 LOGGER.warn("Error while writing file.", e);
                 throw new IllegalStateException(e);
@@ -170,9 +171,9 @@ public class MediaDaoImpl implements MediaDao {
         return mediaDatabasePath.resolve(bundleTag + "/" + dataFileName).toFile();
     }
 
-    private File getResourceFile(String bundleTag, String uuid, String ext) {
+    private File getResourceFile(String uuid, String ext) {
         String dataFileName = uuid + (ext.startsWith(".") ? ext : "." + ext);
-        return mediaResourcesPath.resolve(bundleTag + "/" + dataFileName).toFile();
+        return mediaResourcesPath.resolve(dataFileName).toFile();
     }
 
 

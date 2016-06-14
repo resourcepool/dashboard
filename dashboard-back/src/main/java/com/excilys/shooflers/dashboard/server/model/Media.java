@@ -1,14 +1,13 @@
 package com.excilys.shooflers.dashboard.server.model;
 
 import com.excilys.shooflers.dashboard.server.model.metadata.MediaMetadata;
-import org.springframework.web.multipart.MultipartFile;
 
 /**
  * @author Loïc Ortola on 13/06/2016.
  */
 public class Media {
     private MediaMetadata metadata;
-    private MultipartFile content;
+    private Content content;
 
     public MediaMetadata getMetadata() {
         return metadata;
@@ -18,11 +17,11 @@ public class Media {
         this.metadata = metadata;
     }
 
-    public MultipartFile getContent() {
+    public Content getContent() {
         return content;
     }
 
-    public void setContent(MultipartFile content) {
+    public void setContent(Content content) {
         this.content = content;
     }
 
@@ -33,7 +32,7 @@ public class Media {
 
     public static final class Builder {
         private MediaMetadata metadata;
-        private MultipartFile content;
+        private Content content;
 
         private Builder() {
         }
@@ -43,7 +42,7 @@ public class Media {
             return this;
         }
 
-        public Builder content(MultipartFile content) {
+        public Builder content(Content content) {
             this.content = content;
             return this;
         }

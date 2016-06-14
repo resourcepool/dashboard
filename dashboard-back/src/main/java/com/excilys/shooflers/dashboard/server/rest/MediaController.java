@@ -3,7 +3,9 @@ package com.excilys.shooflers.dashboard.server.rest;
 import com.excilys.shooflers.dashboard.server.dto.MediaMetadataDto;
 import com.excilys.shooflers.dashboard.server.dto.mapper.MediaDtoMapper;
 import com.excilys.shooflers.dashboard.server.exception.ResourceNotFoundException;
+import com.excilys.shooflers.dashboard.server.model.Content;
 import com.excilys.shooflers.dashboard.server.model.Media;
+import com.excilys.shooflers.dashboard.server.model.metadata.MediaMetadata;
 import com.excilys.shooflers.dashboard.server.security.annotation.RequireValidApiKey;
 import com.excilys.shooflers.dashboard.server.security.annotation.RequireValidUser;
 import com.excilys.shooflers.dashboard.server.service.MediaService;
@@ -81,11 +83,12 @@ public class MediaController {
         // Check Validation of MediaMetadataDto
         validator.validate(mediaMetadataDto, multipartFile);
 
+        MediaMetadata meta = mapper.fromDto(mediaMetadataDto);
         // Save or update media
         Media media = Media
                 .builder()
-                .metadata(mapper.fromDto(mediaMetadataDto))
-                .content(multipartFile)
+                .metadata(meta)
+                .content(multipartFile == null ? null : new Content(multipartFile, meta.getMediaType()))
                 .build();
 
         mediaService.save(media);
@@ -103,11 +106,13 @@ public class MediaController {
         // Check Validation of MediaMetadataDto
         validator.validate(mediaMetadataDto, multipartFile);
 
+        MediaMetadata meta = mapper.fromDto(mediaMetadataDto);
+
         // Save or update media
         Media media = Media
                 .builder()
-                .metadata(mapper.fromDto(mediaMetadataDto))
-                .content(multipartFile)
+                .metadata(meta)
+                .content(multipartFile == null ? null : new Content(multipartFile, meta.getMediaType()))
                 .build();
 
         mediaService.update(media);
