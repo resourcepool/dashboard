@@ -20,7 +20,8 @@ public enum MediaType {
             new String[]{"video/x-flv", ".flv"}),
     DOCUMENT(new String[]{"application/vnd.ms-powerpoint", ".pptx"},
             new String[]{"application/pdf", ".pdf"}),
-    WEB(new String[]{"application/web-site", ""});
+    WEB(new String[]{"application/web-site", ""}),
+    NEWS(new String[]{"text/plain", ""});
 
     private Map<String, String> mimeTypes;
 

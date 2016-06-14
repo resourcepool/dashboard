@@ -25,6 +25,7 @@ public class MediaDtoMapperImpl implements MediaDtoMapper {
                 .mediaType(model.getMediaType())
                 .validity(validityDtoMapper.toDto(model.getValidity()))
                 .url(model.getUrl())
+                .content(model.getContent())
                 .bundleTag(model.getBundleTag())
                 .build() : null;
     }
@@ -38,6 +39,7 @@ public class MediaDtoMapperImpl implements MediaDtoMapper {
                 .mediaType(MediaType.valueOf(dto.getMediaType()))
                 .validity(validityDtoMapper.fromDto(dto.getValidity()))
                 .url(dto.getUrl())
+                .content(dto.getContent())
                 .bundleTag(dto.getBundleTag())
                 .build() : null;
     }

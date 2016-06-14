@@ -15,7 +15,7 @@ public class MediaMetadata {
     /**
      * MediaType that no need a file to upload
      */
-    public static final List<MediaType> MEDIA_TYPES_NO_FILE = Arrays.asList(MediaType.WEB);
+    public static final List<MediaType> MEDIA_TYPES_NO_FILE = Arrays.asList(MediaType.WEB, MediaType.NEWS);
 
     private String uuid;
 
@@ -27,20 +27,25 @@ public class MediaMetadata {
 
     private Validity validity;
 
+    // Used only for WEB type
     private String url;
+
+    // Used only for NEWS type
+    private String content;
 
     private String bundleTag;
 
     public MediaMetadata() {
     }
 
-    private MediaMetadata(String uuid, String name, int duration, MediaType mediaType, Validity validity, String url, String bundleTag) {
+    private MediaMetadata(String uuid, String name, int duration, MediaType mediaType, Validity validity, String url, String content, String bundleTag) {
         this.uuid = uuid;
         this.name = name;
         this.duration = duration;
         this.mediaType = mediaType;
         this.validity = validity;
         this.url = url;
+        this.content = content;
         this.bundleTag = bundleTag;
     }
 
@@ -61,6 +66,8 @@ public class MediaMetadata {
         private String uuid;
 
         private String url;
+
+        private String content;
 
         private String bundleTag;
 
@@ -97,6 +104,11 @@ public class MediaMetadata {
             return this;
         }
 
+        public Builder content(String content) {
+            this.content = content;
+            return this;
+        }
+
         public Builder bundleTag(String bundleTag) {
             this.bundleTag = bundleTag;
             return this;
@@ -106,7 +118,7 @@ public class MediaMetadata {
             if (uuid == null) {
                 uuid = UUID.randomUUID().toString();
             }
-            return new MediaMetadata(uuid, name, duration, mediaType, validity, url, bundleTag);
+            return new MediaMetadata(uuid, name, duration, mediaType, validity, url, content, bundleTag);
         }
     }
 
@@ -156,6 +168,14 @@ public class MediaMetadata {
 
     public void setUrl(String url) {
         this.url = url;
+    }
+
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
     }
 
     public String getBundleTag() {

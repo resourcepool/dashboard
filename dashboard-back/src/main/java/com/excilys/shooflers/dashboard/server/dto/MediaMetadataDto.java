@@ -16,15 +16,20 @@ public class MediaMetadataDto {
 
     private ValidityDto validity;
 
+    // Used only for WEB type
     private String url;
+    
+    // Used only for NEWS type
+    private String content;
 
     private String bundleTag;
 
     public MediaMetadataDto() { }
 
-    private MediaMetadataDto(String uuid, String name, int duration, MediaType mediaType, ValidityDto validity, String url, String bundleTag) {
+    private MediaMetadataDto(String uuid, String name, int duration, MediaType mediaType, ValidityDto validity, String url, String content, String bundleTag) {
         this.uuid = uuid;
         this.name = name;
+        this.content = content;
         this.duration = duration;
         this.mediaType = mediaType.toString();
         this.validity = validity;
@@ -45,6 +50,8 @@ public class MediaMetadataDto {
         private String uuid;
 
         private String url;
+        
+        private String content;
 
         private String bundleTag;
 
@@ -78,13 +85,19 @@ public class MediaMetadataDto {
             return this;
         }
 
+
+        public Builder content(String content) {
+            this.content = content;
+            return this;
+        }
+
         public Builder bundleTag(String bundleTag) {
             this.bundleTag = bundleTag;
             return this;
         }
 
         public MediaMetadataDto build() {
-            return new MediaMetadataDto(uuid, name, duration, mediaType, validityDto, url, bundleTag);
+            return new MediaMetadataDto(uuid, name, duration, mediaType, validityDto, url, content, bundleTag);
         }
     }
 
@@ -134,6 +147,14 @@ public class MediaMetadataDto {
 
     public void setUrl(String url) {
         this.url = url;
+    }
+
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
     }
 
     public String getBundleTag() {

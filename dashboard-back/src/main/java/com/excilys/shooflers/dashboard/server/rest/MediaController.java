@@ -34,7 +34,8 @@ public class MediaController {
     public static final String MESSAGE_NEED_FILE = "Need file with this type of media \"%s\".";
     public static final String MESSAGE_NEED_FILE_WHEN_NO_MEDIA_TYPE = "Need file when you don't specify a mediatype.";
     public static final String MESSAGE_NOT_CORRESPONDING_MEDIA_TYPE = "Provided MediaType differnete of Provided mediatype in the file";
-    public static final String MESSAGE_NEED_URL = "This mediatype %s need an url.";
+    public static final String MESSAGE_NEED_URL = "This mediatype %s requires an url.";
+    public static final String MESSAGE_NEED_CONTENT = "This mediatype %s requires a text content attribute.";
     public static final String MESSAGE_MALFORMED_URL = "The url provided is malformed";
 
     @Autowired
