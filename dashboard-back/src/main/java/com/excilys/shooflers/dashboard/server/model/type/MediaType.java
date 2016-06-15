@@ -60,7 +60,7 @@ public enum MediaType {
      * @return the target converter or null if no conversion is needed
      */
     public ContentConverter getConverter(String mimeType) {
-        return converters.stream().filter(contentConverter -> contentConverter.supports(mimeType)).findFirst().get();
+        return converters.stream().filter(contentConverter -> contentConverter.supports(mimeType)).findFirst().orElseGet(() -> null);
     }
 
     /**

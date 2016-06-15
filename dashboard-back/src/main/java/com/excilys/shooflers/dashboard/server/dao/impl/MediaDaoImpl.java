@@ -104,8 +104,7 @@ public class MediaDaoImpl implements MediaDao {
 
         // TODO implement some kind of rollback if second content write fails
         if (content != null) {
-            String ext = mediaType.getExtension(content.getContentType());
-            dest = getResourceFile(mediaMetadata.getUuid(), ext);
+            dest = getResourceFile(mediaMetadata.getUrl());
             try {
                 dest.createNewFile();
                 FileCopyUtils.copy(content.getInputStream(), new FileOutputStream(dest));
@@ -174,6 +173,26 @@ public class MediaDaoImpl implements MediaDao {
         return mediaDatabasePath.resolve(bundleTag + "/" + dataFileName).toFile();
     }
 
+    /**
+     * Retrieve Resource file from URL.
+     *
+     * @param url the resource url
+     * @return the resource file
+     */
+    private File getResourceFile(String url) {
+        String filename = url.substring(url.lastIndexOf("/") + 1);
+        String ext = url.substring(filename.lastIndexOf("."));
+        String uuid = filename.substring(0, filename.lastIndexOf("."));
+        return getResourceFile(uuid, ext);
+    }
+
+    /**
+     * Retrieve Resource file from content uuid and extension.
+     *
+     * @param uuid the content uuid
+     * @param ext  the extension
+     * @return the resource file
+     */
     private File getResourceFile(String uuid, String ext) {
         String dataFileName = uuid + (ext.startsWith(".") ? ext : "." + ext);
         return mediaResourcesPath.resolve(dataFileName).toFile();
