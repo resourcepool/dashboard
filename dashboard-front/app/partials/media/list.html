@@ -26,9 +26,10 @@
       <tr ng-repeat="media in medias">
       	<td >
       		<a href="{{ media.url }}">
-      			<span ng-if="media.mediaType == 'image'" class="glyphicon glyphicon-picture"></span>
-      			<span ng-if="media.mediaType == 'web'" class="glyphicon glyphicon-link"></span>
-      			<span ng-if="media.mediaType == 'video'" class="glyphicon glyphicon-film"></span>
+      			<span ng-if="media.mediaType == 'IMAGE'" class="glyphicon glyphicon-picture"></span>
+      			<span ng-if="media.mediaType == 'WEB'" class="glyphicon glyphicon-link"></span>
+      			<span ng-if="media.mediaType == 'VIDEO'" class="glyphicon glyphicon-film"></span>
+            <span ng-if="media.mediaType == 'NEWS'" class="glyphicon glyphicon-pencil"></span>
       			{{ media.name }}
       		</a>
       	</td>

@@ -11,7 +11,6 @@ angular
     this.getById = getById;
     this.removeById = removeById;
     this.saveMedia = saveMedia;
-    this.saveWebMedia = saveWebMedia;
 
 
     function getAllByBundle(bundleTag) {
@@ -39,19 +38,6 @@ angular
         }, function (error) {
           return error;
         })
-    }
-
-    function saveWebMedia(media) {
-      return $http.post(API.BASE_URL + "/media", media, {
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json'
-        }
-      }).then(function (response) {
-        return response;
-      }, function (error) {
-        return error;
-      });
     }
 
     function saveMedia(media, file, update) {
