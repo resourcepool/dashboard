@@ -1,5 +1,6 @@
-package com.excilys.shooflers.dashboard.server.dao;
+package com.excilys.shooflers.dashboard.server.dao.impl;
 
+import com.excilys.shooflers.dashboard.server.dao.MediaDao;
 import com.excilys.shooflers.dashboard.server.dao.util.MediaReverseIndex;
 import com.excilys.shooflers.dashboard.server.dao.util.YamlUtils;
 import com.excilys.shooflers.dashboard.server.exception.ResourceIoException;
@@ -13,6 +14,7 @@ import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Component;
 import org.springframework.util.FileCopyUtils;
 
@@ -28,6 +30,7 @@ import java.util.List;
 import java.util.Set;
 
 @Component
+@DependsOn("daoInitializer")
 public class MediaDaoImpl implements MediaDao {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MediaDaoImpl.class);

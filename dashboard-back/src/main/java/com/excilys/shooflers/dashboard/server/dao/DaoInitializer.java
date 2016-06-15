@@ -16,9 +16,9 @@ import java.nio.file.Paths;
  * @author Loïc Ortola on 07/06/2016.
  */
 @Component
-public class ADaoInitializer {
+public class DaoInitializer {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(ADaoInitializer.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(DaoInitializer.class);
 
     @Autowired
     private DashboardProperties props;

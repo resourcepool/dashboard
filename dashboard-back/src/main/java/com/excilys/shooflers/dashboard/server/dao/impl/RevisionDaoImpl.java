@@ -1,11 +1,13 @@
-package com.excilys.shooflers.dashboard.server.dao;
+package com.excilys.shooflers.dashboard.server.dao.impl;
 
+import com.excilys.shooflers.dashboard.server.dao.RevisionDao;
 import com.excilys.shooflers.dashboard.server.dao.util.YamlUtils;
 import com.excilys.shooflers.dashboard.server.model.Revision;
 import com.excilys.shooflers.dashboard.server.property.DashboardProperties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
@@ -19,6 +21,7 @@ import java.util.List;
  * @author Loïc Ortola on 07/06/2016.
  */
 @Component
+@DependsOn("daoInitializer")
 public class RevisionDaoImpl implements RevisionDao {
 
     private static final String REVISION_LATEST_FILE = "latest";
