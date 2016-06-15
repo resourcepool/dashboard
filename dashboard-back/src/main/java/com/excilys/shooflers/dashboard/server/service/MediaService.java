@@ -4,6 +4,7 @@ package com.excilys.shooflers.dashboard.server.service;
 import com.excilys.shooflers.dashboard.server.model.Media;
 import com.excilys.shooflers.dashboard.server.model.metadata.MediaMetadata;
 
+import java.io.File;
 import java.util.List;
 
 public interface MediaService {
@@ -30,6 +31,14 @@ public interface MediaService {
      * @param uuid tag to delete
      */
     void delete(String uuid);
+
+    /**
+     * Get a media content file.
+     *
+     * @param filename the content filename
+     * @return the media content file or null if none
+     */
+    File getContent(String filename);
 
     /**
      * Get a media by tag.

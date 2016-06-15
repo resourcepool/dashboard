@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
@@ -123,6 +124,11 @@ public class MediaServiceImpl implements MediaService {
         mediaDao.delete(uuid);
         // Create a new revision
         revisionService.add(Revision.Type.MEDIA, Revision.Action.DELETE, uuid);
+    }
+
+    @Override
+    public File getContent(String filename) {
+        return mediaDao.getContent(filename);
     }
 
     /**

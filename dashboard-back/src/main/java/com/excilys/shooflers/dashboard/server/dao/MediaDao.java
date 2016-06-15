@@ -23,10 +23,11 @@ public interface MediaDao {
 
     /**
      * Retrieve content of a media from DB.
-     * @param uuid the media tag
+     *
+     * @param filename the resource filename
      * @return the retrieved media content or null if no match
      */
-    File getContent(String uuid);
+    File getContent(String filename);
 
     /**
      * Retrieve all medias from DB.
@@ -37,6 +38,7 @@ public interface MediaDao {
 
     /**
      * Retrieve all medias matching a bundle from DB.
+     *
      * @param bundleUuid the bundle Uuid
      * @return null if bundle doesn't exist, empty if bundle is empty, and entries if non-empty
      */
