@@ -2,11 +2,7 @@ package com.excilys.shooflers.dashboard.server.dao.util;
 
 import com.excilys.shooflers.dashboard.server.model.metadata.MediaMetadata;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * @author Loïc Ortola on 12/06/2016.
@@ -35,11 +31,13 @@ public class MediaReverseIndex {
      * @return tag
      */
     public String getBundleTag(String uuid) {
-        Map.Entry<String, Set<String>> entry = reverseIndex.entrySet().stream()
+        Optional<Map.Entry<String, Set<String>>> optional = reverseIndex
+                .entrySet()
+                .stream()
                 .filter(e -> e.getValue().contains(uuid))
-                .findFirst()
-                .orElseGet(null);
-        return entry == null ? null : entry.getKey();
+                .findFirst();
+
+        return  optional.isPresent() ? optional.get().getKey() : null;
     }
 
     public void addEntry(String bundleTag, String uuid) {
