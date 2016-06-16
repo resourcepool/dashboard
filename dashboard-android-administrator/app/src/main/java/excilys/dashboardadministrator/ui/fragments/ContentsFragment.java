@@ -18,6 +18,8 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import excilys.dashboardadministrator.R;
 import excilys.dashboardadministrator.model.entities.ImageContent;
 import excilys.dashboardadministrator.model.entities.SlideShow;
@@ -51,11 +53,13 @@ public class ContentsFragment extends Fragment {
 
     private OnContentsFragmentInteractionListener mListener;
 
-    private RecyclerView mRecyclerView;
+    @BindView(R.id.contents_recycler_view)
+    RecyclerView mRecyclerView;
+
+    FloatingActionButton mAddFloatingActionButton;
+
     private RecyclerView.LayoutManager mLayoutManager;
     private ContentsAdapter mAdapter;
-
-    private FloatingActionButton mAddFloatingActionButton;
 
     private SlideShow mSlideShow;
 
@@ -82,6 +86,8 @@ public class ContentsFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_contents, container, false);
+        ButterKnife.bind(this, rootView);
+
         setUpAddFloatingActionButton();
         mDisplayables = new ArrayList<>();
         setUpRecyclerView(rootView);
@@ -100,7 +106,6 @@ public class ContentsFragment extends Fragment {
     }
 
     private void setUpRecyclerView(View rootView) {
-        mRecyclerView = (RecyclerView) rootView.findViewById(R.id.contents_recycler_view);
 
         // use a Grid layout manager
         mLayoutManager = new GridLayoutManager(getContext(), 2);

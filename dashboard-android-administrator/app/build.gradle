@@ -18,7 +18,7 @@ android {
         }
     }
 }
-
+apply plugin: 'android-apt'
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     testCompile 'junit:junit:4.12'
@@ -28,6 +28,10 @@ dependencies {
 
     /* For video caching*/
     compile 'com.danikula:videocache:2.3.4'
+
+    /*Butterknife*/
+    compile 'com.jakewharton:butterknife:8.0.1'
+    apt 'com.jakewharton:butterknife-compiler:8.0.1'
 
     // JSON formatter
     compile 'com.fasterxml.jackson.core:jackson-core:2.7.3'

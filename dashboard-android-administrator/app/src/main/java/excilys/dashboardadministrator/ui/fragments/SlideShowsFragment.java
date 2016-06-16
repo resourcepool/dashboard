@@ -14,6 +14,8 @@ import android.view.ViewGroup;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import excilys.dashboardadministrator.R;
 import excilys.dashboardadministrator.model.entities.SlideShow;
 import excilys.dashboardadministrator.rest.service.SlideShowService;
@@ -32,11 +34,13 @@ public class SlideShowsFragment extends Fragment {
 
     private OnSlideShowsFragmentInteractionListener mListener;
 
-    private RecyclerView mRecyclerView;
+    @BindView(R.id.slidewhows_recycler_view)
+    RecyclerView mRecyclerView;
+
+    FloatingActionButton mAddFloatingActionButton;
+
     private RecyclerView.LayoutManager mLayoutManager;
     private SlideShowsAdapter mAdapter;
-
-    private FloatingActionButton mAddFloatingActionButton;
 
     private MainActivity mMainActivity;
 
@@ -47,12 +51,13 @@ public class SlideShowsFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_slideshows, container, false);
+        ButterKnife.bind(this,rootView);
+
         mMainActivity = (MainActivity) getActivity();
         setUpAddFloatingActionButton();
         mSlideShows = new ArrayList<>();
         setUpRecyclerView(rootView);
         updateSlideShows();
-
         return rootView;
     }
 
@@ -77,7 +82,6 @@ public class SlideShowsFragment extends Fragment {
     }
 
     private void setUpRecyclerView(View rootView) {
-        mRecyclerView = (RecyclerView) rootView.findViewById(R.id.slidewhows_recycler_view);
 
         // use a linear layout manager
         mLayoutManager = new LinearLayoutManager(getActivity());
