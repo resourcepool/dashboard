@@ -1,7 +1,7 @@
 <div class="container">
   <div class="row">
     <div class="pull-left">
-      <h4 id="tables"><a href="#/home">Dashboard</a> > <a href="#/bundle/{{ bundle.uuid }}">{{ bundle.name }}</a>  > {{ nav }} </h4>
+      <h4 id="tables"><a href="#/home">{{ "APP" | translate }}</a> > <a href="#/bundle/{{ bundle.uuid }}">{{ bundle.name }}</a>  > {{ nav }} </h4>
     </div>
   </div>
   <div ng-if="error" class="alert alert-danger">{{ error }}</div>
@@ -18,60 +18,59 @@
             {{  media.name }}
           </legend>
 
-          <p ng-show="loading">Sending ... <img src="images/loader.gif"></p>
+          <p ng-show="loading">{{ "ACTIONS.SENDING" | translate }}<img src="images/loader.gif"></p>
 
           <div class="form-group">
-            <label for="name">Name</label>
-            <input name="name" id="name" required type="text" class="form-control" placeholder="Name" ng-model="media.name">
-            <div ng-show="form.$submitted && form.name.$error.required" class="alert alert-danger">The field must not be empty</div>
+            <label for="name">{{ "MEDIA.NAME" | translate }}</label>
+            <input name="name" id="name" required type="text" class="form-control" placeholder="{{ 'PLACEHOLDERS.MEDIA.NAME' | translate }}" ng-model="media.name">
+            <div ng-show="form.$submitted && form.name.$error.required" class="alert alert-danger">{{ "ERRORS.FIELDS.EMPTY" | translate }}</div>
           </div>
 
           <div class="form-group">
-            <label for="mediaType">Content Type</label>
+            <label for="mediaType">{{ "MEDIA.TYPE" | translate }}</label>
             <select id="mediaType" name="mediaType" class="form-control" required ng-model="media.mediaType">
-              <option value="">Select a Type</option>
-              <option value="IMAGE" ng-selected="media.mediaType === 'IMAGE'">Image</option>
-              <option value="VIDEO" ng-selected="media.mediaType === 'VIDEO'">Video</option>
-              <option value="WEB" ng-selected="media.mediaType === 'WEB'">Web</option>
-              <option value="NEWS" ng-selected="media.mediaType === 'NEWS'">News</option>
+              <option value="">{{ "PLACEHOLDERS.MEDIA.TYPE" | translate }}</option>
+              <option value="IMAGE" ng-selected="media.mediaType === 'IMAGE'">{{ "TYPE.IMAGE" | translate }}</option>
+              <option value="VIDEO" ng-selected="media.mediaType === 'VIDEO'">{{ "TYPE.VIDEO" | translate }}</option>
+              <option value="WEB" ng-selected="media.mediaType === 'WEB'">{{ "TYPE.WEB" | translate }}</option>
+              <option value="NEWS" ng-selected="media.mediaType === 'NEWS'">{{ "TYPE.NEWS" | translate }}</option>
             </select>
-            <div ng-show="form.$submitted && form.mediaType.$error.required" class="alert alert-danger">The field must not be empty</div>
+            <div ng-show="form.$submitted && form.mediaType.$error.required" class="alert alert-danger">{{ "ERRORS.FIELDS.EMPTY" | translate }}</div>
           </div>
 
           <div ng-show="media.mediaType == 'WEB'" class="form-group">
-            <label for="url">URL</label>
-            <input name="url" id="url" type="text" class="form-control" ng-required="media.mediaType === 'WEB'" placeholder="Page web url" ng-model="media.url">
-            <div ng-show="form.$submitted && form.url.$error.required" class="alert alert-danger">The field must not be empty</div>
+            <label for="url">{{ "MEDIA.URL" | translate }}</label>
+            <input name="url" id="url" type="text" class="form-control" ng-required="media.mediaType === 'WEB'" placeholder="{{ 'PLACEHOLDERS.MEDIA.URL' }}" ng-model="media.url">
+            <div ng-show="form.$submitted && form.url.$error.required" class="alert alert-danger">{{ "ERRORS.FIELDS.EMPTY" | translate }}</div>
           </div>
 
           <div ng-show="media.mediaType == 'NEWS'" class="form-group">
-            <label for="url">Content</label>
-            <input name="content" id="content" type="text" class="form-control" ng-required="media.mediaType === 'NEWS'" placeholder="News text content" ng-model="media.content">
-            <div ng-show="form.$submitted && form.url.$error.required" class="alert alert-danger">The field must not be empty</div>
+            <label for="content">{{ 'MEDIA.CONTENT' | translate }}</label>
+            <input name="content" id="content" type="text" class="form-control" ng-required="media.mediaType === 'NEWS'" placeholder="{{ 'PLACEHOLDERS.MEDIA.NEWS' }}" ng-model="media.content">
+            <div ng-show="form.$submitted && form.url.$error.required" class="alert alert-danger">{{ "ERRORS.FIELDS.EMPTY" | translate }}</div>
           </div>
 
           <div class="form-group">
-            <label for="duration">Duration (seconds)</label>
-            <input name="duration" id="duration" type="text" class="form-control" placeholder="Duration (seconds)" ng-model="media.duration">
+            <label for="duration">{{ 'MEDIA.DURATION' | translate }}</label>
+            <input name="duration" id="duration" type="text" class="form-control" placeholder="{{ 'PLACEHOLDERS.MEDIA.DURATION' | translate }}" ng-model="media.duration">
           </div>
 
           <div class="form-group">
-            <label for="mediaValidityStart">Start Datetime</label>
-            <input id="mediaValidityStart" name="mediaStartDateTime" ng-pattern="regexDate" type="text" date-picker="start" class="datetimepicker form-control" placeholder="media start datetime" ng-model="media.validity.start">
+            <label for="mediaValidityStart">{{ "VALIDITY.START" }}</label>
+            <input id="mediaValidityStart" name="mediaStartDateTime" ng-pattern="regexDate" type="text" date-picker="start" class="datetimepicker form-control" placeholder="{{ 'PLACEHOLDERS.VALIDITY.START' | translate }}" ng-model="media.validity.start">
           </div>
           <div class="form-group">
-            <label for="mediaValidityEnd">End Datetime</label>
-            <input id="mediaValidityEnd" name="bundleValidityEnd" type="text" class="datetimepicker form-control" placeholder="media end datetime" date-picker="end" ng-model="media.validity.end">
+            <label for="mediaValidityEnd">{{ "VALIDITY.END" }}</label>
+            <input id="mediaValidityEnd" name="bundleValidityEnd" type="text" class="datetimepicker form-control" placeholder="{{ 'PLACEHOLDERS.VALIDITY.END' | translate }}" date-picker="end" ng-model="media.validity.end">
           </div>
-
           <div class="box" ng-show="media.mediaType != 'WEB' && media.mediaType != 'NEWS'">
             <input name="file "type="file" required valid-file="file" file-model="file" />
-            <div ng-show="form.$submitted && form.file.$error.required" class="alert alert-danger">The field must not be empty</div>
+            <div ng-show="form.$submitted && form.file.$error.required" class="alert alert-danger">{{ "ERRORS.FIELDS.EMPTY" | translate }}</div>
           </div>
         </fieldset>
         <div class="actions pull-right">
-          <input type="submit" class="btn btn-primary" value="Send">
-          or <a href="#/bundle/{{bundle.tag}}/media" class="btn btn-default"  ng-click="reset()">Cancel</a>
+          <input type="submit" class="btn btn-primary" value="{{ 'ACTIONS.SEND' | translate }}">
+          or <a href="#/bundle/{{bundle.tag}}/media" class="btn btn-default"  ng-click="reset()">{{ "ACTIONS.CANCEL" | translate }}</a>
         </div>
       </form>
     </div>

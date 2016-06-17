@@ -10,6 +10,7 @@ angular
     this.validateDates = validateDates;
     this.formatDates = formatDates;
 
+
     function validateDates(start, end, $scope) {
       if (start && end) {
         var bool = moment(start, DATE.SERVER_FORMAT).isBefore(end, DATE.SERVER_FORMAT);
@@ -22,7 +23,9 @@ angular
     }
 
     function formatDates(entities) {
-      for (var entity in entities) {
+      console.log(entities)
+      for (var entity of entities) {
+
         if (!entity.validity) {
           continue;
         }
@@ -35,7 +38,6 @@ angular
       }
       return entities;
     }
-
   }]);
 
 

@@ -4,23 +4,22 @@
     <div class="col-xs-8 col-xs-offset-1 box">
       <form class="form-horizontal" name="form" ng-submit="login(form.$valid)" novalidate>
         <fieldset>
-          <legend>Login</legend>
-          <p ng-show="loading">Sending ... <img src="images/loader.gif"></p>
+          <legend>{{ "ACTIONS.LOGIN" | translate }}</legend>
+          <p ng-show="loading">{{ "ACTIONS.SENDING" | translate }}<img src="images/loader.gif"></p>
           <div class="form-group">
-            <label for="username">Username</label>
+            <label for="username">{{ "USER.USERNAME" | translate }}</label>
             <input id="username" type='text' name="username" required class="form-control" ng-model="username">
-            <div ng-show="form.$submitted && form.username.$error.required" class="alert alert-danger">The field must not be empty</div>
+            <div ng-show="form.$submitted && form.username.$error.required" class="alert alert-danger">{{ "ERRORS.FIELDS.EMPTY" | translate }}</div>
           </div>
 
           <div class="form-group">
-            <label for="password">Password</label>
+            <label for="password">{{ "USER.PASSWORD" | translate }}</label>
             <input id="password" type="password" name="password" required  class="form-control" ng-model="password">
-            <div ng-show="form.$submitted && form.password.$error.required" class="alert alert-danger">The field must not be empty</div>
+            <div ng-show="form.$submitted && form.password.$error.required" class="alert alert-danger">{{ "ERRORS.FIELDS.EMPTY" | translate }}</div>
           </div>
 
           <div class="actions pull-right">
-            <button type="reset" class="btn btn-default">Reset</button>
-            <input type="submit" value="Login" class="btn btn-primary" />
+            <input type="submit" value="{{ 'ACTIONS.LOGIN' | translate }}" class="btn btn-primary" />
           </div>
         </fieldset>
       </form>

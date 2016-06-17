@@ -6,8 +6,8 @@
 angular
   .module('dashboardFrontApp')
   .controller('HomeController',
-    [ '$scope', '$cookieStore','DATE', 'MSG', 'bundleService', 'firewallService', 'responseService',
-      function ($scope, $cookieStore, DATE, MSG, bundleService, firewallService, responseService) {
+    [ '$scope', '$cookieStore','DATE', 'MSG', 'bundleService', 'firewallService', 'responseService', 'dateService',
+      function ($scope, $cookieStore, DATE, MSG, bundleService, firewallService, responseService, dateService) {
 
         $scope.bundles = {};
 
@@ -17,7 +17,7 @@ angular
           bundleService.getAll().then(function(response) {
             console.log(response);
             if (responseService.isResponseOK($scope, response)) {
-            	$scope.bundles = response.data;
+            	$scope.bundles = dateService.formatDates(response.data);
             }
           }, function(error) {
             $scope.error = MSG.ERR.GET_MEDIAS;
