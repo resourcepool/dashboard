@@ -21,7 +21,7 @@ import org.springframework.test.context.web.WebAppConfiguration;
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(DashboardApplication.class)
 @WebAppConfiguration
-public class MediaControllerTest extends BaseControllerTest {
+public abstract class MediaControllerTest extends BaseControllerTest {
 
     // ============================================================
     //	Attributes

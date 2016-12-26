@@ -1,16 +1,11 @@
 package com.excilys.shooflers.dashboard.server.mediacontroller.delete;
 
-import com.excilys.shooflers.dashboard.server.DashboardApplication;
 import com.excilys.shooflers.dashboard.server.dto.MediaMetadataDto;
 import com.excilys.shooflers.dashboard.server.mediacontroller.MediaControllerTest;
 import com.excilys.shooflers.dashboard.server.model.Media;
 import com.excilys.shooflers.dashboard.server.model.Revision;
 import org.hamcrest.collection.IsCollectionWithSize;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.boot.test.SpringApplicationConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.web.WebAppConfiguration;
 
 import java.util.List;
 import java.util.UUID;
@@ -22,9 +17,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 /**
  * @author Florian Castelain
  */
-@RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(DashboardApplication.class)
-@WebAppConfiguration
 public class DeleteTest extends MediaControllerTest {
 
     // ============================================================

@@ -1,6 +1,5 @@
 package com.excilys.shooflers.dashboard.server.mediacontroller.create;
 
-import com.excilys.shooflers.dashboard.server.DashboardApplication;
 import com.excilys.shooflers.dashboard.server.dao.MediaDao;
 import com.excilys.shooflers.dashboard.server.dto.BundleMetadataDto;
 import com.excilys.shooflers.dashboard.server.dto.MediaMetadataDto;
@@ -11,11 +10,7 @@ import com.excilys.shooflers.dashboard.server.model.type.MediaType;
 import com.excilys.shooflers.dashboard.server.rest.MediaController;
 import org.hamcrest.collection.IsCollectionWithSize;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.mock.web.MockMultipartFile;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MvcResult;
 
 import java.io.File;
@@ -31,9 +26,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 /**
  * @author Florian Castelain
  */
-@RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(DashboardApplication.class)
-@WebAppConfiguration
 public class CreateTest extends MediaControllerTest {
 
     // ============================================================

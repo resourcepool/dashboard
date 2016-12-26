@@ -16,7 +16,7 @@ import org.springframework.test.context.web.WebAppConfiguration;
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(DashboardApplication.class)
 @WebAppConfiguration
-public class RevisionController extends BaseControllerTest {
+public abstract class RevisionController extends BaseControllerTest {
 
 
     // ============================================================

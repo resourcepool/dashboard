@@ -1,6 +1,5 @@
 package com.excilys.shooflers.dashboard.server.bundlecontroller.create;
 
-import com.excilys.shooflers.dashboard.server.DashboardApplication;
 import com.excilys.shooflers.dashboard.server.bundlecontroller.BundleControllerTest;
 import com.excilys.shooflers.dashboard.server.dao.BundleDao;
 import com.excilys.shooflers.dashboard.server.dto.BundleMetadataDto;
@@ -8,11 +7,7 @@ import com.excilys.shooflers.dashboard.server.model.Revision;
 import org.exparity.hamcrest.date.LocalDateTimeMatchers;
 import org.hamcrest.collection.IsCollectionWithSize;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MvcResult;
 
 import java.io.File;
@@ -23,16 +18,11 @@ import java.util.UUID;
 
 import static org.hamcrest.CoreMatchers.allOf;
 import static org.junit.Assert.*;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
  * Created by Camille Vrod on 15/06/16.
  */
-@RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(DashboardApplication.class)
-@WebAppConfiguration
 public class CreateTest extends BundleControllerTest {
 
     @Test

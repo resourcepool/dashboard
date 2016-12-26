@@ -17,7 +17,7 @@ import org.springframework.test.context.web.WebAppConfiguration;
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(DashboardApplication.class)
 @WebAppConfiguration
-public class BundleControllerTest extends BaseControllerTest{
+public abstract class BundleControllerTest extends BaseControllerTest {
     
     @Autowired
     protected BundleService bundleService;
