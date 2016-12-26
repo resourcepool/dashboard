@@ -1,7 +1,7 @@
 package com.excilys.shooflers.dashboard.server.mediacontroller.delete;
 
 import com.excilys.shooflers.dashboard.server.dto.MediaMetadataDto;
-import com.excilys.shooflers.dashboard.server.mediacontroller.MediaControllerTest;
+import com.excilys.shooflers.dashboard.server.mediacontroller.AbstractMediaControllerTest;
 import com.excilys.shooflers.dashboard.server.model.Media;
 import com.excilys.shooflers.dashboard.server.model.Revision;
 import org.hamcrest.collection.IsCollectionWithSize;
@@ -17,7 +17,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 /**
  * @author Florian Castelain
  */
-public class DeleteTest extends MediaControllerTest {
+public class MediaControllerDeleteTest extends AbstractMediaControllerTest {
 
     // ============================================================
     //	Tests

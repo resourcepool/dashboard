@@ -31,7 +31,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
  * @author Mickael
  */
 @SuppressWarnings("WeakerAccess")
-public abstract class BaseControllerTest {
+public abstract class AbstractControllerTest {
 
     //============================================================
     // Attributes

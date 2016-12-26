@@ -1,6 +1,6 @@
 package com.excilys.shooflers.dashboard.server.bundlecontroller.find;
 
-import com.excilys.shooflers.dashboard.server.bundlecontroller.BundleControllerTest;
+import com.excilys.shooflers.dashboard.server.bundlecontroller.AbstractBundleControllerTest;
 import com.excilys.shooflers.dashboard.server.dao.BundleDao;
 import com.excilys.shooflers.dashboard.server.dto.BundleMetadataDto;
 import com.excilys.shooflers.dashboard.server.model.metadata.BundleMetadata;
@@ -19,7 +19,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 /**
  * Created by Camille Vrod on 15/06/16.
  */
-public class FindTest extends BundleControllerTest {
+public class BundleControllerFindTest extends AbstractBundleControllerTest {
 
     @Test
     @Ignore("Change not yet reported")

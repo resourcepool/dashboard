@@ -1,6 +1,6 @@
 package com.excilys.shooflers.dashboard.server.bundlecontroller.delete;
 
-import com.excilys.shooflers.dashboard.server.bundlecontroller.BundleControllerTest;
+import com.excilys.shooflers.dashboard.server.bundlecontroller.AbstractBundleControllerTest;
 import com.excilys.shooflers.dashboard.server.dto.BundleMetadataDto;
 import com.excilys.shooflers.dashboard.server.model.Revision;
 import com.excilys.shooflers.dashboard.server.model.metadata.BundleMetadata;
@@ -17,7 +17,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 /**
  * Created by Camille Vrod on 15/06/16.
  */
-public class DeleteTest extends BundleControllerTest {
+public class BundleControllerDeleteTest extends AbstractBundleControllerTest {
 
     @Test
     @Ignore("NullPointerException on mockMvc.perform")

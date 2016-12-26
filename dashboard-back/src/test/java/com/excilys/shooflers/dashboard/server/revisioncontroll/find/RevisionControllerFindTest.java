@@ -3,7 +3,7 @@ package com.excilys.shooflers.dashboard.server.revisioncontroll.find;
 import com.excilys.shooflers.dashboard.server.dto.BundleMetadataDto;
 import com.excilys.shooflers.dashboard.server.dto.MediaMetadataDto;
 import com.excilys.shooflers.dashboard.server.model.metadata.BundleMetadata;
-import com.excilys.shooflers.dashboard.server.revisioncontroll.RevisionController;
+import com.excilys.shooflers.dashboard.server.revisioncontroll.AbstractRevisionControllerTest;
 import org.junit.Test;
 import org.springframework.test.web.servlet.MvcResult;
 
@@ -13,7 +13,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 /**
  * Created by Florian Castelain on 17/06/16.
  */
-public class FindTest extends RevisionController {
+public class RevisionControllerFindTest extends AbstractRevisionControllerTest {
 
     // ============================================================
     //	Tests

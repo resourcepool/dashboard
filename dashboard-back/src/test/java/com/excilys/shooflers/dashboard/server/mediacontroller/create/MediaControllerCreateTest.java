@@ -3,7 +3,7 @@ package com.excilys.shooflers.dashboard.server.mediacontroller.create;
 import com.excilys.shooflers.dashboard.server.dao.MediaDao;
 import com.excilys.shooflers.dashboard.server.dto.BundleMetadataDto;
 import com.excilys.shooflers.dashboard.server.dto.MediaMetadataDto;
-import com.excilys.shooflers.dashboard.server.mediacontroller.MediaControllerTest;
+import com.excilys.shooflers.dashboard.server.mediacontroller.AbstractMediaControllerTest;
 import com.excilys.shooflers.dashboard.server.model.Revision;
 import com.excilys.shooflers.dashboard.server.model.metadata.BundleMetadata;
 import com.excilys.shooflers.dashboard.server.model.type.MediaType;
@@ -26,7 +26,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 /**
  * @author Florian Castelain
  */
-public class CreateTest extends MediaControllerTest {
+public class MediaControllerCreateTest extends AbstractMediaControllerTest {
 
     // ============================================================
     //	Tests

@@ -1,6 +1,6 @@
 package com.excilys.shooflers.dashboard.server.bundlecontroller.create;
 
-import com.excilys.shooflers.dashboard.server.bundlecontroller.BundleControllerTest;
+import com.excilys.shooflers.dashboard.server.bundlecontroller.AbstractBundleControllerTest;
 import com.excilys.shooflers.dashboard.server.dao.BundleDao;
 import com.excilys.shooflers.dashboard.server.dto.BundleMetadataDto;
 import com.excilys.shooflers.dashboard.server.model.Revision;
@@ -23,7 +23,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 /**
  * Created by Camille Vrod on 15/06/16.
  */
-public class CreateTest extends BundleControllerTest {
+public class BundleControllerCreateTest extends AbstractBundleControllerTest {
 
     @Test
     public void bundleCreateEmptyBody1() throws Exception {

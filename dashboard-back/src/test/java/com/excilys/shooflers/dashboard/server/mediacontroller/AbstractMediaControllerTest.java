@@ -1,6 +1,6 @@
 package com.excilys.shooflers.dashboard.server.mediacontroller;
 
-import com.excilys.shooflers.dashboard.server.BaseControllerTest;
+import com.excilys.shooflers.dashboard.server.AbstractControllerTest;
 import com.excilys.shooflers.dashboard.server.DashboardApplication;
 import com.excilys.shooflers.dashboard.server.dto.BundleMetadataDto;
 import com.excilys.shooflers.dashboard.server.dto.mapper.BundleDtoMapper;
@@ -21,7 +21,7 @@ import org.springframework.test.context.web.WebAppConfiguration;
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(DashboardApplication.class)
 @WebAppConfiguration
-public abstract class MediaControllerTest extends BaseControllerTest {
+public abstract class AbstractMediaControllerTest extends AbstractControllerTest {
 
     // ============================================================
     //	Attributes

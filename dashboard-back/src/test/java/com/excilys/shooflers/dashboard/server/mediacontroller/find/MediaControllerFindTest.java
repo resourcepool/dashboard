@@ -1,7 +1,7 @@
 package com.excilys.shooflers.dashboard.server.mediacontroller.find;
 
 import com.excilys.shooflers.dashboard.server.dto.BundleMetadataDto;
-import com.excilys.shooflers.dashboard.server.mediacontroller.MediaControllerTest;
+import com.excilys.shooflers.dashboard.server.mediacontroller.AbstractMediaControllerTest;
 import com.excilys.shooflers.dashboard.server.model.Media;
 import com.excilys.shooflers.dashboard.server.model.metadata.BundleMetadata;
 import com.excilys.shooflers.dashboard.server.model.metadata.MediaMetadata;
@@ -15,7 +15,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 /**
  * @author Florian Castelain
  */
-public class FindTest extends MediaControllerTest {
+public class MediaControllerFindTest extends AbstractMediaControllerTest {
 
     // ============================================================
     //	Tests
