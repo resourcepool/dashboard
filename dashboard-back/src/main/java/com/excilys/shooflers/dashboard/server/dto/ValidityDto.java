@@ -29,4 +29,16 @@ public class ValidityDto {
     public void setEnd(String end) {
         this.end = end;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof ValidityDto)) return false;
+
+        ValidityDto that = (ValidityDto) o;
+
+        if (start != null ? !start.equals(that.start) : that.start != null) return false;
+        return end != null ? end.equals(that.end) : that.end == null;
+
+    }
 }

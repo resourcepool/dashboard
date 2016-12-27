@@ -5,12 +5,16 @@ import com.excilys.shooflers.dashboard.server.dao.BundleDao;
 import com.excilys.shooflers.dashboard.server.dto.BundleMetadataDto;
 import com.excilys.shooflers.dashboard.server.model.metadata.BundleMetadata;
 import org.apache.commons.io.FileUtils;
-import org.junit.Ignore;
 import org.junit.Test;
+import org.springframework.http.converter.HttpMessageConverter;
+import org.springframework.http.converter.xml.Jaxb2CollectionHttpMessageConverter;
 import org.springframework.test.web.servlet.MvcResult;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import static org.junit.Assert.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -21,20 +25,29 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  */
 public class BundleControllerFindTest extends AbstractBundleControllerTest {
 
-    @Test
-    @Ignore("Change not yet reported")
-    public void bundleAll() throws Exception {
-        mockMvc.perform(getAuthenticated("/bundle"))
-                .andExpect(status().isOk());
+    private HttpMessageConverter<List<BundleMetadataDto>> httpMessageConverter = new Jaxb2CollectionHttpMessageConverter<>();
 
-//        fromJson(result.getResponse().getContentAsString(), );
+    public static class BundleMetadataDtoList extends ArrayList<BundleMetadataDto> {
+
+    }
+
+    @Test
+    public void bundleAll() throws Exception {
+        MvcResult result = mockMvc.perform(getAuthenticated("/bundle"))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        List<BundleMetadataDto> list = fromJson(result.getResponse().getContentAsString(), BundleMetadataDtoList.class);
+        list.sort((o1, o2) -> o1.getUuid().compareTo(o2.getUuid()));
+        List<BundleMetadataDto> list2 = bundleService.getAll().stream().map(bundleMetadata -> bundleDtoMapper.toDto(bundleMetadata)).collect(Collectors.toList());
+        list2.sort((o1, o2) -> o1.getUuid().compareTo(o2.getUuid()));
+        assertEquals(list, list2);
     }
 
     /**
-     * The main goal is to check that an empty list doesn't generate an error
+     * The main goal is to check that an empty list doesn't generate an error.
      */
     @Test
-    @Ignore("Change not yet reported")
     public void bundleAllEmpty() throws Exception {
         File bundleFolder = new File(props.getBasePath() + "/" + BundleDao.ENTITY_NAME);
 
