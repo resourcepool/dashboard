@@ -5,7 +5,6 @@ import com.excilys.shooflers.dashboard.server.property.DashboardProperties;
 import com.excilys.shooflers.dashboard.server.security.interceptor.CorsInterceptor;
 import org.apache.commons.codec.binary.Base64;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,19 +17,18 @@ import org.springframework.web.context.WebApplicationContext;
 
 import java.net.URI;
 
-import static org.junit.Assert.fail;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
- * Test Resources without annotations.
+ * Test Resources without security annotations.
  *
  * @author Mickael
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(DashboardApplication.class)
 @WebAppConfiguration
-public class NoRequireTest {
+public class NoRequireSecurityTest {
 
     //============================================================
     // Consts
@@ -110,12 +108,10 @@ public class NoRequireTest {
     }
 
     @Test
-    @Ignore("Not implemented yet...")
     public void tokenAlwaysWorks() throws Exception {
-        mockMvc.perform(get(URI.create(URL_TO_TEST)).header(HEADER_AUTHORIZATION, "Token "))
+        mockMvc.perform(get(URI.create(URL_TO_TEST)).header(HEADER_AUTHORIZATION, "Token isdiufhysdif"))
                 .andExpect(status().isOk())
         ;
-        fail();
     }
 
     @Test
