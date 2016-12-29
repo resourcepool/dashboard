@@ -92,14 +92,24 @@ public class BundleMetadataDto {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof BundleMetadataDto)) return false;
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof BundleMetadataDto)) {
+            return false;
+        }
 
         BundleMetadataDto that = (BundleMetadataDto) o;
 
-        if (uuid != null ? !uuid.equals(that.uuid) : that.uuid != null) return false;
-        if (tag != null ? !tag.equals(that.tag) : that.tag != null) return false;
-        if (name != null ? !name.equals(that.name) : that.name != null) return false;
+        if (uuid != null ? !uuid.equals(that.uuid) : that.uuid != null) {
+            return false;
+        }
+        if (tag != null ? !tag.equals(that.tag) : that.tag != null) {
+            return false;
+        }
+        if (name != null ? !name.equals(that.name) : that.name != null) {
+            return false;
+        }
         return validity != null ? validity.equals(that.validity) : that.validity == null;
 
     }
