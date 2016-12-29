@@ -45,13 +45,12 @@ public class BundleControllerDeleteTest extends AbstractBundleControllerTest {
         BundleMetadata bundleMetadata = bundleService.getAll().get(bundleService.getAll().size() - 1);
         BundleMetadataDto bundleMetaDataDto = bundleDtoMapper.toDto(bundleMetadata);
 
-
         assertNotNull(bundleService.getByTag(bundleMetaDataDto.getTag()));
 
         mockMvc.perform(deleteAuthenticated("/bundle/" + bundleMetaDataDto.getUuid()))
                 .andExpect(status().isOk());
 
-        assertNotNull(bundleService.getByTag(bundleMetaDataDto.getTag()));
+        assertNull(bundleService.getByTag(bundleMetaDataDto.getTag()));
 
         assertEquals(previousSize - 1, bundleService.getAll().size());
         assertEquals(previousRevision + 1, revisionService.getLatest());
@@ -65,6 +64,9 @@ public class BundleControllerDeleteTest extends AbstractBundleControllerTest {
         assertEquals(revision.getType(), Revision.Type.BUNDLE);
         assertEquals(revision.getTarget(), bundleMetaDataDto.getUuid());
         assertEquals(revision.getResult(), null);
+
+        mockMvc.perform(deleteAuthenticated("/bundle/" + bundleMetaDataDto.getUuid()))
+                .andExpect(status().isNotFound());
     }
 
     @Test
