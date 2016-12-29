@@ -26,13 +26,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class BundleControllerCreateTest extends AbstractBundleControllerTest {
 
     @Test
-    public void bundleCreateEmptyBody1() throws Exception {
+    public void failedWithEmptyBody1() throws Exception {
         mockMvc.perform(postAuthenticated(("/bundle")))
                 .andExpect(status().isBadRequest());
     }
 
     @Test
-    public void bundleCreateBasicSuccess() throws Exception {
+    public void successWithBasic() throws Exception {
         final long previousRevision = revisionService.getLatest();
         final String name = "UnNom";
 
@@ -62,10 +62,11 @@ public class BundleControllerCreateTest extends AbstractBundleControllerTest {
         assertEquals(revision.getType(), Revision.Type.BUNDLE);
         assertEquals(revision.getTarget(), bundleMetadataDto.getUuid());
         assertEquals(revision.getResult(), null);
+        assertNotNull(bundleService.getByTag(bundleMetadataDto.getUuid()));
     }
 
     @Test
-    public void bundleCreateCompleteSuccess() throws Exception {
+    public void successWithComplete() throws Exception {
         final long previousRevision = revisionService.getLatest();
         final String name = "UnNom";
         final LocalDateTime startDateTime = LocalDateTime.now().minusMonths(3).minusDays(10);
@@ -88,10 +89,12 @@ public class BundleControllerCreateTest extends AbstractBundleControllerTest {
         assertTrue(file.isFile());
 
         assertEquals(previousRevision + 1, revisionService.getLatest());
+
+        assertNotNull(bundleService.getByTag(bundleMetadataDto.getUuid()));
     }
 
     @Test
-    public void bundleCreateFailedWithoutName() throws Exception {
+    public void failedWithoutName() throws Exception {
         mockMvc.perform(postAuthenticated(("/bundle"))
                 .content(toJson(new BundleMetadataDto.Builder().build()))
                 .contentType(MediaType.APPLICATION_JSON_UTF8))
@@ -100,7 +103,7 @@ public class BundleControllerCreateTest extends AbstractBundleControllerTest {
     }
 
     @Test
-    public void bundleCreateSuccessButCantSetUuid() throws Exception {
+    public void successButCantSetUuid() throws Exception {
         final String name = "Bouikbouik";
         final String chosenUuid = UUID.randomUUID().toString();
 
@@ -115,10 +118,12 @@ public class BundleControllerCreateTest extends AbstractBundleControllerTest {
         assertEquals(name, bundleMetadataDto.getName());
         assertNull(bundleMetadataDto.getValidity());
         assertNotEquals(chosenUuid, bundleMetadataDto.getUuid());
+
+        assertNotNull(bundleService.getByTag(bundleMetadataDto.getUuid()));
     }
 
     @Test
-    public void bundleCreateFailedStartAfterEnd() throws Exception {
+    public void failedStartAfterEnd() throws Exception {
         final String name = "Bouikbouik";
 
         mockMvc.perform(postAuthenticated(("/bundle"))
@@ -132,7 +137,7 @@ public class BundleControllerCreateTest extends AbstractBundleControllerTest {
     }
 
     @Test
-    public void bundleCreateSuccesWithValidityWithoutStartWithoutEnd() throws Exception {
+    public void successWithValidityWithoutStartWithoutEnd() throws Exception {
         final String name = "Bouikbouik";
 
         BundleMetadataDto bundleMetadataDto = new BundleMetadataDto.Builder()
@@ -150,10 +155,12 @@ public class BundleControllerCreateTest extends AbstractBundleControllerTest {
         BundleMetadataDto bundleMetadataDtoAfter = fromJson(result.getResponse().getContentAsString(), BundleMetadataDto.class);
         assertEquals(name, bundleMetadataDtoAfter.getName());
         assertNull(bundleMetadataDtoAfter.getValidity());
+
+        assertNotNull(bundleService.getByTag(bundleMetadataDto.getUuid()));
     }
 
     @Test
-    public void bundleCreateSuccesWithValidityWithStartWithoutEnd() throws Exception {
+    public void successWithValidityWithStartWithoutEnd() throws Exception {
         final String name = "Bouikbouik";
         final LocalDateTime startDateTime = LocalDateTime.now().plusDays(6);
 
@@ -174,10 +181,12 @@ public class BundleControllerCreateTest extends AbstractBundleControllerTest {
         assertNotNull(bundleMetadataDtoAfter.getValidity());
         assertNull(bundleMetadataDtoAfter.getValidity().getEnd());
         assertEquals(startDateTime, toLocalDateTime(bundleMetadataDtoAfter.getValidity().getStart()));
+
+        assertNotNull(bundleService.getByTag(bundleMetadataDto.getUuid()));
     }
 
     @Test
-    public void bundleCreateSuccesWithValidityWithoutStartWithEnd() throws Exception {
+    public void successWithValidityWithoutStartWithEnd() throws Exception {
         final String name = "Bouikbouik";
         final LocalDateTime endDateTime = LocalDateTime.now().plusDays(9);
 
@@ -197,10 +206,12 @@ public class BundleControllerCreateTest extends AbstractBundleControllerTest {
         assertNotNull(bundleMetadataDtoAfter.getValidity());
         assertThat(toLocalDateTime(bundleMetadataDtoAfter.getValidity().getStart()), allOf(LocalDateTimeMatchers.before(LocalDateTime.now().plus(Duration.ofSeconds(1))), LocalDateTimeMatchers.after(LocalDateTime.now().minus(Duration.ofSeconds(1)))));
         assertEquals(endDateTime, toLocalDateTime(bundleMetadataDtoAfter.getValidity().getEnd()));
+
+        assertNotNull(bundleService.getByTag(bundleMetadataDto.getUuid()));
     }
 
     @Test
-    public void bundleCreateFailedWithValidityWithoutStartWithEndAnteriorNow() throws Exception {
+    public void failedWithValidityWithoutStartWithEndAnteriorNow() throws Exception {
         final String name = "Bouikbouik";
 
         BundleMetadataDto bundleMetadataDto = new BundleMetadataDto.Builder()
@@ -215,8 +226,9 @@ public class BundleControllerCreateTest extends AbstractBundleControllerTest {
     }
 
     @Test
-    public void bundleCreateFailedWithWrongFormatStart() throws Exception {
+    public void failedWithWrongFormatStart() throws Exception {
         final String name = "Bouikbouik";
+        final long size = bundleService.getAll().size();
 
         BundleMetadataDto bundleMetadataDto = new BundleMetadataDto.Builder()
                 .name(name)
@@ -230,10 +242,12 @@ public class BundleControllerCreateTest extends AbstractBundleControllerTest {
                 .contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(status().isBadRequest())
                 .andReturn();
+
+        assertEquals(size, bundleService.getAll().size());
     }
 
     @Test
-    public void bundleCreateFailedWithWrongFormatEnd() throws Exception {
+    public void failedWithWrongFormatEnd() throws Exception {
         final String name = "Bouikbouik";
 
         BundleMetadataDto bundleMetadataDto = new BundleMetadataDto.Builder()
@@ -252,8 +266,8 @@ public class BundleControllerCreateTest extends AbstractBundleControllerTest {
 
 
     @Test
-    public void bundleCreateFailedIfUnknownProperty() throws Exception {
-        mockMvc.perform(postAuthenticated(("/bundle"))
+    public void failedIfUnknownProperty() throws Exception {
+        mockMvc.perform(postAuthenticated("/bundle")
                 .content("{unknown:null}")
                 .contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(status().isBadRequest())

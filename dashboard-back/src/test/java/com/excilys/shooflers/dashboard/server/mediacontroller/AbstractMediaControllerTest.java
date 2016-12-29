@@ -42,7 +42,7 @@ public abstract class AbstractMediaControllerTest extends AbstractControllerTest
     /**
      * GlobalBundle.
      */
-    protected static BundleMetadataDto globalBundleMetadataDto;
+    protected BundleMetadataDto globalBundleMetadataDto;
 
     // ============================================================
     //	Callback for Tests

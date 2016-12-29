@@ -120,7 +120,6 @@ public class MediaDaoImpl implements MediaDao {
 
     @Override
     public void deleteByBundle(String bundleTag) {
-
         if (bundleTag == null) {
             throw new ResourceNotFoundException();
         }

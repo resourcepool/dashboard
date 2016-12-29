@@ -103,6 +103,12 @@ public class BundleController {
      */
     @RequestMapping(value = "{uuid}", method = RequestMethod.DELETE)
     public void delete(@PathVariable("uuid") String uuid) {
-        bundleService.delete(uuid);
+        BundleMetadata result = bundleService.getByTag(uuid);
+        if (result == null) {
+            throw new ResourceNotFoundException("Bound not found");
+        } else {
+            bundleService.delete(uuid);
+        }
+
     }
 }

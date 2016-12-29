@@ -33,14 +33,14 @@ public class MediaControllerCreateTest extends AbstractMediaControllerTest {
     // ============================================================
 
     @Test
-    public void mediaCreateFailedEmptyBody1() throws Exception {
+    public void failedEmptyBody1() throws Exception {
         mockMvc.perform(fileUploadAuthenticated("/media"))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().string(""));
     }
 
     @Test
-    public void mediaCreateFailedOnlyName() throws Exception {
+    public void failedOnlyName() throws Exception {
         final String name = "UnNom";
 
         mockMvc.perform(fileUploadAuthenticated("/media")
@@ -49,7 +49,7 @@ public class MediaControllerCreateTest extends AbstractMediaControllerTest {
     }
 
     @Test
-    public void mediaCreateFailedWithoutUuidBundle() throws Exception {
+    public void failedWithoutUuidBundle() throws Exception {
         final String name = "Purinsessu Keni";
 
         mockMvc.perform(fileUploadAuthenticated("/media")
@@ -60,7 +60,7 @@ public class MediaControllerCreateTest extends AbstractMediaControllerTest {
     }
 
     @Test
-    public void mediaImageCreateFailedWithUnvalidUuidBundle() throws Exception {
+    public void failedWithUnvalidUuidBundle() throws Exception {
         final String name = "UnNom";
 
         mockMvc.perform(fileUploadAuthenticated("/media")
@@ -69,7 +69,7 @@ public class MediaControllerCreateTest extends AbstractMediaControllerTest {
     }
 
     @Test
-    public void mediaCreateFailedWithUnvalidMediaTypeWithoutFile() throws Exception {
+    public void failedWithUnvalidMediaTypeWithoutFile() throws Exception {
         final String name = "UnNom";
         final MediaMetadataDto mediaMetadataDto = new MediaMetadataDto.Builder().mediaType(MediaType.WEB).name(name).bundleTag(globalBundleMetadataDto.getUuid()).build();
         mediaMetadataDto.setMediaType("mediatype");
@@ -80,7 +80,7 @@ public class MediaControllerCreateTest extends AbstractMediaControllerTest {
     }
 
     @Test
-    public void mediaWebCreateSuccess() throws Exception {
+    public void successMediaWeb() throws Exception {
         final long previousRevision = revisionService.getLatest();
         final String name = "Killua Zoldik";
         final String url = "http://www.google.fr";
@@ -124,7 +124,7 @@ public class MediaControllerCreateTest extends AbstractMediaControllerTest {
 
 
     @Test
-    public void mediaImageCreateFailedWithoutFile() throws Exception {
+    public void failedMediaImageWithoutFile() throws Exception {
         final String name = "Gon Freecss";
         final com.excilys.shooflers.dashboard.server.model.type.MediaType mediaType = com.excilys.shooflers.dashboard.server.model.type.MediaType.IMAGE;
 
@@ -139,7 +139,7 @@ public class MediaControllerCreateTest extends AbstractMediaControllerTest {
     }
 
     @Test
-    public void mediaImageCreateFailedWithWrongExtension() throws Exception {
+    public void failedMediaImageWithWrongExtension() throws Exception {
         final String bundleName = "Bundle";
         final BundleMetadata bundleEntity = new BundleMetadata.Builder().name(bundleName).build();
         final BundleMetadataDto bundleMetadataDto = bundleDtoMapper.toDto(bundleEntity);
@@ -160,7 +160,7 @@ public class MediaControllerCreateTest extends AbstractMediaControllerTest {
     }
 
     @Test
-    public void mediaWebCreateFailedWithoutUrl() throws Exception {
+    public void failedMediaWebWithoutUrl() throws Exception {
         final long previousRevision = revisionService.getLatest();
         final String name = "Killua Zoldik";
         final com.excilys.shooflers.dashboard.server.model.type.MediaType mediaType = com.excilys.shooflers.dashboard.server.model.type.MediaType.WEB;
@@ -178,7 +178,7 @@ public class MediaControllerCreateTest extends AbstractMediaControllerTest {
     }
 
     @Test
-    public void mediaWebCreateFailedWithMalformedUrl() throws Exception {
+    public void failedMediaWebWithMalformedUrl() throws Exception {
         final long previousRevision = revisionService.getLatest();
         final String name = "Killua Zoldik";
         final com.excilys.shooflers.dashboard.server.model.type.MediaType mediaType = com.excilys.shooflers.dashboard.server.model.type.MediaType.WEB;
@@ -199,7 +199,7 @@ public class MediaControllerCreateTest extends AbstractMediaControllerTest {
     }
 
     @Test
-    public void mediaWebCreateSuccessComplete() throws Exception {
+    public void successMediaWebComplete() throws Exception {
         final long previousRevision = revisionService.getLatest();
         final String name = "Killua Zoldik";
         final com.excilys.shooflers.dashboard.server.model.type.MediaType mediaType = com.excilys.shooflers.dashboard.server.model.type.MediaType.WEB;
@@ -246,7 +246,7 @@ public class MediaControllerCreateTest extends AbstractMediaControllerTest {
     }
 
     @Test
-    public void mediaWebCreateSuccessDespiteTryingFixUuid() throws Exception {
+    public void successMediaWebDespiteTryingFixUuid() throws Exception {
         final long previousRevision = revisionService.getLatest();
         final String name = "Zelda";
         final String chosenUuid = UUID.randomUUID().toString();

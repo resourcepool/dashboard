@@ -73,6 +73,7 @@ public class BundleDaoImpl implements BundleDao {
         File dest = getBundleFile(bundle.getUuid());
         YamlUtils.store(bundle, dest);
         refreshReverseIndex();
+        //bri.addEntry(bundle.getTag(), bundle.getUuid());
         return bundle;
     }
 
