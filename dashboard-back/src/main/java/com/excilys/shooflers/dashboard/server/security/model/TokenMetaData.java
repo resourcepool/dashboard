@@ -1,6 +1,7 @@
 package com.excilys.shooflers.dashboard.server.security.model;
 
 import com.excilys.shooflers.dashboard.server.model.User;
+import org.apache.commons.codec.binary.Base64;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -41,7 +42,7 @@ public class TokenMetaData {
         System.arraycopy(password, 0, message, salt.length, password.length);
         byte[] hash = digest.digest(message);
 
-        return new TokenMetaData(u.getLogin(), hash.toString());
+        return new TokenMetaData(u.getLogin(), Base64.encodeBase64URLSafeString(hash));
     }
 
     @Override

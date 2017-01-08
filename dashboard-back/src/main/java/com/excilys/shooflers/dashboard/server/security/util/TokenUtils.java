@@ -1,7 +1,6 @@
 package com.excilys.shooflers.dashboard.server.security.util;
 
 import com.excilys.shooflers.dashboard.server.security.model.TokenMetaData;
-import org.apache.commons.codec.binary.Base64;
 
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
@@ -70,7 +69,7 @@ public class TokenUtils {
             return null;
         }
 
-        return stringEncryptor.decrypt(new String(Base64.decodeBase64(base64[1])));
+        return stringEncryptor.decrypt(base64[1]);
     }
 
     /**

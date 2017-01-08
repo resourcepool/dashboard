@@ -6,7 +6,6 @@ import com.excilys.shooflers.dashboard.server.security.interceptor.CorsIntercept
 import org.apache.commons.codec.binary.Base64;
 import org.hamcrest.Matchers;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -125,7 +124,6 @@ public class RequireValidUserTest {
     }
 
     @Test
-    @Ignore("Think later a good response for this use case")
     public void wrongAuthentification() throws Exception {
         mockMvc.perform(get(URI.create(URL_TO_TEST)).header(HEADER_AUTHORIZATION, getHeaderAuthenticationContent("user", "user")))
                 .andExpect(status().isUnauthorized())
@@ -161,14 +159,11 @@ public class RequireValidUserTest {
     }
 
     @Test
-    @Ignore("Not terminated")
     public void retrieveTokenAfterLogin() throws Exception {
         MvcResult result = mockMvc.perform(get(URI.create(URL_TO_TEST)).header(HEADER_AUTHORIZATION, getHeaderAuthenticationContent()))
                 .andExpect(status().isOk()).andReturn();
 
         String headerAuthorization = result.getResponse().getHeader(HEADER_AUTHORIZATION);
-
-        System.out.println(headerAuthorization);
 
         assertThat(headerAuthorization, Matchers.startsWith("Token "));
         mockMvc.perform(get(URI.create(URL_TO_TEST)).header(HEADER_AUTHORIZATION, headerAuthorization))
