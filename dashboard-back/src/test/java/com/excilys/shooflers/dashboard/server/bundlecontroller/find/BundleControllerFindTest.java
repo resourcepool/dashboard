@@ -6,14 +6,11 @@ import com.excilys.shooflers.dashboard.server.dto.BundleMetadataDto;
 import com.excilys.shooflers.dashboard.server.model.metadata.BundleMetadata;
 import org.apache.commons.io.FileUtils;
 import org.junit.Test;
-import org.springframework.http.converter.HttpMessageConverter;
-import org.springframework.http.converter.xml.Jaxb2CollectionHttpMessageConverter;
 import org.springframework.test.web.servlet.MvcResult;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 import static org.junit.Assert.*;
@@ -25,14 +22,17 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  */
 public class BundleControllerFindTest extends AbstractBundleControllerTest {
 
-    private HttpMessageConverter<List<BundleMetadataDto>> httpMessageConverter = new Jaxb2CollectionHttpMessageConverter<>();
-
     public static class BundleMetadataDtoList extends ArrayList<BundleMetadataDto> {
 
     }
 
     @Test
-    public void bundleAll() throws Exception {
+    public void bundleAllWithContents() throws Exception {
+        bundleService.save(new BundleMetadata.Builder().tag("tag1").build());
+        bundleService.save(new BundleMetadata.Builder().tag("tag2").build());
+        bundleService.save(new BundleMetadata.Builder().tag("tag3").build());
+        assertEquals(3, bundleService.getAll().size());
+
         MvcResult result = mockMvc.perform(getAuthenticated("/bundle"))
                 .andExpect(status().isOk())
                 .andReturn();
@@ -63,14 +63,8 @@ public class BundleControllerFindTest extends AbstractBundleControllerTest {
     }
 
     @Test
-    public void bundleNotFoundNegative() throws Exception {
+    public void bundleNotFound() throws Exception {
         mockMvc.perform(getAuthenticated("/bundle/dsfsdf"))
-                .andExpect(status().isNotFound());
-    }
-
-    @Test
-    public void bundleNotFoundReally() throws Exception {
-        mockMvc.perform(getAuthenticated("/bundle/" + UUID.randomUUID()))
                 .andExpect(status().isNotFound());
     }
 
