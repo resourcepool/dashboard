@@ -19,6 +19,7 @@ import java.util.UUID;
 @Service
 public class BundleServiceImpl implements BundleService {
 
+    public static final String ERROR_TAG_ALREADY_EXISTS = "This tag already exists";
     @Autowired
     private BundleDao bundleDao;
 
@@ -40,11 +41,12 @@ public class BundleServiceImpl implements BundleService {
 
     @Override
     public void save(BundleMetadata bundle) {
-        if (getByTag(bundle.getTag()) != null) {
-            throw new IllegalArgumentException("This tag already exists");
-        }
         if (bundle.getTag() == null) {
             bundle.setTag(StringUtils.normalize(bundle.getName()));
+        }
+
+        if (getByTag(bundle.getTag()) != null) {
+            throw new IllegalArgumentException(ERROR_TAG_ALREADY_EXISTS);
         }
         // Save is ALWAYS a new UUID as bundle is immutable
         bundle.setUuid(UUID.randomUUID().toString());

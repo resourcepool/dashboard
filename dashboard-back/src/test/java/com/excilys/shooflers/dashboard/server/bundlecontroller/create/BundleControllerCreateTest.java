@@ -4,16 +4,14 @@ import com.excilys.shooflers.dashboard.server.bundlecontroller.AbstractBundleCon
 import com.excilys.shooflers.dashboard.server.dao.BundleDao;
 import com.excilys.shooflers.dashboard.server.dto.BundleMetadataDto;
 import com.excilys.shooflers.dashboard.server.model.Revision;
+import com.excilys.shooflers.dashboard.server.service.impl.BundleServiceImpl;
 import com.excilys.shooflers.dashboard.server.util.StringUtils;
-import com.google.common.jimfs.Jimfs;
 import org.exparity.hamcrest.date.LocalDateTimeMatchers;
 import org.hamcrest.collection.IsCollectionWithSize;
-import org.junit.Before;
 import org.junit.Test;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MvcResult;
 
-import java.nio.file.FileSystem;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.Duration;
@@ -29,17 +27,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  * Created by Camille Vrod on 15/06/16.
  */
 public class BundleControllerCreateTest extends AbstractBundleControllerTest {
-
-
-    @Override
-    @Before
-    public void setUp() throws Exception {
-        super.setUp();
-        FileSystem fs = Jimfs.newFileSystem();
-        Path foo = fs.getPath("public");
-        Files.createDirectory(foo);
-        Files.createDirectories(fs.getPath("db"));
-    }
 
     @Test
     public void failedWithEmptyBody1() throws Exception {
@@ -90,7 +77,7 @@ public class BundleControllerCreateTest extends AbstractBundleControllerTest {
     public void successWithComplete() throws Exception {
         final long previousRevision = revisionService.getLatest();
         final String name = "UnNom";
-        final String tag = "tag123";
+        final String tag = "tag";
         final LocalDateTime startDateTime = LocalDateTime.now().minusMonths(3).minusDays(10);
         final LocalDateTime endDateTime = LocalDateTime.now().plusDays(10);
 
@@ -309,6 +296,7 @@ public class BundleControllerCreateTest extends AbstractBundleControllerTest {
     public void failedWithTagAlreadyUsed() throws Exception {
         successWithComplete();
 
+        final long n = bundleService.getAll().size();
         final long previousRevision = revisionService.getLatest();
         final String name = "UnNom";
         final String tag = "tag";
@@ -321,23 +309,14 @@ public class BundleControllerCreateTest extends AbstractBundleControllerTest {
                 .andExpect(status().isBadRequest())
                 .andReturn();
 
-        BundleMetadataDto bundleMetadataDto = fromJson(result.getResponse().getContentAsString(), BundleMetadataDto.class);
-
-        // Vérification données de retour
-        assertEquals(name, bundleMetadataDto.getName());
-        assertEquals(tag, bundleMetadataDto.getTag());
-        assertEquals(startDateTime, toLocalDateTime(bundleMetadataDto.getValidity().getStart()));
-        assertEquals(endDateTime, toLocalDateTime(bundleMetadataDto.getValidity().getEnd()));
-        assertNotNull(bundleMetadataDto.getUuid());
-
-        // Vérification de la persistence
-        Path path = fileSystem.getPath(props.getBasePath(), BundleDao.ENTITY_NAME, bundleMetadataDto.getUuid() + ".yaml");
-        assertTrue(Files.isRegularFile(path));
-        assertNotNull(bundleService.getByTag(tag));
+        // Vérification du retour
+        assertEquals(BundleServiceImpl.ERROR_TAG_ALREADY_EXISTS, result.getResponse().getContentAsString());
 
         // Vérification du Révision
-        assertEquals(previousRevision + 1, revisionService.getLatest());
+        assertEquals(previousRevision, revisionService.getLatest());
 
+        //
+        assertEquals(n, bundleService.getAll().size());
     }
 
 }
