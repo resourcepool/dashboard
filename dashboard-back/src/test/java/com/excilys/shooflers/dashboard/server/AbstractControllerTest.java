@@ -1,11 +1,13 @@
 package com.excilys.shooflers.dashboard.server;
 
+import com.excilys.shooflers.dashboard.server.dao.DaoInitializer;
 import com.excilys.shooflers.dashboard.server.dto.ValidityDto;
 import com.excilys.shooflers.dashboard.server.dto.mapper.ValidityDtoMapperImpl;
 import com.excilys.shooflers.dashboard.server.property.DashboardProperties;
 import com.excilys.shooflers.dashboard.server.securityTest.RequireValidUserTest;
 import com.excilys.shooflers.dashboard.server.service.RevisionService;
 import org.apache.commons.codec.binary.Base64;
+import org.junit.After;
 import org.junit.Before;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -21,6 +23,12 @@ import org.springframework.web.context.WebApplicationContext;
 
 import java.io.IOException;
 import java.net.URI;
+import java.nio.file.FileSystem;
+import java.nio.file.FileVisitResult;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.SimpleFileVisitor;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 
@@ -44,6 +52,12 @@ public abstract class AbstractControllerTest {
 
     @Autowired
     protected WebApplicationContext webApplicationContext;
+
+    @Autowired
+    protected FileSystem fileSystem;
+
+    @Autowired
+    private DaoInitializer daoInitializer;
 
     /**
      * Client Rest
@@ -196,6 +210,23 @@ public abstract class AbstractControllerTest {
     @Before
     public void setUp() throws Exception {
         this.mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
+        daoInitializer.init();
     }
 
+    @After
+    public final void tearDown() throws Exception {
+        Files.walkFileTree(fileSystem.getPath(props.getBasePath()), new SimpleFileVisitor<Path>() {
+            @Override
+            public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+                Files.delete(file);
+                return FileVisitResult.CONTINUE;
+            }
+
+            @Override
+            public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
+                Files.delete(dir);
+                return FileVisitResult.CONTINUE;
+            }
+        });
+    }
 }
