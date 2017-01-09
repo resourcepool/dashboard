@@ -19,12 +19,10 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.FileCopyUtils;
 
 import javax.annotation.PostConstruct;
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.file.FileSystem;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
@@ -38,6 +36,9 @@ public class MediaDaoImpl implements MediaDao {
     @Autowired
     private DashboardProperties props;
 
+    @Autowired
+    private FileSystem fs;
+
     private Path mediaDatabasePath;
     private Path mediaResourcesPath;
 
@@ -45,8 +46,8 @@ public class MediaDaoImpl implements MediaDao {
 
     @PostConstruct
     public void init() {
-        mediaDatabasePath = Paths.get(props.getBasePath(), ENTITY_NAME);
-        mediaResourcesPath = Paths.get(props.getBaseResources());
+        mediaDatabasePath = fs.getPath(props.getBasePath(), ENTITY_NAME);
+        mediaResourcesPath = fs.getPath(props.getBaseResources());
         // Refresh reverse index
         mri.refreshDataset(getAll());
     }
@@ -54,26 +55,38 @@ public class MediaDaoImpl implements MediaDao {
     @Override
     public MediaMetadata get(String uuid) {
         String bundleUuid = mri.getBundleTag(uuid);
-        File dataFile = getMediaFile(bundleUuid, uuid);
-        return readMediaFromFile(dataFile);
+        Path dataPath = getMediaFile(bundleUuid, uuid);
+        return readMediaFromFile(dataPath);
     }
 
     @Override
-    public File getContent(String filename) {
+    public Path getContent(String filename) {
         String uuid = filename.substring(0, filename.indexOf("."));
         String ext = filename.substring(uuid.length());
-        File dataFile = getResourceFile(uuid, ext);
-        return dataFile;
+        Path path = getResourceFile(uuid, ext);
+        return path;
     }
 
     @Override
     public List<MediaMetadata> getAll() {
         List<MediaMetadata> mediaMetadatas = new LinkedList<>();
         // Get all media in bundle folder
-        for (File bundle : mediaDatabasePath.toFile().listFiles(File::isDirectory)) {
-            for (File media : bundle.listFiles(File::isFile)) {
-                mediaMetadatas.add(readMediaFromFile(media));
-            }
+        try {
+            Files.list(mediaDatabasePath)
+                    .filter(Files::isDirectory)
+                    .flatMap(path -> {
+                        try {
+                            return Files.list(path);
+                        } catch (IOException e) {
+                            LOGGER.error("exception in MediaDaoImpl#getAll", e);
+                            throw new ResourceIoException(e);
+                        }
+                    })
+                    .filter(Files::isRegularFile)
+                    .forEach(path -> mediaMetadatas.add(readMediaFromFile(path)));
+        } catch (IOException e) {
+            LOGGER.error("exception in MediaDaoImpl#getAll", e);
+            throw new ResourceIoException(e);
         }
         return mediaMetadatas;
     }
@@ -86,8 +99,11 @@ public class MediaDaoImpl implements MediaDao {
         if (!Files.exists(bundle) || !Files.isDirectory(bundle)) {
             return mediaMetadatas;
         }
-        for (File media : bundle.toFile().listFiles(File::isFile)) {
-            mediaMetadatas.add(readMediaFromFile(media));
+        try {
+            Files.list(bundle).filter(Files::isRegularFile).forEach(path -> mediaMetadatas.add(readMediaFromFile(path)));
+        } catch (IOException e) {
+            LOGGER.error("exception in MediaDaoImpl#getByBundle", e);
+            throw new ResourceIoException(e);
         }
         return mediaMetadatas;
     }
@@ -97,7 +113,7 @@ public class MediaDaoImpl implements MediaDao {
         MediaMetadata mediaMetadata = media.getMetadata();
         MediaType mediaType = mediaMetadata.getMediaType();
 
-        File dest = getMediaFile(mediaMetadata.getBundleTag(), mediaMetadata.getUuid());
+        Path dest = getMediaFile(mediaMetadata.getBundleTag(), mediaMetadata.getUuid());
         YamlUtils.store(mediaMetadata, dest);
 
         Content content = media.getContent();
@@ -106,8 +122,8 @@ public class MediaDaoImpl implements MediaDao {
         if (content != null) {
             dest = getResourceFile(mediaMetadata.getUrl());
             try {
-                dest.createNewFile();
-                FileCopyUtils.copy(content.getInputStream(), new FileOutputStream(dest));
+                Files.createFile(dest);
+                FileCopyUtils.copy(content.getInputStream(), Files.newOutputStream(dest));
             } catch (IOException e) {
                 LOGGER.warn("Error while writing file.", e);
                 throw new IllegalStateException(e);
@@ -167,9 +183,9 @@ public class MediaDaoImpl implements MediaDao {
      * @param uuid
      * @return
      */
-    private File getMediaFile(String bundleTag, String uuid) {
+    private Path getMediaFile(String bundleTag, String uuid) {
         String dataFileName = uuid + ".yaml";
-        return mediaDatabasePath.resolve(bundleTag + "/" + dataFileName).toFile();
+        return mediaDatabasePath.resolve(bundleTag + "/" + dataFileName);
     }
 
     /**
@@ -178,7 +194,7 @@ public class MediaDaoImpl implements MediaDao {
      * @param url the resource url
      * @return the resource file
      */
-    private File getResourceFile(String url) {
+    private Path getResourceFile(String url) {
         String filename = url.substring(url.lastIndexOf("/") + 1);
         String ext = url.substring(filename.lastIndexOf("."));
         String uuid = filename.substring(0, filename.lastIndexOf("."));
@@ -192,13 +208,13 @@ public class MediaDaoImpl implements MediaDao {
      * @param ext  the extension
      * @return the resource file
      */
-    private File getResourceFile(String uuid, String ext) {
+    private Path getResourceFile(String uuid, String ext) {
         String dataFileName = uuid + (ext.startsWith(".") ? ext : "." + ext);
-        return mediaResourcesPath.resolve(dataFileName).toFile();
+        return mediaResourcesPath.resolve(dataFileName);
     }
 
 
-    private MediaMetadata readMediaFromFile(File dataFile) {
-        return YamlUtils.read(dataFile, MediaMetadata.class);
+    private MediaMetadata readMediaFromFile(Path path) {
+        return YamlUtils.read(path, MediaMetadata.class);
     }
 }

@@ -11,7 +11,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 /**
  * This class allows to download media content from API.
@@ -36,11 +37,12 @@ public class FileController {
     @RequireValidApiKey
     @ResponseBody
     public FileSystemResource get(@PathVariable String filename) {
-        File result = mediaService.getContent(filename);
-        if (result == null || !result.exists()) {
+        Path result = mediaService.getContent(filename);
+        if (result == null || !Files.exists(result)) {
             throw new ResourceNotFoundException();
         }
-        return new FileSystemResource(result);
+        // TODO adapt to Java NIO when is avaible
+        return new FileSystemResource(result.toFile());
     }
 
 }

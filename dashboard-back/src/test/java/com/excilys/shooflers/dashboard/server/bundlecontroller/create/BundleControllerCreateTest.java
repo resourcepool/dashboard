@@ -4,13 +4,18 @@ import com.excilys.shooflers.dashboard.server.bundlecontroller.AbstractBundleCon
 import com.excilys.shooflers.dashboard.server.dao.BundleDao;
 import com.excilys.shooflers.dashboard.server.dto.BundleMetadataDto;
 import com.excilys.shooflers.dashboard.server.model.Revision;
+import com.excilys.shooflers.dashboard.server.util.StringUtils;
+import com.google.common.jimfs.Jimfs;
 import org.exparity.hamcrest.date.LocalDateTimeMatchers;
 import org.hamcrest.collection.IsCollectionWithSize;
+import org.junit.Before;
 import org.junit.Test;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MvcResult;
 
-import java.io.File;
+import java.nio.file.FileSystem;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -25,6 +30,17 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  */
 public class BundleControllerCreateTest extends AbstractBundleControllerTest {
 
+
+    @Override
+    @Before
+    public void setUp() throws Exception {
+        super.setUp();
+        FileSystem fs = Jimfs.newFileSystem();
+        Path foo = fs.getPath("public");
+        Files.createDirectory(foo);
+        Files.createDirectories(fs.getPath("db"));
+    }
+
     @Test
     public void failedWithEmptyBody1() throws Exception {
         mockMvc.perform(postAuthenticated(("/bundle")))
@@ -33,6 +49,7 @@ public class BundleControllerCreateTest extends AbstractBundleControllerTest {
 
     @Test
     public void successWithBasic() throws Exception {
+        long n = bundleService.getAll().size();
         final long previousRevision = revisionService.getLatest();
         final String name = "UnNom";
 
@@ -47,10 +64,15 @@ public class BundleControllerCreateTest extends AbstractBundleControllerTest {
         assertEquals(name, bundleMetadataDto.getName());
         assertNull(bundleMetadataDto.getValidity());
         assertNotNull(bundleMetadataDto.getUuid());
+        assertEquals(StringUtils.normalize(name), bundleMetadataDto.getTag());
 
-        File file = new File(props.getBasePath() + "/" + BundleDao.ENTITY_NAME + "/" + bundleMetadataDto.getUuid() + ".yaml");
-        assertTrue(file.isFile());
+        // Vérification de la persistence
+        assertNotNull(bundleService.getByTag(bundleMetadataDto.getTag()));
+        Path path = fileSystem.getPath(props.getBasePath(), BundleDao.ENTITY_NAME, bundleMetadataDto.getUuid() + ".yaml");
+        assertTrue(Files.isRegularFile(path));
+        assertEquals(n + 1, bundleService.getAll().size());
 
+        // Vérification de la récision
         assertEquals(previousRevision + 1, revisionService.getLatest());
 
         List<Revision> revisions = revisionService.getDiffs(previousRevision);
@@ -62,44 +84,51 @@ public class BundleControllerCreateTest extends AbstractBundleControllerTest {
         assertEquals(revision.getType(), Revision.Type.BUNDLE);
         assertEquals(revision.getTarget(), bundleMetadataDto.getUuid());
         assertEquals(revision.getResult(), null);
-        assertNotNull(bundleService.getByTag(bundleMetadataDto.getUuid()));
     }
 
     @Test
     public void successWithComplete() throws Exception {
         final long previousRevision = revisionService.getLatest();
         final String name = "UnNom";
+        final String tag = "tag123";
         final LocalDateTime startDateTime = LocalDateTime.now().minusMonths(3).minusDays(10);
         final LocalDateTime endDateTime = LocalDateTime.now().plusDays(10);
 
         MvcResult result = mockMvc.perform(postAuthenticated(("/bundle"))
-                .content(toJson(new BundleMetadataDto.Builder().name(name).validity(makeValidityDto(startDateTime, endDateTime)).build()))
+                .content(toJson(new BundleMetadataDto.Builder().name(name).tag(tag).validity(makeValidityDto(startDateTime, endDateTime)).build()))
                 .contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(status().isOk())
                 .andReturn();
 
         BundleMetadataDto bundleMetadataDto = fromJson(result.getResponse().getContentAsString(), BundleMetadataDto.class);
 
+        // Vérification données de retour
         assertEquals(name, bundleMetadataDto.getName());
+        assertEquals(tag, bundleMetadataDto.getTag());
         assertEquals(startDateTime, toLocalDateTime(bundleMetadataDto.getValidity().getStart()));
         assertEquals(endDateTime, toLocalDateTime(bundleMetadataDto.getValidity().getEnd()));
         assertNotNull(bundleMetadataDto.getUuid());
 
-        File file = new File(props.getBasePath() + "/" + BundleDao.ENTITY_NAME + "/" + bundleMetadataDto.getUuid() + ".yaml");
-        assertTrue(file.isFile());
+        // Vérification de la persistence
+        Path path = fileSystem.getPath(props.getBasePath(), BundleDao.ENTITY_NAME, bundleMetadataDto.getUuid() + ".yaml");
+        assertTrue(Files.isRegularFile(path));
+        assertNotNull(bundleService.getByTag(tag));
 
+        // Vérification du Révision
         assertEquals(previousRevision + 1, revisionService.getLatest());
 
-        assertNotNull(bundleService.getByTag(bundleMetadataDto.getUuid()));
     }
 
     @Test
     public void failedWithoutName() throws Exception {
+        long n = bundleService.getAll().size();
         mockMvc.perform(postAuthenticated(("/bundle"))
                 .content(toJson(new BundleMetadataDto.Builder().build()))
                 .contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(status().isBadRequest())
                 .andReturn();
+
+        assertEquals(n, bundleService.getAll().size());
     }
 
     @Test
@@ -119,7 +148,7 @@ public class BundleControllerCreateTest extends AbstractBundleControllerTest {
         assertNull(bundleMetadataDto.getValidity());
         assertNotEquals(chosenUuid, bundleMetadataDto.getUuid());
 
-        assertNotNull(bundleService.getByTag(bundleMetadataDto.getUuid()));
+        assertNotNull(bundleService.getByTag(bundleMetadataDto.getTag()));
     }
 
     @Test
@@ -156,7 +185,7 @@ public class BundleControllerCreateTest extends AbstractBundleControllerTest {
         assertEquals(name, bundleMetadataDtoAfter.getName());
         assertNull(bundleMetadataDtoAfter.getValidity());
 
-        assertNotNull(bundleService.getByTag(bundleMetadataDto.getUuid()));
+        assertNotNull(bundleService.getByTag(StringUtils.normalize(name)));
     }
 
     @Test
@@ -182,7 +211,7 @@ public class BundleControllerCreateTest extends AbstractBundleControllerTest {
         assertNull(bundleMetadataDtoAfter.getValidity().getEnd());
         assertEquals(startDateTime, toLocalDateTime(bundleMetadataDtoAfter.getValidity().getStart()));
 
-        assertNotNull(bundleService.getByTag(bundleMetadataDto.getUuid()));
+        assertNotNull(bundleService.getByTag(StringUtils.normalize(name)));
     }
 
     @Test
@@ -194,25 +223,25 @@ public class BundleControllerCreateTest extends AbstractBundleControllerTest {
                 .name(name)
                 .validity(makeValidityDto(null, endDateTime))
                 .build();
-        MvcResult result = mockMvc.perform(postAuthenticated(("/bundle"))
+        MvcResult result = mockMvc.perform(postAuthenticated("/bundle")
                 .content(toJson(bundleMetadataDto))
                 .contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(status().isOk())
                 .andReturn();
 
-        System.out.println(result.getResponse().getContentAsString());
         BundleMetadataDto bundleMetadataDtoAfter = fromJson(result.getResponse().getContentAsString(), BundleMetadataDto.class);
         assertEquals(name, bundleMetadataDtoAfter.getName());
         assertNotNull(bundleMetadataDtoAfter.getValidity());
         assertThat(toLocalDateTime(bundleMetadataDtoAfter.getValidity().getStart()), allOf(LocalDateTimeMatchers.before(LocalDateTime.now().plus(Duration.ofSeconds(1))), LocalDateTimeMatchers.after(LocalDateTime.now().minus(Duration.ofSeconds(1)))));
         assertEquals(endDateTime, toLocalDateTime(bundleMetadataDtoAfter.getValidity().getEnd()));
 
-        assertNotNull(bundleService.getByTag(bundleMetadataDto.getUuid()));
+        assertNotNull(bundleService.getByTag(StringUtils.normalize(name)));
     }
 
     @Test
     public void failedWithValidityWithoutStartWithEndAnteriorNow() throws Exception {
         final String name = "Bouikbouik";
+        long n = bundleService.getAll().size();
 
         BundleMetadataDto bundleMetadataDto = new BundleMetadataDto.Builder()
                 .name(name)
@@ -223,6 +252,8 @@ public class BundleControllerCreateTest extends AbstractBundleControllerTest {
                 .contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(status().isBadRequest())
                 .andReturn();
+
+        assertEquals(n, bundleService.getAll().size());
     }
 
     @Test
@@ -273,4 +304,40 @@ public class BundleControllerCreateTest extends AbstractBundleControllerTest {
                 .andExpect(status().isBadRequest())
                 .andReturn();
     }
+
+    @Test
+    public void failedWithTagAlreadyUsed() throws Exception {
+        successWithComplete();
+
+        final long previousRevision = revisionService.getLatest();
+        final String name = "UnNom";
+        final String tag = "tag";
+        final LocalDateTime startDateTime = LocalDateTime.now().minusMonths(3).minusDays(10);
+        final LocalDateTime endDateTime = LocalDateTime.now().plusDays(10);
+
+        MvcResult result = mockMvc.perform(postAuthenticated(("/bundle"))
+                .content(toJson(new BundleMetadataDto.Builder().name(name).tag(tag).validity(makeValidityDto(startDateTime, endDateTime)).build()))
+                .contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(status().isBadRequest())
+                .andReturn();
+
+        BundleMetadataDto bundleMetadataDto = fromJson(result.getResponse().getContentAsString(), BundleMetadataDto.class);
+
+        // Vérification données de retour
+        assertEquals(name, bundleMetadataDto.getName());
+        assertEquals(tag, bundleMetadataDto.getTag());
+        assertEquals(startDateTime, toLocalDateTime(bundleMetadataDto.getValidity().getStart()));
+        assertEquals(endDateTime, toLocalDateTime(bundleMetadataDto.getValidity().getEnd()));
+        assertNotNull(bundleMetadataDto.getUuid());
+
+        // Vérification de la persistence
+        Path path = fileSystem.getPath(props.getBasePath(), BundleDao.ENTITY_NAME, bundleMetadataDto.getUuid() + ".yaml");
+        assertTrue(Files.isRegularFile(path));
+        assertNotNull(bundleService.getByTag(tag));
+
+        // Vérification du Révision
+        assertEquals(previousRevision + 1, revisionService.getLatest());
+
+    }
+
 }

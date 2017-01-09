@@ -19,6 +19,9 @@ import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
+import java.nio.file.FileSystem;
+import java.nio.file.FileSystems;
+
 /**
  * Configuration SpringBoot.
  */
@@ -48,6 +51,14 @@ public class DashboardApplication extends WebMvcConfigurerAdapter {
                 .paths(Predicates.not(PathSelectors.regex("/")))
                 .build()
                 .apiInfo(apiInfo());
+    }
+
+    /**
+     * @return Return a filesystem for Daos.
+     */
+    @Bean
+    public FileSystem fileSystem() {
+        return FileSystems.getDefault();
     }
 
     /**

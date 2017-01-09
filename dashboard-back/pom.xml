@@ -32,6 +32,7 @@
         <commons-validator.version>1.5.1</commons-validator.version>
         <apache.poi.version>3.14</apache.poi.version>
         <apache.pdfbox.version>2.0.1</apache.pdfbox.version>
+        <jimfs.version>1.1</jimfs.version>
     </properties>
 
     <dependencies>
@@ -165,6 +166,13 @@
         </dependency>
 
         <dependency>
+            <groupId>com.google.jimfs</groupId>
+            <artifactId>jimfs</artifactId>
+            <version>${jimfs.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
             <groupId>org.exparity</groupId>
             <artifactId>hamcrest-date</artifactId>
             <version>${hamcrest-date.version}</version>
@@ -175,7 +183,6 @@
             <artifactId>jacoco-maven-plugin</artifactId>
             <version>0.7.5.201505241946</version>
         </dependency>
-
     </dependencies>
 
     <build>

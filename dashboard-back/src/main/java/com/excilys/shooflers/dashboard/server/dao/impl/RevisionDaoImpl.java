@@ -2,6 +2,7 @@ package com.excilys.shooflers.dashboard.server.dao.impl;
 
 import com.excilys.shooflers.dashboard.server.dao.RevisionDao;
 import com.excilys.shooflers.dashboard.server.dao.util.YamlUtils;
+import com.excilys.shooflers.dashboard.server.exception.ResourceIoException;
 import com.excilys.shooflers.dashboard.server.model.Revision;
 import com.excilys.shooflers.dashboard.server.property.DashboardProperties;
 import org.slf4j.Logger;
@@ -11,9 +12,10 @@ import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
-import java.io.File;
+import java.io.IOException;
+import java.nio.file.FileSystem;
+import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -31,16 +33,19 @@ public class RevisionDaoImpl implements RevisionDao {
     @Autowired
     private DashboardProperties props;
 
+    @Autowired
+    private FileSystem fs;
+
     private Path revDatabasePath;
 
     @PostConstruct
     public void init() {
-        revDatabasePath = Paths.get(props.getBasePath(), ENTITY_NAME);
+        revDatabasePath = fs.getPath(props.getBasePath(), ENTITY_NAME);
     }
 
     @Override
     public Revision get(Long rev) {
-        File dataFile = getRevFile(rev.toString());
+        Path dataFile = getRevFile(rev.toString());
         return readRevFromFile(dataFile);
     }
 
@@ -56,11 +61,14 @@ public class RevisionDaoImpl implements RevisionDao {
     @Override
     public List<Revision> getAll() {
         List<Revision> revisions = new LinkedList<>();
-        for (File b : revDatabasePath.toFile().listFiles(File::isFile)) {
+        try {
             // Skip latest
-            if (!b.getName().equals(REVISION_LATEST_FILE + ".yaml")) {
-                revisions.add(readRevFromFile(b));
-            }
+            Files.walk(revDatabasePath, 1)
+                    .filter(path -> path.getFileName().equals(REVISION_LATEST_FILE + ".yaml"))
+                    .forEach(path -> revisions.add(readRevFromFile(path)));
+        } catch (IOException e) {
+            LOGGER.error("exception in RevisionDaoImpl#getAll", e);
+            throw new ResourceIoException(e);
         }
         return revisions;
     }
@@ -70,7 +78,7 @@ public class RevisionDaoImpl implements RevisionDao {
         if (rev.getRevision() == null) {
             rev.setRevision(getLatest());
         }
-        File dest = getRevFile(rev.getRevision().toString());
+        Path dest = getRevFile(rev.getRevision().toString());
         YamlUtils.store(rev, dest);
 
         Revision latest = new Revision();
@@ -80,19 +88,19 @@ public class RevisionDaoImpl implements RevisionDao {
 
     @Override
     public Long getLatest() {
-        File dataFile = getRevFile(REVISION_LATEST_FILE);
-        Revision rev = readRevFromFile(dataFile);
+        Path path = getRevFile(REVISION_LATEST_FILE);
+        Revision rev = readRevFromFile(path);
         return rev == null ? 0 : rev.getRevision();
     }
 
-    private File getRevFile(String rev) {
+    private Path getRevFile(String rev) {
         String dataFileName = rev + ".yaml";
-        return revDatabasePath.resolve(dataFileName).toFile();
+        return revDatabasePath.resolve(dataFileName);
     }
 
 
-    private Revision readRevFromFile(File dataFile) {
-        return YamlUtils.read(dataFile, Revision.class);
+    private Revision readRevFromFile(Path path) {
+        return YamlUtils.read(path, Revision.class);
     }
 
 }

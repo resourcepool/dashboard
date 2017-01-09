@@ -3,7 +3,7 @@ package com.excilys.shooflers.dashboard.server.dao;
 import com.excilys.shooflers.dashboard.server.model.Media;
 import com.excilys.shooflers.dashboard.server.model.metadata.MediaMetadata;
 
-import java.io.File;
+import java.nio.file.Path;
 import java.util.List;
 
 /**
@@ -27,7 +27,7 @@ public interface MediaDao {
      * @param filename the resource filename
      * @return the retrieved media content or null if no match
      */
-    File getContent(String filename);
+    Path getContent(String filename);
 
     /**
      * Retrieve all medias from DB.

@@ -8,9 +8,9 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import java.io.IOException;
+import java.nio.file.FileSystem;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 
 /**
  * @author Loïc Ortola on 07/06/2016.
@@ -21,6 +21,9 @@ public class DaoInitializer {
     private static final Logger LOGGER = LoggerFactory.getLogger(DaoInitializer.class);
 
     @Autowired
+    private FileSystem fs;
+
+    @Autowired
     private DashboardProperties props;
 
     /**
@@ -28,7 +31,7 @@ public class DaoInitializer {
      */
     @PostConstruct
     public void init() {
-        Path dbPath = Paths.get(props.getBasePath());
+        Path dbPath = fs.getPath(props.getBasePath());
         if (!Files.exists(dbPath)) {
             try {
                 LOGGER.warn("Dashboard database path does not exist: {}. It will be created.", dbPath.toString());
@@ -40,7 +43,7 @@ public class DaoInitializer {
             }
         }
 
-        Path dbRes = Paths.get(props.getBaseResources());
+        Path dbRes = fs.getPath(props.getBaseResources());
         if (!Files.exists(dbRes)) {
             try {
                 LOGGER.warn("Dashboard resources path does not exist: {}. It will be created.", dbRes.toString());

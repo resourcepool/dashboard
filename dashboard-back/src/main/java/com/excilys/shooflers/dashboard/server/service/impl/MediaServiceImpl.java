@@ -17,9 +17,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.io.ByteArrayInputStream;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Path;
 import java.util.List;
 import java.util.UUID;
 
@@ -127,7 +127,7 @@ public class MediaServiceImpl implements MediaService {
     }
 
     @Override
-    public File getContent(String filename) {
+    public Path getContent(String filename) {
         return mediaDao.getContent(filename);
     }
 

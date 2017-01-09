@@ -4,7 +4,7 @@ package com.excilys.shooflers.dashboard.server.service;
 import com.excilys.shooflers.dashboard.server.model.Media;
 import com.excilys.shooflers.dashboard.server.model.metadata.MediaMetadata;
 
-import java.io.File;
+import java.nio.file.Path;
 import java.util.List;
 
 public interface MediaService {
@@ -38,7 +38,7 @@ public interface MediaService {
      * @param filename the content filename
      * @return the media content file or null if none
      */
-    File getContent(String filename);
+    Path getContent(String filename);
 
     /**
      * Get a media by tag.

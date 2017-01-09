@@ -13,9 +13,10 @@ import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
-import java.io.File;
+import java.io.IOException;
+import java.nio.file.FileSystem;
+import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
@@ -33,34 +34,42 @@ public class BundleDaoImpl implements BundleDao {
     @Autowired
     private DashboardProperties props;
 
+    @Autowired
+    private FileSystem fileSystem;
+
     private BundleReverseIndex bri = new BundleReverseIndex();
 
     private Path bundleDatabasePath;
 
     @PostConstruct
     public void init() {
-        bundleDatabasePath = Paths.get(props.getBasePath(), ENTITY_NAME);
+        bundleDatabasePath = fileSystem.getPath(props.getBasePath(), ENTITY_NAME);
         bri.refreshDataset(getAll());
     }
 
     @Override
     public BundleMetadata get(String uuid) {
-        File dataFile = getBundleFile(uuid);
+        Path dataFile = getBundleFile(uuid);
         return readBundleFromFile(dataFile);
     }
 
     @Override
     public BundleMetadata getByTag(String tag) {
         String uuid = bri.getBundleUuid(tag);
-        File dataFile = getBundleFile(uuid);
+        Path dataFile = getBundleFile(uuid);
         return readBundleFromFile(dataFile);
     }
 
     @Override
     public List<BundleMetadata> getAll() {
         List<BundleMetadata> bundles = new LinkedList<>();
-        for (File b : bundleDatabasePath.toFile().listFiles(File::isFile)) {
-            bundles.add(readBundleFromFile(b));
+        try {
+            Files.walk(bundleDatabasePath, 1)
+                    .filter(Files::isRegularFile)
+                    .forEach(path -> bundles.add(readBundleFromFile(path)));
+        } catch (IOException e) {
+            LOGGER.error("exception in BundleDaoImpl#getAll", e);
+            throw new ResourceIoException(e);
         }
         return bundles;
     }
@@ -70,7 +79,7 @@ public class BundleDaoImpl implements BundleDao {
         if (bundle.getUuid() == null) {
             bundle.setUuid(UUID.randomUUID().toString());
         }
-        File dest = getBundleFile(bundle.getUuid());
+        Path dest = getBundleFile(bundle.getUuid());
         YamlUtils.store(bundle, dest);
         refreshReverseIndex();
         //bri.addEntry(bundle.getTag(), bundle.getUuid());
@@ -88,14 +97,14 @@ public class BundleDaoImpl implements BundleDao {
         return result;
     }
 
-    private File getBundleFile(String uuid) {
+    private Path getBundleFile(String uuid) {
         String dataFileName = uuid + ".yaml";
-        return bundleDatabasePath.resolve(dataFileName).toFile();
+        return bundleDatabasePath.resolve(dataFileName);
     }
 
 
-    private BundleMetadata readBundleFromFile(File dataFile) {
-        return YamlUtils.read(dataFile, BundleMetadata.class);
+    private BundleMetadata readBundleFromFile(Path path) {
+        return YamlUtils.read(path, BundleMetadata.class);
     }
 
 
