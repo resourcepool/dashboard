@@ -1,6 +1,7 @@
 package com.excilys.shooflers.dashboard.server.securityTest;
 
 import com.excilys.shooflers.dashboard.server.DashboardApplication;
+import com.excilys.shooflers.dashboard.server.TestConfiguration;
 import com.excilys.shooflers.dashboard.server.property.DashboardProperties;
 import com.excilys.shooflers.dashboard.server.security.interceptor.CorsInterceptor;
 import org.apache.commons.codec.binary.Base64;
@@ -29,7 +30,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  * @author Mickael
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(DashboardApplication.class)
+@SpringApplicationConfiguration({DashboardApplication.class, TestConfiguration.class})
 @WebAppConfiguration
 public class RequireValidUserTest {
 
