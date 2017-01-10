@@ -45,4 +45,11 @@ public interface BundleService {
      * @param uuid The bundle uuid
      */
     void delete(String uuid);
+
+    /**
+     * Delete bundle from DB.
+     *
+     * @param bundleMetadata Bundle to delete
+     */
+    void delete(BundleMetadata bundleMetadata);
 }

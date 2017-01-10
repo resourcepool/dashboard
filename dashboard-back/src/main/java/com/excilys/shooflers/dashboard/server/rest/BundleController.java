@@ -99,15 +99,15 @@ public class BundleController {
     /**
      * Delete a bundle by its tag.
      *
-     * @param uuid tag to delete
+     * @param tag tag to delete
      */
-    @RequestMapping(value = "{uuid}", method = RequestMethod.DELETE)
-    public void delete(@PathVariable("uuid") String uuid) {
-        BundleMetadata result = bundleService.getByTag(uuid);
+    @RequestMapping(value = "{tag}", method = RequestMethod.DELETE)
+    public void delete(@PathVariable("tag") String tag) {
+        BundleMetadata result = bundleService.getByTag(tag);
         if (result == null) {
             throw new ResourceNotFoundException("Bound not found");
         } else {
-            bundleService.delete(uuid);
+            bundleService.delete(result);
         }
 
     }

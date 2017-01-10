@@ -11,11 +11,11 @@ import com.excilys.shooflers.dashboard.server.model.type.MediaType;
 import com.excilys.shooflers.dashboard.server.service.MediaService;
 import org.hamcrest.Matchers;
 import org.hamcrest.collection.IsCollectionWithSize;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.List;
 
 import static org.hamcrest.Matchers.not;
@@ -36,7 +36,7 @@ public class BundleControllerDeleteTest extends AbstractBundleControllerTest {
         final long previousRevision = revisionService.getLatest();
 
 
-        mockMvc.perform(deleteAuthenticated("/bundle/wronguid"))
+        mockMvc.perform(deleteAuthenticated("/bundle/wrongtag"))
                 .andExpect(status().isNotFound());
         assertEquals(previousSize, bundleService.getAll().size());
         assertEquals(previousRevision, revisionService.getLatest());
@@ -51,19 +51,20 @@ public class BundleControllerDeleteTest extends AbstractBundleControllerTest {
         final long previousSize = bundleService.getAll().size();
         final long previousRevision = revisionService.getLatest();
 
-        assertThat(bundleService.getAll().size(), Matchers.greaterThanOrEqualTo(1));
+        assertThat(bundleService.getAll().size(), Matchers.equalTo(1));
         assertThat(bundleMetadata.getUuid(), not(Matchers.isEmptyOrNullString()));
-        assertTrue(Files.exists(Paths.get("db", BundleDaoImpl.ENTITY_NAME, bundleMetadata.getUuid() + ".yaml")));
+        assertThat(bundleMetadata.getTag(), not(Matchers.isEmptyOrNullString()));
+        assertTrue(Files.exists(fileSystem.getPath(props.getBasePath(), BundleDaoImpl.ENTITY_NAME, bundleMetadata.getUuid() + ".yaml")));
 
         assertNotNull(bundleService.getByTag(bundleMetadata.getTag()));
 
-        mockMvc.perform(deleteAuthenticated("/bundle/" + bundleMetadata.getUuid()))
+        mockMvc.perform(deleteAuthenticated("/bundle/" + bundleMetadata.getTag()))
                 .andExpect(status().isOk());
 
-        mockMvc.perform(deleteAuthenticated("/bundle/" + bundleMetadata.getUuid()))
+        mockMvc.perform(deleteAuthenticated("/bundle/" + bundleMetadata.getTag()))
                 .andExpect(status().isNotFound());
 
-        assertFalse(Files.exists(Paths.get("db", BundleDaoImpl.ENTITY_NAME, bundleMetadata.getUuid() + ".yaml")));
+        assertFalse(Files.exists(fileSystem.getPath(props.getBasePath(), BundleDaoImpl.ENTITY_NAME, bundleMetadata.getUuid() + ".yaml")));
         assertNull(bundleService.getByTag(bundleMetadata.getTag()));
 
         assertEquals(previousSize - 1, bundleService.getAll().size());
@@ -81,13 +82,8 @@ public class BundleControllerDeleteTest extends AbstractBundleControllerTest {
     }
 
     @Test
-    public void failedAlreadyDeleted() throws Exception {
-
-
-    }
-
-    @Test
-    public void bundleDeleteContainingMedia() throws Exception {
+    @Ignore
+    public void successWithMediaContent() throws Exception {
         BundleMetadata formBundleMetadata = new BundleMetadata.Builder()
                 .name("ToDeleteWithMedia")
                 .build();

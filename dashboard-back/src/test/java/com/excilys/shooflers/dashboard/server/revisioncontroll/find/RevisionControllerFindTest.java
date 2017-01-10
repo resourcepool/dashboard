@@ -8,6 +8,7 @@ import org.junit.Test;
 import org.springframework.test.web.servlet.MvcResult;
 
 import static org.junit.Assert.assertNotEquals;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
@@ -20,13 +21,14 @@ public class RevisionControllerFindTest extends AbstractRevisionControllerTest {
     // ============================================================
 
     @Test
-    public void getLatestRevision() throws Exception {
+    public void successGetLatestRevision() throws Exception {
         mockMvc.perform(getAuthenticated("/revision"))
-                .andExpect(status().isOk());
+                .andExpect(status().isOk())
+                .andExpect(content().json("0"));
     }
 
     @Test
-    public void checkRevisionVersionWithAddMedia() throws Exception {
+    public void successCheckRevisionVersionWithAddMedia() throws Exception {
         MvcResult resultOldRevision = mockMvc.perform(getAuthenticated("/revision"))
                 .andExpect(status().isOk())
                 .andReturn();
@@ -61,13 +63,13 @@ public class RevisionControllerFindTest extends AbstractRevisionControllerTest {
     }
 
     @Test
-    public void getRevisionListBadRequest() throws Exception {
+    public void failedGetRevisionListBadRequest() throws Exception {
         mockMvc.perform(getAuthenticated("/revision/szfgqsf"))
                 .andExpect(status().isBadRequest());
     }
 
     @Test
-    public void getRevisionList() throws Exception {
+    public void successGetRevisionList() throws Exception {
         MvcResult resultOldRevision = mockMvc.perform(getAuthenticated("/revision"))
                 .andExpect(status().isOk())
                 .andReturn();

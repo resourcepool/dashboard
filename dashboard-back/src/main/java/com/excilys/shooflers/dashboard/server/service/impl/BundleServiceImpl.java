@@ -94,13 +94,16 @@ public class BundleServiceImpl implements BundleService {
     @Override
     public void delete(String uuid) {
         BundleMetadata metadata = bundleDao.get(uuid);
-        // Step 1: delete all media related to bundle:
-        mediaService.deleteByBundleTag(metadata.getTag());
-        // Step 2: delete bundle
-        BundleMetadata dbBundle = bundleDao.delete(uuid);
-        // Create a new revision
-        revisionService.add(Revision.Type.BUNDLE, Revision.Action.DELETE, dbBundle.getUuid());
-
+        delete(metadata);
     }
 
+    @Override
+    public void delete(BundleMetadata bundleMetadata) {
+        // Step 1: delete all media related to bundle:
+        mediaService.deleteByBundleTag(bundleMetadata.getTag());
+        // Step 2: delete bundle
+        BundleMetadata dbBundle = bundleDao.delete(bundleMetadata.getUuid());
+        // Create a new revision
+        revisionService.add(Revision.Type.BUNDLE, Revision.Action.DELETE, dbBundle.getUuid());
+    }
 }

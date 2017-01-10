@@ -131,7 +131,7 @@ public abstract class AbstractControllerTest {
     @Autowired
     void setConverters(HttpMessageConverter<?>[] converters) {
         //noinspection OptionalGetWithoutIsPresent
-        mappingJackson2HttpMessageConverter = Arrays.asList(converters).stream().filter(
+        mappingJackson2HttpMessageConverter = Arrays.stream(converters).filter(
                 hmc -> hmc instanceof MappingJackson2HttpMessageConverter).findAny().get();
 
         assertNotNull("the JSON message converter must not be null",
