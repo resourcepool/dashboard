@@ -196,7 +196,7 @@ public class MediaDaoImpl implements MediaDao {
      */
     private Path getResourceFile(String url) {
         String filename = url.substring(url.lastIndexOf("/") + 1);
-        String ext = url.substring(filename.lastIndexOf("."));
+        String ext = filename.substring(filename.lastIndexOf("."));
         String uuid = filename.substring(0, filename.lastIndexOf("."));
         return getResourceFile(uuid, ext);
     }

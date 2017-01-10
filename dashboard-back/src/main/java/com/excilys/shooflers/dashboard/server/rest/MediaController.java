@@ -96,6 +96,9 @@ public class MediaController {
         // Get generated Uuid
         mediaMetadataDto.setUuid(media.getMetadata().getUuid());
 
+        // Get generated Url si non media web
+        mediaMetadataDto.setUrl(media.getMetadata().getUrl());
+
         return mediaMetadataDto;
     }
 

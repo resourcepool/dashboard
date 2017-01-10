@@ -44,11 +44,8 @@ public abstract class AbstractMediaControllerTest extends AbstractControllerTest
     public void setUp() throws Exception {
         super.setUp();
         final String bundleName = "bundleMetadataDto";
-        if (globalBundleMetadataDto == null) {
-            final BundleMetadata bundleEntity = new BundleMetadata.Builder().name(bundleName).build();
-            bundleService.save(bundleEntity);
-            globalBundleMetadataDto = bundleDtoMapper.toDto(bundleService.getByTag(bundleEntity.getTag()));
-        }
+        final BundleMetadata bundleEntity = new BundleMetadata.Builder().name(bundleName).build();
+        bundleService.save(bundleEntity);
+        globalBundleMetadataDto = bundleDtoMapper.toDto(bundleService.getByTag(bundleEntity.getTag()));
     }
-
 }
