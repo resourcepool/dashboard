@@ -4,8 +4,11 @@ import com.excilys.shooflers.dashboard.server.bundlecontroller.AbstractBundleCon
 import com.excilys.shooflers.dashboard.server.dto.BundleMetadataDto;
 import com.excilys.shooflers.dashboard.server.model.Revision;
 import com.excilys.shooflers.dashboard.server.model.metadata.BundleMetadata;
+import com.excilys.shooflers.dashboard.server.service.impl.BundleServiceImpl;
 import org.exparity.hamcrest.date.LocalDateTimeMatchers;
 import org.hamcrest.Matchers;
+import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MvcResult;
@@ -24,36 +27,54 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  */
 public class BundleControllerEditTest extends AbstractBundleControllerTest {
 
+    private BundleMetadata formBundleMetadata;
+
+    private BundleMetadataDto formBundleMetadataDto;
+
+    @Override
+    @Before
+    public void setUp() throws Exception {
+        super.setUp();
+
+        // Créer un bundle de base pour l'édition
+        formBundleMetadata = new BundleMetadata.Builder()
+                .name("baseBundleMetadata")
+                .tag("baseTag")
+                .build();
+        bundleService.save(formBundleMetadata);
+
+        assertNotNull(formBundleMetadata.getUuid());
+
+        formBundleMetadataDto = bundleDtoMapper.toDto(formBundleMetadata);
+    }
+
     @Test
-    public void editBundleSuccessBasic() throws Exception {
+    public void successBasic() throws Exception {
         final String newName = "Nouveau Nom";
-        BundleMetadata bundleMetadata = new BundleMetadata.Builder().name("Name").build();
-        bundleService.save(bundleMetadata);
 
-        BundleMetadataDto bundleMetadataDto = bundleDtoMapper.toDto(bundleMetadata);
-
-        final String formName = bundleMetadataDto.getName();
+        final String formName = formBundleMetadataDto.getName();
         final long previousRevision = revisionService.getLatest();
         final long previousSize = bundleService.getAll().size();
 
         assertNotEquals("Choose a newName different", newName, formName);
-        assertNull(bundleMetadataDto.getValidity());
+        assertNull(formBundleMetadataDto.getValidity());
 
-        bundleMetadataDto.setName(newName);
+        formBundleMetadataDto.setName(newName);
 
         MvcResult result = mockMvc.perform(putAuthenticated("/bundle")
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
-                .content(toJson(bundleMetadataDto)))
+                .content(toJson(formBundleMetadataDto)))
                 .andExpect(status().isOk()).andReturn();
 
         BundleMetadataDto newBundleMetadataDto = fromJson(result.getResponse().getContentAsString(), BundleMetadataDto.class);
         assertEquals(newName, newBundleMetadataDto.getName());
+        assertEquals(formBundleMetadataDto.getTag(), newBundleMetadataDto.getTag());
         assertNull(newBundleMetadataDto.getValidity());
-        assertNotEquals(newBundleMetadataDto.getUuid(), bundleMetadataDto.getUuid());
+        assertNotEquals(newBundleMetadataDto.getUuid(), formBundleMetadataDto.getUuid());
         assertNull(newBundleMetadataDto.getValidity());
-        assertNull(bundleMetadataDto.getValidity());
+        assertNull(formBundleMetadataDto.getValidity());
 
-        assertNotNull(bundleService.getByTag(bundleMetadataDto.getTag()));
+        assertNotNull(bundleService.getByTag(formBundleMetadataDto.getTag()));
         assertNotNull(bundleService.getByTag(newBundleMetadataDto.getTag()));
 
         assertEquals(previousSize, bundleService.getAll().size());
@@ -68,7 +89,7 @@ public class BundleControllerEditTest extends AbstractBundleControllerTest {
         assertEquals(Revision.Action.DELETE, revision.getAction());
         assertEquals(((long) revision.getRevision()), previousRevision + 1);
         assertEquals(revision.getType(), Revision.Type.BUNDLE);
-        assertEquals(revision.getTarget(), bundleMetadataDto.getUuid());
+        assertEquals(revision.getTarget(), formBundleMetadataDto.getUuid());
         assertEquals(revision.getResult(), null);
 
         revision = revisions.get(0);
@@ -80,14 +101,7 @@ public class BundleControllerEditTest extends AbstractBundleControllerTest {
     }
 
     @Test
-    public void editBundleSuccessOnValidity() throws Exception {
-        final String name = "AncienNom";
-
-        BundleMetadata formBundleMetadata = new BundleMetadata.Builder().name(name).build();
-        bundleService.save(formBundleMetadata);
-
-        BundleMetadataDto formBundleMetadataDto = bundleDtoMapper.toDto(formBundleMetadata);
-
+    public void successOnValidity() throws Exception {
         final LocalDateTime startDateTime = LocalDateTime.now();
         final long previousRevision = revisionService.getLatest();
         final long previousSize = bundleService.getAll().size();
@@ -102,7 +116,8 @@ public class BundleControllerEditTest extends AbstractBundleControllerTest {
                 .andExpect(status().isOk()).andReturn();
 
         BundleMetadataDto bundleMetadataDto = fromJson(result.getResponse().getContentAsString(), BundleMetadataDto.class);
-        assertEquals(name, bundleMetadataDto.getName());
+        assertEquals(formBundleMetadataDto.getName(), bundleMetadataDto.getName());
+        assertEquals(formBundleMetadataDto.getTag(), bundleMetadataDto.getTag());
         assertNotNull(bundleMetadataDto.getValidity());
         assertEquals(startDateTime, toLocalDateTime(bundleMetadataDto.getValidity().getStart()));
         assertNull(bundleMetadataDto.getValidity().getEnd());
@@ -137,13 +152,7 @@ public class BundleControllerEditTest extends AbstractBundleControllerTest {
     }
 
     @Test
-    public void editBundleFailedWithoutName() throws Exception {
-        final String name = "Toupoutou";
-        BundleMetadata formBundleMetadata = new BundleMetadata.Builder().name(name).build();
-        bundleService.save(formBundleMetadata);
-
-        BundleMetadataDto formBundleMetadataDto = bundleDtoMapper.toDto(formBundleMetadata);
-
+    public void failedWithoutName() throws Exception {
         formBundleMetadataDto.setName(null);
 
         mockMvc.perform(putAuthenticated(("/bundle"))
@@ -154,13 +163,8 @@ public class BundleControllerEditTest extends AbstractBundleControllerTest {
     }
 
     @Test
-    public void editBundleFailedStartAfterEnd() throws Exception {
+    public void failedWithStartAfterEnd() throws Exception {
         final String name = "Bouikbouik";
-
-        BundleMetadata formBundleMetadata = new BundleMetadata.Builder().name(name).build();
-        bundleService.save(formBundleMetadata);
-
-        BundleMetadataDto formBundleMetadataDto = bundleDtoMapper.toDto(formBundleMetadata);
 
         formBundleMetadataDto.setValidity(makeValidityDto(LocalDateTime.now(), LocalDateTime.now().minusDays(9)));
         mockMvc.perform(putAuthenticated(("/bundle"))
@@ -171,14 +175,7 @@ public class BundleControllerEditTest extends AbstractBundleControllerTest {
     }
 
     @Test
-    public void editBundleSuccesWithValidityWithoutStartWithoutEnd() throws Exception {
-        final String name = "Jojo";
-
-        BundleMetadata formBundleMetadata = new BundleMetadata.Builder().name(name).build();
-        bundleService.save(formBundleMetadata);
-
-        BundleMetadataDto formBundleMetadataDto = bundleDtoMapper.toDto(formBundleMetadata);
-
+    public void succesWithValidityWithoutStartWithoutEnd() throws Exception {
         formBundleMetadataDto.setValidity(makeValidityDto(null, null));
         assertNotNull(formBundleMetadataDto.getValidity());
 
@@ -189,23 +186,15 @@ public class BundleControllerEditTest extends AbstractBundleControllerTest {
                 .andReturn();
 
         BundleMetadataDto bundleMetadataDtoAfter = fromJson(result.getResponse().getContentAsString(), BundleMetadataDto.class);
-        assertEquals(name, bundleMetadataDtoAfter.getName());
+        assertEquals(formBundleMetadataDto.getName(), bundleMetadataDtoAfter.getName());
         assertNull(bundleMetadataDtoAfter.getValidity());
     }
 
     @Test
-    public void editBundleSuccesWithValidityWithStartWithoutEnd() throws Exception {
-        final String name = "Jojo";
-
-        BundleMetadata formBundleMetadata = new BundleMetadata.Builder().name(name).build();
-        bundleService.save(formBundleMetadata);
-
-        BundleMetadataDto formBundleMetadataDto = bundleDtoMapper.toDto(formBundleMetadata);
-
+    public void succesWithValidityWithStartWithoutEnd() throws Exception {
         final LocalDateTime startDateTime = LocalDateTime.now().plusDays(6);
 
         formBundleMetadataDto.setValidity(makeValidityDto(startDateTime, null));
-
 
         MvcResult result = mockMvc.perform(putAuthenticated(("/bundle"))
                 .content(toJson(formBundleMetadataDto))
@@ -214,21 +203,14 @@ public class BundleControllerEditTest extends AbstractBundleControllerTest {
                 .andReturn();
 
         BundleMetadataDto bundleMetadataDtoAfter = fromJson(result.getResponse().getContentAsString(), BundleMetadataDto.class);
-        assertEquals(name, bundleMetadataDtoAfter.getName());
+        assertEquals(formBundleMetadataDto.getName(), bundleMetadataDtoAfter.getName());
         assertNotNull(bundleMetadataDtoAfter.getValidity());
         assertNull(bundleMetadataDtoAfter.getValidity().getEnd());
         assertEquals(startDateTime, toLocalDateTime(bundleMetadataDtoAfter.getValidity().getStart()));
     }
 
     @Test
-    public void editBundleSuccesWithValidityWithoutStartWithEnd() throws Exception {
-        final String name = "Bouikbouik";
-
-        BundleMetadata formBundleMetadata = new BundleMetadata.Builder().name(name).build();
-        bundleService.save(formBundleMetadata);
-
-        BundleMetadataDto formBundleMetadataDto = bundleDtoMapper.toDto(formBundleMetadata);
-
+    public void succesWithValidityWithoutStartWithEnd() throws Exception {
         final LocalDateTime endDateTime = LocalDateTime.now().plusDays(9);
 
         formBundleMetadataDto.setValidity(makeValidityDto(null, endDateTime));
@@ -240,21 +222,14 @@ public class BundleControllerEditTest extends AbstractBundleControllerTest {
                 .andReturn();
 
         BundleMetadataDto bundleMetadataDtoAfter = fromJson(result.getResponse().getContentAsString(), BundleMetadataDto.class);
-        assertEquals(name, bundleMetadataDtoAfter.getName());
+        assertEquals(formBundleMetadataDto.getName(), bundleMetadataDtoAfter.getName());
         assertNotNull(bundleMetadataDtoAfter.getValidity());
         assertThat(toLocalDateTime(bundleMetadataDtoAfter.getValidity().getStart()), allOf(LocalDateTimeMatchers.before(LocalDateTime.now().plus(Duration.ofSeconds(1))), LocalDateTimeMatchers.after(LocalDateTime.now().minus(Duration.ofSeconds(1)))));
         assertEquals(endDateTime, toLocalDateTime(bundleMetadataDtoAfter.getValidity().getEnd()));
     }
 
     @Test
-    public void editBundleFailedWithValidityWithoutStartWithEndAnteriorNow() throws Exception {
-        final String name = "Bouikbouik";
-
-        BundleMetadata formBundleMetadata = new BundleMetadata.Builder().name(name).build();
-        bundleService.save(formBundleMetadata);
-
-        BundleMetadataDto formBundleMetadataDto = bundleDtoMapper.toDto(formBundleMetadata);
-
+    public void failedWithValidityWithoutStartWithEndAnteriorNow() throws Exception {
         formBundleMetadataDto.setValidity(makeValidityDto(null, LocalDateTime.now().minusDays(9)));
 
         mockMvc.perform(putAuthenticated(("/bundle"))
@@ -265,18 +240,11 @@ public class BundleControllerEditTest extends AbstractBundleControllerTest {
     }
 
     @Test
-    public void editBundleFailedWithWrongFormatStart() throws Exception {
-        final String name = "Bunduru";
-
-        BundleMetadata formBundleMetadata = new BundleMetadata.Builder().name(name).build();
-        bundleService.save(formBundleMetadata);
-
-        BundleMetadataDto formBundleMetadataDto = bundleDtoMapper.toDto(formBundleMetadata);
-
+    public void failedWithWrongFormatStart() throws Exception {
         formBundleMetadataDto.setValidity(makeValidityDto(null, null));
         formBundleMetadataDto.getValidity().setStart("zesljkl");
 
-        mockMvc.perform(postAuthenticated(("/bundle"))
+        mockMvc.perform(putAuthenticated(("/bundle"))
                 .content(toJson(formBundleMetadataDto))
                 .contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(status().isBadRequest())
@@ -285,18 +253,11 @@ public class BundleControllerEditTest extends AbstractBundleControllerTest {
     }
 
     @Test
-    public void editFailedWithWrongFormatEnd() throws Exception {
-        final String name = "Bouikbouik";
-
-        BundleMetadata formBundleMetadata = new BundleMetadata.Builder().name(name).build();
-        bundleService.save(formBundleMetadata);
-
-        BundleMetadataDto formBundleMetadataDto = bundleDtoMapper.toDto(formBundleMetadata);
-
+    public void failedWithWrongFormatEnd() throws Exception {
         formBundleMetadataDto.setValidity(makeValidityDto(LocalDateTime.now(), null));
         formBundleMetadataDto.getValidity().setEnd("zesljkl");
 
-        mockMvc.perform(postAuthenticated(("/bundle"))
+        mockMvc.perform(putAuthenticated(("/bundle"))
                 .content(toJson(formBundleMetadataDto))
                 .contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(status().isBadRequest())
@@ -305,7 +266,7 @@ public class BundleControllerEditTest extends AbstractBundleControllerTest {
     }
 
     @Test
-    public void editBundleCreateFailedIfUnknownProperty() throws Exception {
+    public void failedIfUnknownProperty() throws Exception {
         mockMvc.perform(putAuthenticated(("/bundle"))
                 .content("{tag:null, unknown:null}")
                 .contentType(MediaType.APPLICATION_JSON_UTF8))
@@ -314,4 +275,48 @@ public class BundleControllerEditTest extends AbstractBundleControllerTest {
                 .andReturn();
     }
 
+    @Test
+    public void failedWithTagAlreadyUsed() throws Exception {
+        // Création d'un bundle avec le tag réservé
+        final String tagUsed = "tagUsed";
+        final String secondName = "secondName";
+        bundleService.save(new BundleMetadata.Builder().name(secondName).tag(tagUsed).build());
+
+        formBundleMetadataDto.setTag(tagUsed);
+
+        mockMvc.perform(putAuthenticated(("/bundle"))
+                .content(toJson(formBundleMetadataDto))
+                .contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().string(BundleServiceImpl.ERROR_TAG_ALREADY_EXISTS))
+                .andReturn();
+    }
+
+    @Test
+    public void successWithNewTagWithEmpty() throws Exception {
+        final String newTag = "newTag";
+        assertNotEquals(newTag, formBundleMetadataDto.getName());
+
+        formBundleMetadataDto.setTag(newTag);
+
+        MvcResult result = mockMvc.perform(putAuthenticated("/bundle")
+                .content(toJson(formBundleMetadataDto))
+                .contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        BundleMetadataDto bundleMetadataDtoAfter = fromJson(result.getResponse().getContentAsString(), BundleMetadataDto.class);
+        assertEquals(formBundleMetadataDto.getName(), bundleMetadataDtoAfter.getName());
+        assertEquals(formBundleMetadataDto.getValidity(), bundleMetadataDtoAfter.getValidity());
+        assertEquals(newTag, bundleMetadataDtoAfter.getTag());
+
+        assertNull(bundleService.getByTag(formBundleMetadata.getTag()));
+        assertNotNull(bundleService.getByTag(bundleMetadataDtoAfter.getTag()));
+    }
+
+    @Test
+    @Ignore
+    public void successWithContent() throws Exception {
+        fail();
+    }
 }

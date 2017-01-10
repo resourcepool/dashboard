@@ -65,6 +65,10 @@ public class BundleServiceImpl implements BundleService {
             bundle.setTag(dbBundle.getTag());
         }
 
+        if (!dbBundle.getTag().equals(bundle.getTag()) && bundleDao.getByTag(bundle.getTag()) != null) {
+            throw new IllegalArgumentException(ERROR_TAG_ALREADY_EXISTS);
+        }
+
         // This is an update of a bundle. Delete previous and add new update
         bundleDao.delete(originalUuid);
         // Save is ALWAYS a new UUID as bundle is immutable
@@ -85,7 +89,6 @@ public class BundleServiceImpl implements BundleService {
 
         // Tell revision service we updated a bundle
         revisionService.add(Revision.Type.BUNDLE, Revision.Action.UPDATE, originalUuid, bundle.getUuid());
-
     }
 
     @Override
