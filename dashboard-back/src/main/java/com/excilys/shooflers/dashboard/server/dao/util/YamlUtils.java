@@ -5,7 +5,6 @@ import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -58,7 +57,13 @@ public class YamlUtils {
         }
     }
 
-    public static boolean delete(File dataFile) {
-        return dataFile.delete();
+    public static boolean delete(Path dataFile) {
+        try {
+            Files.delete(dataFile);
+            return true;
+        } catch (IOException e) {
+            LOGGER.error("exception in YamlUtils#delete", e);
+            return false;
+        }
     }
 }

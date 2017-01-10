@@ -162,7 +162,7 @@ public class MediaDaoImpl implements MediaDao {
         if (bundleTag == null) {
             throw new ResourceNotFoundException();
         }
-        boolean result = YamlUtils.delete(mediaDatabasePath.resolve(bundleTag + "/" + uuid + ".yaml").toFile());
+        boolean result = YamlUtils.delete(mediaDatabasePath.resolve(bundleTag + "/" + uuid + ".yaml"));
         if (!result) {
             throw new ResourceIoException();
         }

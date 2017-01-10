@@ -89,7 +89,7 @@ public class BundleDaoImpl implements BundleDao {
     @Override
     public BundleMetadata delete(String uuid) {
         BundleMetadata result = get(uuid);
-        boolean success = YamlUtils.delete(bundleDatabasePath.resolve(uuid + ".yaml").toFile());
+        boolean success = YamlUtils.delete(bundleDatabasePath.resolve(uuid + ".yaml"));
         if (!success) {
             throw new ResourceIoException();
         }
