@@ -1,19 +1,17 @@
 package com.excilys.shooflers.dashboard.server.bundlecontroller.find;
 
 import com.excilys.shooflers.dashboard.server.bundlecontroller.AbstractBundleControllerTest;
-import com.excilys.shooflers.dashboard.server.dao.BundleDao;
 import com.excilys.shooflers.dashboard.server.dto.BundleMetadataDto;
 import com.excilys.shooflers.dashboard.server.model.metadata.BundleMetadata;
-import org.apache.commons.io.FileUtils;
 import org.junit.Test;
 import org.springframework.test.web.servlet.MvcResult;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -41,6 +39,8 @@ public class BundleControllerFindTest extends AbstractBundleControllerTest {
         list.sort((o1, o2) -> o1.getUuid().compareTo(o2.getUuid()));
         List<BundleMetadataDto> list2 = bundleService.getAll().stream().map(bundleMetadata -> bundleDtoMapper.toDto(bundleMetadata)).collect(Collectors.toList());
         list2.sort((o1, o2) -> o1.getUuid().compareTo(o2.getUuid()));
+
+        assertEquals(3, list.size());
         assertEquals(list, list2);
     }
 
@@ -49,14 +49,7 @@ public class BundleControllerFindTest extends AbstractBundleControllerTest {
      */
     @Test
     public void bundleAllEmpty() throws Exception {
-        File bundleFolder = new File(props.getBasePath() + "/" + BundleDao.ENTITY_NAME);
-
-        if (bundleFolder.exists()) {
-            FileUtils.deleteDirectory(bundleFolder);
-            assertFalse(bundleFolder.exists());
-        }
-        assertTrue(bundleFolder.mkdir());
-
+        // By default, the folder is empty for a test
         mockMvc.perform(getAuthenticated("/bundle"))
                 .andExpect(status().isOk())
                 .andExpect(content().json("[]"));
