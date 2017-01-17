@@ -287,6 +287,7 @@ public class MediaControllerCreateTest extends AbstractMediaControllerTest {
     @Test
     public void successMediaImage() throws Exception {
         final long previousRevision = revisionService.getLatest();
+        final long size = mediaService.getAll().size();
         final String name = "Zelda";
         final String chosenUuid = UUID.randomUUID().toString();
         final com.excilys.shooflers.dashboard.server.model.type.MediaType mediaType = MediaType.IMAGE;
@@ -317,6 +318,8 @@ public class MediaControllerCreateTest extends AbstractMediaControllerTest {
         // Vérification de la persistence
         Path path = fileSystem.getPath(props.getBasePath(), MediaDao.ENTITY_NAME, mediaMetadataDto.getBundleTag(), mediaMetadataDto.getUuid() + ".yaml");
         assertTrue(Files.isRegularFile(path));
+
+        assertEquals(size + 1, mediaService.getAll().size());
 
         // Vérification de la peristence de l'écriture
         path = fileSystem.getPath(props.getBaseResources(), mediaMetadataDto.getUrl().substring(mediaMetadataDto.getUrl().lastIndexOf("/") + 1));

@@ -162,12 +162,23 @@ public class MediaDaoImpl implements MediaDao {
         if (bundleTag == null) {
             throw new ResourceNotFoundException();
         }
+
+        MediaMetadata mediaMetadata = get(uuid);
+
+        // TODO add a rollback
         boolean result = YamlUtils.delete(mediaDatabasePath.resolve(bundleTag + "/" + uuid + ".yaml"));
         if (!result) {
             throw new ResourceIoException();
         }
-        // FIXME for now, we chose not to delete files when media is destroyed.
-        // Refresh Reverse index
+
+        if (mediaMetadata.hasFile()) {
+            result = YamlUtils.delete(getResourceFile(mediaMetadata.getUrl()));
+            if (!result) {
+                throw new ResourceIoException();
+            }
+        }
+
+        // TODO Refresh Reverse index
         refreshReverseIndex();
     }
 

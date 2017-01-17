@@ -27,7 +27,7 @@ public class MediaMetadata {
 
     private Validity validity;
 
-    // Used only for WEB type
+    // Used only for WEB type or content media
     private String url;
 
     // Used only for NEWS type
