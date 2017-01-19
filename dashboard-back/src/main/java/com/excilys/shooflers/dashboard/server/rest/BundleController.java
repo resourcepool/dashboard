@@ -8,6 +8,9 @@ import com.excilys.shooflers.dashboard.server.security.annotation.RequireValidAp
 import com.excilys.shooflers.dashboard.server.security.annotation.RequireValidUser;
 import com.excilys.shooflers.dashboard.server.service.BundleService;
 import com.excilys.shooflers.dashboard.server.validator.BundleMedataDtoValidator;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -41,6 +44,7 @@ public class BundleController {
      */
     @RequestMapping(method = RequestMethod.GET)
     @RequireValidApiKey
+    @ApiOperation(value = "List of BundleDto")
     public List<BundleMetadataDto> getAll() {
         List<BundleMetadataDto> bundles = mapper.toListDto(bundleService.getAll());
         return bundles;
@@ -52,6 +56,8 @@ public class BundleController {
      * @param bundleMetadataDto Bundle to save
      */
     @RequestMapping(method = RequestMethod.POST)
+    @ApiOperation(value = "Persist a Bundle", notes = "Save a new Bundle and add a new revision")
+    @ApiResponse(code = 201, message = "REUSSI")
     public BundleMetadataDto save(@RequestBody BundleMetadataDto bundleMetadataDto) {
         validator.validate(bundleMetadataDto);
         BundleMetadata bundle = mapper.fromDto(bundleMetadataDto);
@@ -67,6 +73,7 @@ public class BundleController {
      */
     @RequestMapping(value = "{tag}", method = RequestMethod.GET)
     @RequireValidApiKey
+    @ApiOperation(value = "Get a Bundle by his Tag", notes = "Get a particular Bundle by its tag")
     public BundleMetadataDto get(@PathVariable("tag") String tag) {
         BundleMetadata result = bundleService.getByTag(tag);
         if (result == null) {
@@ -83,6 +90,7 @@ public class BundleController {
      * @return
      */
     @RequestMapping(method = RequestMethod.PUT)
+    @ApiOperation(value = "Update a Bundle", code = 204)
     public BundleMetadataDto update(@RequestBody BundleMetadataDto bundleMetadataDto) {
         validator.validate(bundleMetadataDto);
 
@@ -102,10 +110,11 @@ public class BundleController {
      * @param tag tag to delete
      */
     @RequestMapping(value = "{tag}", method = RequestMethod.DELETE)
+    @ApiOperation(value = "Delete a bundle by its tags.")
     public void delete(@PathVariable("tag") String tag) {
         BundleMetadata result = bundleService.getByTag(tag);
         if (result == null) {
-            throw new ResourceNotFoundException("Bound not found");
+            throw new ResourceNotFoundException("Bundle not found");
         } else {
             bundleService.delete(result);
         }
