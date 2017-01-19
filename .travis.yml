@@ -6,5 +6,8 @@ jdk:
 install:
   - "nvm install 7.3.0"
 
+before_script:
+  - "cd dashboard-back; mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V"
+
 script:
-  - "cd dashboard-back; mvn verify"
+  - "cd dashboard-back; mvn verify -B"
