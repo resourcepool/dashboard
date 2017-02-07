@@ -187,6 +187,16 @@ public class MediaMetadata {
     }
 
     public boolean hasFile() {
+        return hasFile(mediaType);
+    }
+
+    public static boolean hasFile(MediaType mediaType) {
         return !MEDIA_TYPES_NO_FILE.contains(mediaType);
     }
+
+    public static boolean hasFile(String mediaTypeString) {
+        return hasFile(MediaType.valueOf(mediaTypeString));
+    }
+
+
 }

@@ -6,12 +6,16 @@ import com.excilys.shooflers.dashboard.server.exception.ResourceNotFoundExceptio
 import com.excilys.shooflers.dashboard.server.model.Content;
 import com.excilys.shooflers.dashboard.server.model.Media;
 import com.excilys.shooflers.dashboard.server.model.metadata.MediaMetadata;
+import com.excilys.shooflers.dashboard.server.model.type.MediaType;
 import com.excilys.shooflers.dashboard.server.security.annotation.RequireValidApiKey;
 import com.excilys.shooflers.dashboard.server.security.annotation.RequireValidUser;
 import com.excilys.shooflers.dashboard.server.service.MediaService;
 import com.excilys.shooflers.dashboard.server.validator.MediaValidator;
+import io.swagger.annotations.ApiOperation;
+import org.apache.commons.codec.binary.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -103,25 +107,76 @@ public class MediaController {
     }
 
     @RequestMapping(method = RequestMethod.PUT)
-    public MediaMetadataDto update(@RequestParam("media") String json, @RequestParam(value = "file", required = false) MultipartFile multipartFile) {
-        MediaMetadataDto mediaMetadataDto = mapper.toDto(json);
+    public MediaMetadataDto update(@RequestBody MediaMetadataDto mediaMetadataDto) {
+        MediaMetadata mediaMetadataFromDb;
+        if (mediaMetadataDto.getUuid() == null || (mediaMetadataFromDb = mediaService.get(mediaMetadataDto.getUuid())) == null) {
+            throw new ResourceNotFoundException("A valid uuid is required to edit a bundle.");
+        }
 
         // Check Validation of MediaMetadataDto
-        validator.validate(mediaMetadataDto, multipartFile);
+        validator.validate(mediaMetadataDto, null);
 
+        // Additionnal Validations
+        if (MediaMetadata.hasFile(mediaMetadataDto.getMediaType())
+                && !StringUtils.equals(mediaMetadataFromDb.getUrl(), mediaMetadataDto.getUrl())) {
+            throw new IllegalArgumentException("You can set the URL if the media has a file.");
+        }
+
+        // Mapper
         MediaMetadata meta = mapper.fromDto(mediaMetadataDto);
 
         // Save or update media
         Media media = Media
                 .builder()
                 .metadata(meta)
-                .content(multipartFile == null ? null : new Content(multipartFile, meta.getMediaType()))
                 .build();
 
         mediaService.update(media);
 
         // Get generated Uuid
         mediaMetadataDto.setUuid(media.getMetadata().getUuid());
+
+        return mediaMetadataDto;
+    }
+
+    @RequestMapping(value = "{uuid}/file", method = RequestMethod.POST)
+    @ApiOperation(value = "Permet de mettre à jour le fichier d'un media et de changer aussi son type.")
+    public MediaMetadataDto updateWithFile(@PathVariable("uuid") String uuid, @RequestParam("file") MultipartFile multipartFile) {
+        MediaMetadata mediaMetadata = mediaService.get(uuid);
+
+        if (mediaMetadata == null) {
+            throw new ResourceNotFoundException("A valid uuid is required to edit a bundle.");
+        }
+
+        MediaType mediaType = MediaType.parseMimeType(multipartFile.getContentType());
+        if (mediaType == null) {
+            throw new IllegalArgumentException(MESSAGE_MEDIA_TYPE_NOT_SUPPORTED);
+        }
+
+        MediaMetadataDto mediaMetadataDto = mapper.toDto(mediaMetadata);
+
+        mediaMetadataDto.setMediaType(mediaType.toString());
+
+        // Check Validation of MediaMetadataDto
+        validator.validate(mediaMetadataDto, multipartFile);
+
+        // Mapper
+        MediaMetadata meta = mapper.fromDto(mediaMetadataDto);
+
+        // Save or update media
+        Media media = Media
+                .builder()
+                .metadata(meta)
+                .content(new Content(multipartFile, meta.getMediaType()))
+                .build();
+
+        mediaService.update(media);
+
+        // Get generated Uuid
+        mediaMetadataDto.setUuid(media.getMetadata().getUuid());
+
+        // Get generated Url si non media web
+        mediaMetadataDto.setUrl(media.getMetadata().getUrl());
 
         return mediaMetadataDto;
     }
