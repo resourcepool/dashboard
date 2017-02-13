@@ -2,15 +2,20 @@ package com.excilys.shooflers.dashboard.server.bundlecontroller.edit;
 
 import com.excilys.shooflers.dashboard.server.bundlecontroller.AbstractBundleControllerTest;
 import com.excilys.shooflers.dashboard.server.dto.BundleMetadataDto;
+import com.excilys.shooflers.dashboard.server.dto.MediaMetadataDto;
+import com.excilys.shooflers.dashboard.server.model.Media;
 import com.excilys.shooflers.dashboard.server.model.Revision;
 import com.excilys.shooflers.dashboard.server.model.metadata.BundleMetadata;
+import com.excilys.shooflers.dashboard.server.model.metadata.MediaMetadata;
+import com.excilys.shooflers.dashboard.server.service.MediaService;
 import com.excilys.shooflers.dashboard.server.service.impl.BundleServiceImpl;
 import org.exparity.hamcrest.date.LocalDateTimeMatchers;
 import org.hamcrest.Matchers;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MvcResult;
 
 import java.time.Duration;
@@ -30,6 +35,9 @@ public class BundleControllerEditTest extends AbstractBundleControllerTest {
     private BundleMetadata formBundleMetadata;
 
     private BundleMetadataDto formBundleMetadataDto;
+
+    @Autowired
+    private MediaService mediaService;
 
     @Override
     @Before
@@ -315,8 +323,67 @@ public class BundleControllerEditTest extends AbstractBundleControllerTest {
     }
 
     @Test
-    @Ignore
     public void successWithContent() throws Exception {
-        fail();
+        // Créer d'un Media sans fichier
+        Media media1 = Media.builder()
+                .metadata(MediaMetadata.builder()
+                        .name("Jojo")
+                        .mediaType(com.excilys.shooflers.dashboard.server.model.type.MediaType.WEB)
+                        .bundleTag(formBundleMetadata.getTag())
+                        .url("http://www.jba-france.fr/")
+                        .build())
+                .build();
+
+        mediaService.save(media1);
+
+        // Création d'un Media avec fichier
+        final String name = "Zelda";
+        final com.excilys.shooflers.dashboard.server.model.type.MediaType mediaType = com.excilys.shooflers.dashboard.server.model.type.MediaType.IMAGE;
+        final MockMultipartFile jsonFile = new MockMultipartFile("file", "texte.jpeg", "image/jpeg", "{json:null}".getBytes());
+        MvcResult result = mockMvc.perform(fileUploadAuthenticated("/media")
+                .file(jsonFile)
+                .param("media", toJson(new MediaMetadataDto.Builder()
+                        .name(name)
+                        .mediaType(mediaType)
+                        .bundleTag(formBundleMetadata.getTag())
+                        .build()))
+        )
+                .andExpect(status().isOk())
+                .andReturn();
+        MediaMetadataDto mediaMetadataDto = fromJson(result.getResponse().getContentAsString(), MediaMetadataDto.class);
+
+        final long previousBundleSize = bundleService.getAll().size();
+        final long previousMediaSize = mediaService.getAll().size();
+        final long previousRevision = revisionService.getLatest();
+
+        assertThat(bundleService.getAll().size(), Matchers.greaterThanOrEqualTo(1));
+
+        BundleMetadata bundleMetadata = bundleService.getAll().get(bundleService.getAll().size() - 1);
+        BundleMetadataDto bundleMetaDataDto = bundleDtoMapper.toDto(bundleMetadata);
+
+        assertNotNull(bundleService.getByTag(bundleMetaDataDto.getTag()));
+        assertNotNull(mediaService.get(media1.getMetadata().getUuid()));
+        assertNotNull(mediaService.get(mediaMetadataDto.getUuid()));
+
+        final String secondBundleName = "secondBundleName";
+        formBundleMetadata.setName(secondBundleName);
+
+        MvcResult mvcResult = mockMvc.perform(putAuthenticated(("/bundle"))
+                .content(toJson(formBundleMetadataDto))
+                .contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        BundleMetadataDto bundleMetadataDto = fromJson(mvcResult.getResponse().getContentAsString(), BundleMetadataDto.class);
+        assertNotEquals(mediaMetadataDto.getUuid(), formBundleMetadata.getUuid());
+
+        assertNotNull(bundleService.getByTag(bundleMetaDataDto.getTag()));
+        assertNotNull(mediaService.get(media1.getMetadata().getUuid()));
+        assertNotNull(mediaService.get(mediaMetadataDto.getUuid()));
+
+        assertEquals(previousBundleSize, bundleService.getAll().size());
+        assertEquals(previousMediaSize, mediaService.getAll().size());
+        assertEquals(previousRevision + 1, revisionService.getLatest());
+        assertEquals(2, mediaService.getByBundleTag(bundleMetadata.getTag()).size());
     }
 }

@@ -10,7 +10,7 @@ import com.excilys.shooflers.dashboard.server.model.Media;
 import com.excilys.shooflers.dashboard.server.model.metadata.MediaMetadata;
 import com.excilys.shooflers.dashboard.server.model.type.MediaType;
 import com.excilys.shooflers.dashboard.server.property.DashboardProperties;
-import org.apache.commons.io.FileUtils;
+import com.excilys.shooflers.dashboard.server.util.PathUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -148,7 +148,7 @@ public class MediaDaoImpl implements MediaDao {
             }
             medias.forEach(this::delete);
             // Remove parent directory
-            FileUtils.deleteDirectory(mediaDatabasePath.resolve(bundleTag).toFile());
+            PathUtils.deleteDirectory(mediaDatabasePath.resolve(bundleTag));
         } catch (IOException e) {
             throw new ResourceIoException(e);
         }
