@@ -61,10 +61,15 @@ public class MediaDaoImpl implements MediaDao {
 
     @Override
     public Path getContent(String filename) {
-        String uuid = filename.substring(0, filename.indexOf("."));
-        String ext = filename.substring(uuid.length());
-        Path path = getResourceFile(uuid, ext);
-        return path;
+        int index = filename.indexOf(".");
+        if (index == -1) {
+            return null;
+        } else {
+            String uuid = filename.substring(0, index);
+            String ext = filename.substring(uuid.length());
+            Path path = getResourceFile(uuid, ext);
+            return path;
+        }
     }
 
     @Override
