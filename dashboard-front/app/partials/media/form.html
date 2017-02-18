@@ -1,7 +1,7 @@
 <div class="container">
   <div class="row">
     <div class="pull-left">
-      <h4 id="tables"><a href="#/home">{{ "APP" | translate }}</a> > <a href="#/bundle/{{ bundle.uuid }}">{{ bundle.name }}</a>  > {{ nav }} </h4>
+      <h4 id="tables"><a href="#!/home">{{ "APP" | translate }}</a> > <a href="#!/bundle/{{ bundle.uuid }}">{{ bundle.name }}</a>  > {{ nav }} </h4>
     </div>
   </div>
   <div ng-if="error" class="alert alert-danger">{{ error }}</div>
@@ -70,7 +70,7 @@
         </fieldset>
         <div class="actions pull-right">
           <input type="submit" class="btn btn-primary" value="{{ 'ACTIONS.SEND' | translate }}">
-          or <a href="#/bundle/{{bundle.tag}}/media" class="btn btn-default"  ng-click="reset()">{{ "ACTIONS.CANCEL" | translate }}</a>
+          or <a href="#!/bundle/{{bundle.tag}}/media" class="btn btn-default"  ng-click="reset()">{{ "ACTIONS.CANCEL" | translate }}</a>
         </div>
       </form>
     </div>

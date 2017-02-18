@@ -56,6 +56,9 @@ public class BundleDaoImpl implements BundleDao {
     @Override
     public BundleMetadata getByTag(String tag) {
         String uuid = bri.getBundleUuid(tag);
+        if (uuid == null) {
+          return null;
+        }
         Path dataFile = getBundleFile(uuid);
         return readBundleFromFile(dataFile);
     }
@@ -102,6 +105,15 @@ public class BundleDaoImpl implements BundleDao {
         return bundleDatabasePath.resolve(dataFileName);
     }
 
+    private boolean isUuid(String content) {
+        // FIXME: Dirty, replace by UUID parser
+        try {
+            UUID.fromString(content);
+        } catch (RuntimeException e) {
+            return false;
+        }
+        return true;
+    }
 
     private BundleMetadata readBundleFromFile(Path path) {
         return YamlUtils.read(path, BundleMetadata.class);

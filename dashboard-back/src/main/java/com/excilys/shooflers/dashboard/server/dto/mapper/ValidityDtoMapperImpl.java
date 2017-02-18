@@ -19,9 +19,13 @@ public class ValidityDtoMapperImpl implements ValidityDtoMapper {
 
     @Override
     public Validity fromDto(ValidityDto dto) {
-        return dto != null && (dto.getStart() != null || dto.getEnd() != null) ? new Validity.Builder()
-                .start(dto.getStart() == null ? null : LocalDateTime.parse(dto.getStart(), FORMATTER))
-                .end(dto.getEnd() == null ? null : LocalDateTime.parse(dto.getEnd(), FORMATTER))
+        return dto != null && ((notEmpty(dto.getStart()) || notEmpty(dto.getEnd()))) ? new Validity.Builder()
+                .start(notEmpty(dto.getStart()) ? LocalDateTime.parse(dto.getStart().trim(), FORMATTER) : null)
+                .end(notEmpty(dto.getEnd()) ? LocalDateTime.parse(dto.getEnd().trim(), FORMATTER) : null)
                 .build() : null;
+    }
+    
+    private boolean notEmpty(String s) {
+        return s != null && !s.trim().isEmpty();
     }
 }

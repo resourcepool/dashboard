@@ -55,7 +55,7 @@ dashboardFrontApp.config(['$translateProvider',
       "APP" : "Dashboard",
       "HOME" : "Home",
       "BUNDLE" : {
-        "THIS" : "This",
+        "ADD" : "Add Bundle",
         "NAME": "Name",
       },
       "MEDIA": {
@@ -118,4 +118,4 @@ dashboardFrontApp.config(['$translateProvider',
     // Tell the module what language to use by default
     $translateProvider.preferredLanguage('en_US');
 
-  }])
+  }]);

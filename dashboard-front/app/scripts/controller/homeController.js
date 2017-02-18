@@ -6,12 +6,13 @@
 angular
   .module('dashboardFrontApp')
   .controller('HomeController',
-    [ '$scope', '$cookieStore','DATE', 'MSG', 'bundleService', 'firewallService', 'responseService', 'dateService',
-      function ($scope, $cookieStore, DATE, MSG, bundleService, firewallService, responseService, dateService) {
-
-        $scope.bundles = {};
-
+    [ '$scope', '$cookieStore', '$location', 'DATE', 'MSG', 'bundleService', 'firewallService', 'responseService', 'dateService',
+      function ($scope, $cookieStore, $location, DATE, MSG, bundleService, firewallService, responseService, dateService) {
+        // Check authentication
         firewallService.isAuthenticated();
+
+        // Bundles
+        $scope.bundles = {};
 
         function getBundles() {
           bundleService.getAll().then(function(response) {
@@ -28,9 +29,9 @@ angular
 
 
         // on bind la fonction de suppression
-        $scope.remove = function(id) {
+        $scope.remove = function(tag) {
           if (confirm(MSG.CONF.DELETE_BUNDLE)) {
-            bundleService.removeById(id).then(
+            bundleService.removeByTag(tag).then(
               function (response) {
                 if (responseService.isResponseOK($scope, response)) {
                 	getBundles();

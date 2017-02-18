@@ -1,12 +1,12 @@
 <div class="container">
   <div class="row">
     <div class="pull-left">
-      <h4 id="tables"><a href="#/home">{{ "APP" | translate }}</a> > {{ bundle.name }} <span aria-hidden="true" class="glyphicon glyphicon-folder-open"></span> </h4>
+      <h4 id="tables"><a href="#!/home">{{ "APP" | translate }}</a> > {{ bundle.name }} <span aria-hidden="true" class="glyphicon glyphicon-folder-open"></span> </h4>
     </div>
 
     <div class="pull-right">
       <h4>
-        <a href="#/bundle/{{bundle.tag}}/media/add"> {{ "ACTIONS.ADD" | translate }} {{ "MEDIA.THIS" | translate }} <span aria-hidden="true" class="glyphicon glyphicon-upload"></span></a>
+        <a href="#!/bundle/{{bundle.tag}}/media/add"> {{ "ACTIONS.ADD" | translate }} {{ "MEDIA.THIS" | translate }} <span aria-hidden="true" class="glyphicon glyphicon-upload"></span></a>
       </h4>
     </div>
   </div>
@@ -37,7 +37,7 @@
         <td>{{ media.validity.end }}</td>
         <td>
           <button class="btn-default btn btn-sm" ng-click="remove(media.uuid);" ><span aria-hidden="true" class="glyphicon glyphicon-remove"></span></button>
-          <a class="btn-default btn btn-sm" href="#/bundle/{{ bundle.tag }}/media/edit/{{ media.uuid }}" ><span aria-hidden="true" class="glyphicon glyphicon-edit"></span></a>
+          <a class="btn-default btn btn-sm" href="#!/bundle/{{ bundle.tag }}/media/edit/{{ media.uuid }}" ><span aria-hidden="true" class="glyphicon glyphicon-edit"></span></a>
         </td>
       </tr>
       </tbody>

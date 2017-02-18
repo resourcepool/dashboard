@@ -1,7 +1,6 @@
 package com.excilys.shooflers.dashboard.server.rest;
 
 import com.excilys.shooflers.dashboard.server.exception.ResourceNotFoundException;
-import com.excilys.shooflers.dashboard.server.security.annotation.RequireValidApiKey;
 import com.excilys.shooflers.dashboard.server.service.MediaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileSystemResource;
@@ -20,7 +19,6 @@ import java.nio.file.Path;
  * @author Loïc Ortola on 07/06/2016.
  */
 @RestController
-@RequireValidApiKey
 @RequestMapping("/file")
 public class FileController {
 
@@ -34,7 +32,6 @@ public class FileController {
      * @return the media content if exists, 404 otherwise
      */
     @RequestMapping(value = "/{filename:.*}", method = RequestMethod.GET)
-    @RequireValidApiKey
     @ResponseBody
     public FileSystemResource get(@PathVariable String filename) {
         Path result = mediaService.getContent(filename);

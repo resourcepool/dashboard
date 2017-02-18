@@ -9,7 +9,7 @@ angular
 
     this.getByTag = getByTag;
     this.save = save;
-    this.removeById = removeById;
+    this.removeByTag = removeByTag;
     this.getAll = getAll;
 
     function getByTag(tag) {
@@ -36,8 +36,8 @@ angular
       });
     }
 
-    function removeById(id) {
-      return $http.delete(API.BASE_URL + "/bundle/" + id)
+    function removeByTag(tag) {
+      return $http.delete(API.BASE_URL + "/bundle/" + tag)
         .then(function(response) {
           return response;
         }, function (error){
