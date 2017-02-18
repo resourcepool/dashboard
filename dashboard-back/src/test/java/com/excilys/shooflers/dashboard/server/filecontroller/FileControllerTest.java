@@ -40,18 +40,6 @@ public class FileControllerTest extends AbstractControllerTest {
     private BundleDtoMapperImpl bundleDtoMapper;
 
     @Test
-    public void failedWithNoAuthentication() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.get("/file/image"))
-                .andExpect(status().isUnauthorized());
-    }
-
-    @Test
-    public void failedWithAuthenticationAccount() throws Exception {
-        mockMvc.perform(getAuthenticated("/file/image"))
-                .andExpect(status().isUnauthorized());
-    }
-
-    @Test
     @Ignore("Waiting for Spring 5 for the test running")
     public void success() throws Exception {
         final String bundleName = "bundleMetadataDto";
