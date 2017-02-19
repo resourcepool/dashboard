@@ -6,6 +6,6 @@ COPY . /data
 
 WORKDIR /data
 
-RUN mvn package
+RUN mvn -DskipTests package
 
 CMD ["java", "-jar", "target/dashboard-back-1.0.jar"]
