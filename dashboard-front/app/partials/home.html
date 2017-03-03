@@ -5,13 +5,100 @@
     </div>
     <div class="pull-right">
       <h5>
-        <a href="#!/bundle/add"> {{ "BUNDLE.ADD" | translate }} <span aria-hidden="true" class="glyphicon glyphicon-folder-close"></span></a>
+        <a href="#!/logout"> {{ "LOGOUT" | translate }} <span aria-hidden="true"
+                                                              class="glyphicon glyphicon-log-out"></span></a>
       </h5>
     </div>
   </div>
   <div ng-if="error" class="alert alert-danger">{{ error }}</div>
   <hr>
+  <!-- Devices -->
   <div class="row">
+    <div class="pull-left">
+      <h4>{{ "DEVICES" | translate }} </h4>
+    </div>
+    <table class="table table-striped table-hover ">
+      <thead>
+      <tr>
+        <th>{{ "DEVICE.ID" | translate }}</th>
+        <th>{{ "DEVICE.NAME" | translate }}</th>
+        <th>{{ "DEVICE.DETAILS" | translate }}</th>
+        <th></th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr ng-repeat="device in devices">
+        <td><a href="#!/device/edit/{{ device.id }}"><span aria-hidden="true"
+                                                           class="glyphicon glyphicon-folder-close"></span> {{device.id
+          }} </a></td>
+        <td>{{ device.name }}</td>
+        <td>
+          {{ "DEVICE.LAST_HEALTHCHECK" | translate }}: {{ device.lastHealthCheck }}
+          <br/>
+          {{ "DEVICE.LAST_KNOWN_IP" | translate }}: {{ device.lastKnownIp}}
+          <br/>
+          {{ "DEVICE.HAS_FEED" | translate }}: <span ng-if="device.feedId != null"
+                                                     class="glyphicon glyphicon-ok"></span><span ng-if="!device.feedId"
+                                                                                                 class="glyphicon glyphicon-ban-circle"></span>
+        </td>
+        <td>
+          <button class="btn-default btn btn-sm" ng-click="removeDevice(device.id);"><span aria-hidden="true"
+                                                                                           class="glyphicon glyphicon-remove"></span>
+          </button>
+          <a class="btn-default btn btn-sm" href="#!/device/edit/{{ device.id }}"><span aria-hidden="true"
+                                                                                        class="glyphicon glyphicon-edit"></span></a>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+  <!-- Feeds -->
+  <div class="row">
+    <div class="pull-left">
+      <h4>{{ "FEEDS" | translate }} </h4>
+    </div>
+    <div class="pull-right">
+      <h5>
+        <a href="#!/feed/add"> {{ "FEED.ADD" | translate }} <span aria-hidden="true"
+                                                                  class="glyphicon glyphicon-film"></span></a>
+      </h5>
+    </div>
+    <table class="table table-striped table-hover ">
+      <thead>
+      <tr>
+        <th>{{ "FEED.NAME" | translate }}</th>
+        <th>{{ "FEED.DETAILS" | translate }}</th>
+        <th></th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr ng-repeat="feed in feeds">
+        <td><a href="#!/feed/edit/{{ feed.uuid }}"><span aria-hidden="true"
+                                                         class="glyphicon glyphicon-folder-close"></span> {{feed.name }}
+        </a></td>
+        <td><span translate="BUNDLE.INSIDE" translate-values="{count: feed.bundleTags.length}"/></td>
+        <td>
+          <button class="btn-default btn btn-sm" ng-click="removeFeed(feed.uuid);"><span aria-hidden="true"
+                                                                                         class="glyphicon glyphicon-remove"></span>
+          </button>
+          <a class="btn-default btn btn-sm" href="#!/feed/edit/{{ feed.uuid }}"><span aria-hidden="true"
+                                                                                      class="glyphicon glyphicon-edit"></span></a>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+  <!-- Bundles -->
+  <div class="row">
+    <div class="pull-left">
+      <h4>{{ "BUNDLES" | translate }} </h4>
+    </div>
+    <div class="pull-right">
+      <h5>
+        <a href="#!/bundle/add"> {{ "BUNDLE.ADD" | translate }} <span aria-hidden="true"
+                                                                      class="glyphicon glyphicon-folder-close"></span></a>
+      </h5>
+    </div>
     <table class="table table-striped table-hover ">
       <thead>
       <tr>
@@ -23,12 +110,21 @@
       </thead>
       <tbody>
       <tr ng-repeat="bundle in bundles">
-        <td><a href="#!/bundle/{{ bundle.tag }}/media"><span aria-hidden="true" class="glyphicon glyphicon-folder-close"></span> {{ bundle.name }} </a></td>
+        <td>
+          <a href="#!/bundle/{{ bundle.tag }}/media">
+            <span aria-hidden="true" class="glyphicon glyphicon-folder-close"></span>
+            {{ bundle.name }}
+          </a>
+        </td>
         <td>{{ bundle.validity.start }}</td>
         <td>{{ bundle.validity.end }}</td>
         <td>
-          <button class="btn-default btn btn-sm" ng-click="remove(bundle.tag);" ><span aria-hidden="true" class="glyphicon glyphicon-remove"></span></button>
-          <a class="btn-default btn btn-sm" href="#!/bundle/edit/{{ bundle.tag }}" ><span aria-hidden="true" class="glyphicon glyphicon-edit"></span></a>
+          <button class="btn-default btn btn-sm" ng-click="remove(bundle.tag);">
+            <span aria-hidden="true" class="glyphicon glyphicon-remove"></span>
+          </button>
+          <a class="btn-default btn btn-sm" href="#!/bundle/edit/{{ bundle.tag }}">
+            <span aria-hidden="true" class="glyphicon glyphicon-edit"></span>
+          </a>
         </td>
       </tr>
       </tbody>

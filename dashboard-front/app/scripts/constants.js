@@ -20,10 +20,12 @@ angular
       "GET_MEDIAS": "Cannot get metdas",
       "DELETE_BUNDLE": "Cannot delete bundle",
       "DELETE_MEDIA": "Cannot delete media",
+      "DELETE_FEED": "Cannot delete feed",
       "UPLOAD_MEDIA": "Error when trying to upload media",
       "ADD_BUNDLE": "Cannot create bundle",
       "ADD_MEDIA" : "Cannot create media",
-      "SERVER": "Internal server error occured. Please try again later."
+      "SERVER": "Internal server error occured. Please try again later.",
+      "FEED_MUST_HAVE_BUNDLES": "Your Feed must have at least one bundle."
     },
     "SUCC" : {
       "ADD_BUNDLE" : "Bundle created with success",
@@ -33,6 +35,7 @@ angular
     },
     "CONF": {
       "DELETE_BUNDLE" : "Are you sure to delete selected bundle ?",
-      "DELETE_MEDIA" : "Are you sure to delete selected media ?"
+      "DELETE_MEDIA" : "Are you sure to delete selected media ?",
+      "DELETE_FEED" : "Are you sure to delete selected feed ?"
     }
   });

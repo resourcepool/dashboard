@@ -1,0 +1,38 @@
+<div class="container">
+  <div class="row">
+    <div class="col-sm-3">
+      <h4 id="tables"><a href="#!/home">{{ "APP" | translate }}</a> > {{ nav }} </h4>
+    </div>
+  </div>
+  <hr>
+  <div class="row">
+    <div class="col-xs-8 col-xs-offset-1 box">
+      <form name="form" ng-submit="submit(form.$valid)" novalidate>
+        <fieldset>
+          <legend>{{ title }}</legend>
+          <p ng-show="loading">{{ "ACTIONS.SENDING" | translate }} <img src="images/loader.gif"></p>
+          <div ng-if="error" class="alert alert-danger">{{ error }}</div>
+
+          <div class="form-group">
+            <label for="title">{{ "FEED.NAME" | translate }}</label>
+            <input id="title" name="title" type="text" placeholder="{{ 'PLACEHOLDERS.FEED.NAME' | translate }}" class="form-control" minlength="2" maxlength="30" required ng-model="feed.name">
+            <div class="alert-danger alert" ng-show="form.$submitted && form.title.$error.required" class="help-block">{{ "ERRORS.FIELDS.EMPTY" }}</div>
+            <div class="alert-danger alert" ng-show="form.$submitted && form.title.$error.minlength" class="help-block">{{ "ERRORS.FIELDS.MINLENGTH" | translate:'{ min: "2" }' }}</div>
+            <div class="alert-danger alert" ng-show="form.title.$error.maxlength" class="help-block">{{ "ERRORS.FIELDS.MAXLENGTH" | translate: '{ max: "30"}' }}</div>
+          </div>
+          <div class="form-group">
+            <label>{{ "FEED.BUNDLES" | translate }}</label>
+            <div ng-repeat="bundle in bundles">
+            <input type="checkbox" ng-click="select(bundle)" ng-checked="bundle.selected"/> {{bundle.name}}
+            </div>
+          </div>
+
+        </fieldset>
+        <div class="actions pull-right">
+          <input type="submit" class="btn btn-primary" value="{{ 'ACTIONS.SEND' | translate }}">
+          or <a href="#!/home" class="btn btn-default"  ng-click="reset()">{{ 'ACTIONS.CANCEL' | translate }}</a>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

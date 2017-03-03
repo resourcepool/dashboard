@@ -41,10 +41,20 @@ dashboardFrontApp.config(['$routeProvider',
     when('/bundle/:bundleTag/media/add', {
       templateUrl: 'partials/media/form.html',
       controller: 'MediaAddController'
-    }).when('/bundle/:bundleTag/media/edit/:mediaId', {
+    }).
+    when('/bundle/:bundleTag/media/edit/:mediaId', {
       templateUrl: 'partials/media/form.html',
       controller: 'MediaEditController'
-    }).otherwise({
+    }).
+    when('/feed/add', {
+      templateUrl: 'partials/feed/form_add.html',
+      controller: 'FeedAddController'
+    }).
+    when('/feed/edit/:feedUuid', {
+      templateUrl: 'partials/feed/form.html',
+      controller: 'FeedEditController'
+    }).
+    otherwise({
       redirectTo: '/home'
     });
   }]);
@@ -55,8 +65,14 @@ dashboardFrontApp.config(['$translateProvider',
       "APP" : "Dashboard",
       "HOME" : "Home",
       "BUNDLE" : {
-        "ADD" : "Add Bundle",
+        "ADD" : "New Bundle",
         "NAME": "Name",
+        "INSIDE": "Contains {{count}} bundles"
+      },
+      "FEED": {
+        "NAME": "Name",
+        "DETAILS": "Details",
+        "ADD": "New Feed"
       },
       "MEDIA": {
         "THIS": "Media",
