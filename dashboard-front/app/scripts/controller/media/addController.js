@@ -1,7 +1,4 @@
-'use strict'
-/**
- * Created by excilys on 06/06/16.
- */
+'use strict';
 
 angular
   .module('dashboardFrontApp')
@@ -32,7 +29,7 @@ angular
             $scope.error = MSG.ERR.SERVER;
           }
         });
-        
+
         $scope.updateBox = function() {
           $scope.bundle.validity = $
         };

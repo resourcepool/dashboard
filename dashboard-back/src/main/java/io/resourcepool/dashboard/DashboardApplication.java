@@ -84,9 +84,9 @@ public class DashboardApplication extends WebMvcConfigurerAdapter {
      */
     private ApiInfo apiInfo() {
         return new ApiInfoBuilder()
-                .title("Dashboard REST Api Documentations with Swagger")
-                .description("Dashboard REST Api Documentations with Swagger")
-                .contact("Groupe Excilys")
+                .title("Dashboard REST Api Documentation with Swagger")
+                .description("Dashboard REST Api Documentation with Swagger")
+                .contact("Resourcepool")
                 .version("1.0")
                 .build();
     }

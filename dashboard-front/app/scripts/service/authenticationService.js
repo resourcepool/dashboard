@@ -1,9 +1,5 @@
 'use strict';
 
-/**
- * Created by excilys on 09/06/16.
- */
-
 angular.module('dashboardFrontApp')
   .factory('authenticationService',
     ['Base64', '$http', '$cookieStore', '$rootScope', '$timeout',

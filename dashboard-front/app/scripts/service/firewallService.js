@@ -1,8 +1,4 @@
-'use strict'
-
-/**
- * Created by excilys on 09/06/16.
- */
+'use strict';
 
 angular
   .module("dashboardFrontApp")

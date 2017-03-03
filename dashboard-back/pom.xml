@@ -4,9 +4,9 @@
 
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.excilys.shooflers.dashboard</groupId>
+    <groupId>io.resourcepool.dashboard</groupId>
     <artifactId>dashboard-back</artifactId>
-    <version>1.0</version>
+    <version>1.0.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>dashboard-back</name>
