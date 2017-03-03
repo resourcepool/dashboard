@@ -19,7 +19,7 @@
             android:layout_marginTop="50dp"
             android:gravity="center">
 
-            <com.excilys.shoofleurs.dashboard.ui.utils.TypeFaceTextView
+            <io.resourcepool.dashboard.ui.utils.TypeFaceTextView
                 android:id="@+id/title_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -67,7 +67,7 @@
                 android:background="@drawable/progress_view_point" />
         </RelativeLayout>
 
-        <com.excilys.shoofleurs.dashboard.ui.utils.TypeFaceTextView
+        <io.resourcepool.dashboard.ui.utils.TypeFaceTextView
             android:id="@+id/debug_message"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

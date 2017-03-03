@@ -3,26 +3,26 @@ apply plugin: 'android-apt'
 
 
 android {
-    compileSdkVersion 23
-    buildToolsVersion "23.0.3"
+    compileSdkVersion 25
+    buildToolsVersion '25.0.0'
 
     defaultConfig {
-        applicationId "com.excilys.shoofleurs.dashboard"
+        applicationId "io.resourcepool.dashboard"
         minSdkVersion 19
-        targetSdkVersion 23
+        targetSdkVersion 25
         versionCode 1
         versionName "1.0"
     }
     buildTypes {
         debug {
-            buildConfigField "String", "API_KEY", loadPropertiesFile("conf.properties").getProperty("apiKey")
+            buildConfigField "String", "API_KEY", "default"
             buildConfigField "String", "API_URL", '"http://192.168.10.143:8080"'
         }
 
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            buildConfigField "String", "API_KEY", loadPropertiesFile("conf.properties").getProperty("apiKey")
+            buildConfigField "String", "API_KEY", "default"
         }
     }
     packagingOptions {
@@ -46,8 +46,8 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
 
     /* Android Support*/
-    compile 'com.android.support:appcompat-v7:23.4.0'
-    compile 'com.android.support:design:23.4.0'
+    compile 'com.android.support:appcompat-v7:25.2.0'
+    compile 'com.android.support:design:25.2.0'
 
     /*Butterknife*/
     compile 'com.jakewharton:butterknife:8.0.1'

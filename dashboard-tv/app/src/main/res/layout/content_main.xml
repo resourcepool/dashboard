@@ -12,20 +12,20 @@
         android:id="@+id/splash_fragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:name="com.excilys.shoofleurs.dashboard.ui.fragments.SplashScreenFragment"
+        android:name="io.resourcepool.dashboard.ui.fragments.SplashScreenFragment"
         tools:layout="@layout/fragment_splash_screen"/>
 
-    <com.excilys.shoofleurs.dashboard.ui.utils.ViewPagerCustomDuration
+    <io.resourcepool.dashboard.ui.utils.ViewPagerCustomDuration
         android:id="@+id/view_pager"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-    </com.excilys.shoofleurs.dashboard.ui.utils.ViewPagerCustomDuration>
+    </io.resourcepool.dashboard.ui.utils.ViewPagerCustomDuration>
 
     <fragment
         android:id="@+id/news_fragment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:name="com.excilys.shoofleurs.dashboard.ui.fragments.NewsFragment"
+        android:name="io.resourcepool.dashboard.ui.fragments.NewsFragment"
         tools:layout="@layout/fragment_news_bar"/>
 </RelativeLayout>
