@@ -2,7 +2,7 @@ package io.resourcepool.dashboard.dto.mapper;
 
 import io.resourcepool.dashboard.dao.BundleDao;
 import io.resourcepool.dashboard.dto.FeedDto;
-import io.resourcepool.dashboard.model.metadata.FeedMetaData;
+import io.resourcepool.dashboard.model.metadata.Feed;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -13,12 +13,15 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class FeedDtoMapperImpl implements FeedDtoMapper {
-  
+
   @Autowired
   private BundleDao bundleDao;
-  
+
   @Override
-  public FeedDto toDto(FeedMetaData model) {
+  public FeedDto toDto(Feed model) {
+    if (model == null) {
+      return null;
+    }
     return FeedDto.builder()
       .uuid(model.getUuid())
       .name(model.getName())
@@ -27,8 +30,11 @@ public class FeedDtoMapperImpl implements FeedDtoMapper {
   }
 
   @Override
-  public FeedMetaData fromDto(FeedDto dto) {
-    return FeedMetaData.builder()
+  public Feed fromDto(FeedDto dto) {
+    if (dto == null) {
+      return null;
+    }
+    return Feed.builder()
       .uuid(dto.getUuid())
       .name(dto.getName())
       .bundles(dto.getBundleTags())

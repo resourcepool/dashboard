@@ -17,13 +17,13 @@ import java.util.List;
  */
 @Service
 public class DeviceServiceImpl implements DeviceService {
-  
+
   @Autowired
   private RevisionService revisionService;
-  
+
   @Autowired
   private DeviceDao deviceDao;
-  
+
   @Override
   public List<Device> getAll() {
     return deviceDao.getAll();

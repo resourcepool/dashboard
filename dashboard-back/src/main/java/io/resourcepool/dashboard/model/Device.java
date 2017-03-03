@@ -1,9 +1,9 @@
 package io.resourcepool.dashboard.model;
 
-import io.resourcepool.dashboard.dao.serialization.LocalDateTimeDeserializer;
-import io.resourcepool.dashboard.dao.serialization.LocalDateTimeSerializer;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import io.resourcepool.dashboard.dao.serialization.LocalDateTimeDeserializer;
+import io.resourcepool.dashboard.dao.serialization.LocalDateTimeSerializer;
 
 import java.time.LocalDateTime;
 
@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
  * @author Loïc Ortola on 03/03/2017
  */
 public class Device {
-  
+
   private String id;
   private String feedId;
   private String name;
@@ -21,7 +21,7 @@ public class Device {
   @JsonDeserialize(using = LocalDateTimeDeserializer.class)
   private LocalDateTime lastHealthCheck;
   private String lastKnownIp;
-  
+
   public String getId() {
     return id;
   }

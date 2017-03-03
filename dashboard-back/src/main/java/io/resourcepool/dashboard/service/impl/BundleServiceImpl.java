@@ -21,7 +21,7 @@ import java.util.UUID;
 public class BundleServiceImpl implements BundleService {
 
   public static final String ERROR_TAG_ALREADY_EXISTS = "This tag already exists";
-  
+
   @Autowired
   private BundleDao bundleDao;
 

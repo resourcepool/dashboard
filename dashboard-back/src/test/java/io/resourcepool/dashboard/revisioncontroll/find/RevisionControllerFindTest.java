@@ -65,7 +65,7 @@ public class RevisionControllerFindTest extends AbstractRevisionControllerTest {
 
     @Test
     public void failedGetRevisionListBadRequest() throws Exception {
-        mockMvc.perform(getAuthenticated("/revision/szfgqsf"))
+        mockMvc.perform(getAuthenticated("/revision/szfgqsf/feed/1234"))
                 .andExpect(status().isBadRequest());
     }
 
@@ -77,7 +77,7 @@ public class RevisionControllerFindTest extends AbstractRevisionControllerTest {
 
         final long oldRevision = fromJson(resultOldRevision.getResponse().getContentAsString(), Long.class);
         
-        mockMvc.perform(getAuthenticated("/revision/" + oldRevision + "/feed" + "sss"))
+        mockMvc.perform(getAuthenticated("/revision/" + oldRevision + "/feed/1234"))
                 .andExpect(status().isOk());
     }
 

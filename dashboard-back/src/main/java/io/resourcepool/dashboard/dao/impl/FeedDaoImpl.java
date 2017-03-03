@@ -3,7 +3,7 @@ package io.resourcepool.dashboard.dao.impl;
 import io.resourcepool.dashboard.dao.FeedDao;
 import io.resourcepool.dashboard.dao.util.YamlUtils;
 import io.resourcepool.dashboard.exception.ResourceIoException;
-import io.resourcepool.dashboard.model.metadata.FeedMetaData;
+import io.resourcepool.dashboard.model.metadata.Feed;
 import io.resourcepool.dashboard.property.DashboardProperties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,38 +44,38 @@ public class FeedDaoImpl implements FeedDao {
   }
 
   @Override
-  public FeedMetaData get(String uuid) {
+  public Feed get(String uuid) {
     Path dataFile = getFeedFile(uuid);
     return readFeedFromFile(dataFile);
   }
 
   @Override
-  public List<FeedMetaData> getAll() {
-    List<FeedMetaData> feedMetaDatas = new LinkedList<>();
+  public List<Feed> getAll() {
+    List<Feed> feeds = new LinkedList<>();
     try {
       Files.walk(feedDatabasePath, 1)
         .filter(Files::isRegularFile)
-        .forEach(path -> feedMetaDatas.add(readFeedFromFile(path)));
+        .forEach(path -> feeds.add(readFeedFromFile(path)));
     } catch (IOException e) {
       LOGGER.error("exception in FeedDaoImpl#getAll", e);
       throw new ResourceIoException(e);
     }
-    return feedMetaDatas;
+    return feeds;
   }
 
   @Override
-  public FeedMetaData save(FeedMetaData feedMetaData) {
-    if (feedMetaData.getUuid() == null) {
-      feedMetaData.setUuid(UUID.randomUUID().toString());
+  public Feed save(Feed feed) {
+    if (feed.getUuid() == null) {
+      feed.setUuid(UUID.randomUUID().toString());
     }
-    Path dest = getFeedFile(feedMetaData.getUuid());
-    YamlUtils.store(feedMetaData, dest);
-    return feedMetaData;
+    Path dest = getFeedFile(feed.getUuid());
+    YamlUtils.store(feed, dest);
+    return feed;
   }
 
   @Override
-  public FeedMetaData delete(String uuid) {
-    FeedMetaData result = get(uuid);
+  public Feed delete(String uuid) {
+    Feed result = get(uuid);
     boolean success = YamlUtils.delete(feedDatabasePath.resolve(uuid + ".yaml"));
     if (!success) {
       throw new ResourceIoException();
@@ -84,8 +84,8 @@ public class FeedDaoImpl implements FeedDao {
   }
 
   @Override
-  public List<FeedMetaData> getByBundleTag(String tag) {
-    List<FeedMetaData> all = getAll();
+  public List<Feed> getByBundleTag(String tag) {
+    List<Feed> all = getAll();
     if (all == null || all.isEmpty()) {
       return null;
     }
@@ -98,7 +98,7 @@ public class FeedDaoImpl implements FeedDao {
     return feedDatabasePath.resolve(dataFileName);
   }
 
-  private FeedMetaData readFeedFromFile(Path path) {
-    return YamlUtils.read(path, FeedMetaData.class);
+  private Feed readFeedFromFile(Path path) {
+    return YamlUtils.read(path, Feed.class);
   }
 }

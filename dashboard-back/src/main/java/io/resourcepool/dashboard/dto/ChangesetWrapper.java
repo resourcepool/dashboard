@@ -13,8 +13,9 @@ public class ChangesetWrapper {
   private FeedDto feed;
   private List<Revision> changes;
 
-  public ChangesetWrapper() {}
-  
+  public ChangesetWrapper() {
+  }
+
   public ChangesetWrapper(FeedDto feed, List<Revision> changes) {
     this.feed = feed;
     this.changes = changes;

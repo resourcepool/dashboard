@@ -1,27 +1,27 @@
 package io.resourcepool.dashboard.service;
 
-import io.resourcepool.dashboard.model.metadata.FeedMetaData;
+import io.resourcepool.dashboard.model.metadata.Feed;
 
 import java.util.List;
 
 public interface FeedService {
 
-  List<FeedMetaData> getAll();
+  List<Feed> getAll();
 
   /**
    * Create a feed into DB.
    *
-   * @param feedMetaData the feed
+   * @param feed the feed
    */
-  void save(FeedMetaData feedMetaData);
+  void save(Feed feed);
 
   /**
    * Update a feed into DB.
    *
-   * @param feedMetaData the feed to update
+   * @param feed the feed to update
    * @return the new Feed or null if failed
    */
-  void update(FeedMetaData feedMetaData);
+  void update(Feed feed);
 
   /**
    * Delete feed from DB.
@@ -36,7 +36,7 @@ public interface FeedService {
    * @param uuid the feed uuid
    * @return the new feed or null if none
    */
-  FeedMetaData get(String uuid);
+  Feed get(String uuid);
 
   /**
    * Replace old tag by new bundle tag inside all relevant feeds.

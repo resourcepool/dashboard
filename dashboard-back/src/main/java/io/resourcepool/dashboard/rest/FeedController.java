@@ -3,7 +3,7 @@ package io.resourcepool.dashboard.rest;
 import io.resourcepool.dashboard.dto.FeedDto;
 import io.resourcepool.dashboard.dto.mapper.FeedDtoMapper;
 import io.resourcepool.dashboard.exception.ResourceNotFoundException;
-import io.resourcepool.dashboard.model.metadata.FeedMetaData;
+import io.resourcepool.dashboard.model.metadata.Feed;
 import io.resourcepool.dashboard.security.annotation.RequireValidApiKey;
 import io.resourcepool.dashboard.security.annotation.RequireValidUser;
 import io.resourcepool.dashboard.service.FeedService;
@@ -54,9 +54,9 @@ public class FeedController {
     @RequestMapping(method = RequestMethod.POST)
     public FeedDto save(@RequestBody FeedDto feedDto) {
         validator.validate(feedDto);
-        FeedMetaData feedMetaData = mapper.fromDto(feedDto);
-        feedService.save(feedMetaData);
-        return mapper.toDto(feedMetaData);
+        Feed feed = mapper.fromDto(feedDto);
+        feedService.save(feed);
+        return mapper.toDto(feed);
     }
 
     /**
@@ -68,7 +68,7 @@ public class FeedController {
     @RequestMapping(value = "{uuid}", method = RequestMethod.GET)
     @RequireValidApiKey
     public FeedDto get(@PathVariable("uuid") String uuid) {
-        FeedMetaData result = feedService.get(uuid);
+        Feed result = feedService.get(uuid);
         if (result == null) {
             throw new ResourceNotFoundException("Feed not found");
         } else {
@@ -89,11 +89,11 @@ public class FeedController {
         if (feedDto.getUuid() == null) {
             throw new IllegalArgumentException("A valid uuid is required to edit a feed.");
         }
-        FeedMetaData feedMetaData = mapper.fromDto(feedDto);
+        Feed feed = mapper.fromDto(feedDto);
 
-        feedService.update(feedMetaData);
+        feedService.update(feed);
 
-        return mapper.toDto(feedMetaData);
+        return mapper.toDto(feed);
     }
 
     /**
@@ -103,7 +103,7 @@ public class FeedController {
      */
     @RequestMapping(value = "{uuid}", method = RequestMethod.DELETE)
     public void delete(@PathVariable("uuid") String uuid) {
-        FeedMetaData result = feedService.get(uuid);
+        Feed result = feedService.get(uuid);
         if (result == null) {
             throw new ResourceNotFoundException("Bound not found");
         } else {

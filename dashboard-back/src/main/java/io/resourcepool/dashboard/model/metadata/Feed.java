@@ -7,7 +7,7 @@ import java.util.List;
  *
  * @author Loïc Ortola on 03/03/2017
  */
-public class FeedMetaData {
+public class Feed {
   private String uuid;
   private String name;
   private List<String> bundleTags;
@@ -64,12 +64,12 @@ public class FeedMetaData {
       return this;
     }
 
-    public FeedMetaData build() {
-      FeedMetaData feedMetaData = new FeedMetaData();
-      feedMetaData.setUuid(uuid);
-      feedMetaData.setName(name);
-      feedMetaData.setBundleTags(bundles);
-      return feedMetaData;
+    public Feed build() {
+      Feed feed = new Feed();
+      feed.setUuid(uuid);
+      feed.setName(name);
+      feed.setBundleTags(bundles);
+      return feed;
     }
   }
 }

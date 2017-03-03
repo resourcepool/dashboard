@@ -1,7 +1,7 @@
 package io.resourcepool.dashboard.dao;
 
 
-import io.resourcepool.dashboard.model.metadata.FeedMetaData;
+import io.resourcepool.dashboard.model.metadata.Feed;
 
 import java.util.List;
 
@@ -18,28 +18,28 @@ public interface FeedDao {
    * @param uuid the feed uuid
    * @return the retrieved feed or null if no match
    */
-  FeedMetaData get(String uuid);
+  Feed get(String uuid);
 
   /**
    * Retrieve all feeds from DB.
    *
    * @return the retrieved feeds or empty
    */
-  List<FeedMetaData> getAll();
+  List<Feed> getAll();
 
   /**
    * Save a feed into DB.
    *
-   * @param feedMetaData the feed meta data
+   * @param feed the feed meta data
    */
-  FeedMetaData save(FeedMetaData feedMetaData);
+  Feed save(Feed feed);
 
   /**
    * Delete feed from DB.
    *
    * @param uuid The feed tag
    */
-  FeedMetaData delete(String uuid);
+  Feed delete(String uuid);
 
 
   /**
@@ -48,5 +48,5 @@ public interface FeedDao {
    * @param tag the bundle tag
    * @return the list of feeds or null if none
    */
-  List<FeedMetaData> getByBundleTag(String tag);
+  List<Feed> getByBundleTag(String tag);
 }
