@@ -17,10 +17,13 @@ angular
       "GET_BUNDLE" : "Cannot get bundle",
       "GET_BUNDLES" : "Cannot get bundle list",
       "GET_MEDIA": "Cannot get media",
-      "GET_MEDIAS": "Cannot get metdas",
+      "GET_MEDIAS": "Cannot get medias",
+      "GET_DEVICES": "Cannot get devices",
+      "GET_FEEDS": "Cannot get feeds",
       "DELETE_BUNDLE": "Cannot delete bundle",
       "DELETE_MEDIA": "Cannot delete media",
       "DELETE_FEED": "Cannot delete feed",
+      "DELETE_DEVICE": "Cannot delete device",
       "UPLOAD_MEDIA": "Error when trying to upload media",
       "ADD_BUNDLE": "Cannot create bundle",
       "ADD_MEDIA" : "Cannot create media",
@@ -36,6 +39,7 @@ angular
     "CONF": {
       "DELETE_BUNDLE" : "Are you sure to delete selected bundle ?",
       "DELETE_MEDIA" : "Are you sure to delete selected media ?",
-      "DELETE_FEED" : "Are you sure to delete selected feed ?"
+      "DELETE_FEED" : "Are you sure to delete selected feed ?",
+      "DELETE_DEVICE" : "Are you sure to delete selected device ?"
     }
   });

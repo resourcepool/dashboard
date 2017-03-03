@@ -46,17 +46,12 @@ angular
           return r;
         };
 
-        $scope.select = function (tag) {
-          tag.selected = !tag.selected;
-        };
-
         $scope.submit = function (isValid) {
           if (getSelected().length === 0) {
             $scope.error = MSG.ERR.FEED_MUST_HAVE_BUNDLES;
           } else if (isValid) {
             $scope.loading = true;
             $scope.feed.bundleTags = getSelected();
-            console.log(getSelected());
             feedService.save($scope.feed).then(
               function (response) {
                 if (responseService.isResponseOK($scope, response)) {

@@ -24,7 +24,7 @@ angular
 
     function formatDates(entities) {
       console.log(entities)
-      for (var entity of entities) {
+      for (var entity in entities) {
 
         if (!entity.validity) {
           continue;

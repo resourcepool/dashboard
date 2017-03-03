@@ -54,6 +54,10 @@ dashboardFrontApp.config(['$routeProvider',
       templateUrl: 'partials/feed/form.html',
       controller: 'FeedEditController'
     }).
+    when('/device/edit/:deviceId', {
+      templateUrl: 'partials/device/form.html',
+      controller: 'DeviceEditController'
+    }).
     otherwise({
       redirectTo: '/home'
     });
@@ -68,6 +72,11 @@ dashboardFrontApp.config(['$translateProvider',
         "ADD" : "New Bundle",
         "NAME": "Name",
         "INSIDE": "Contains {{count}} bundles"
+      },
+      "DEVICE":{
+        "LAST_KNOWN_IP": "Last Known IP",
+        "LAST_HEALTHCHECK": "Last Healthcheck",
+        "HAS_FEED": "Feed Bound"
       },
       "FEED": {
         "NAME": "Name",
@@ -87,11 +96,11 @@ dashboardFrontApp.config(['$translateProvider',
         "IMAGE": "Image",
         "VIDEO": "Vidéo",
         "WEB": "Web",
-        "NEWS": "News",
+        "NEWS": "News"
       },
       "USER" : {
         "USERNAME" : "Username",
-        "PASSWORD" : "Password",
+        "PASSWORD" : "Password"
       },
       "VALIDITY": {
         "START": "Start date time",

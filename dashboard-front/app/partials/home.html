@@ -28,25 +28,28 @@
       </thead>
       <tbody>
       <tr ng-repeat="device in devices">
-        <td><a href="#!/device/edit/{{ device.id }}"><span aria-hidden="true"
-                                                           class="glyphicon glyphicon-folder-close"></span> {{device.id
-          }} </a></td>
+        <td>
+          <a href="#!/device/edit/{{ device.id }}">
+            <span aria-hidden="true" class="glyphicon glyphicon-blackboard"></span> {{device.id}}
+          </a>
+        </td>
         <td>{{ device.name }}</td>
         <td>
           {{ "DEVICE.LAST_HEALTHCHECK" | translate }}: {{ device.lastHealthCheck }}
           <br/>
           {{ "DEVICE.LAST_KNOWN_IP" | translate }}: {{ device.lastKnownIp}}
           <br/>
-          {{ "DEVICE.HAS_FEED" | translate }}: <span ng-if="device.feedId != null"
-                                                     class="glyphicon glyphicon-ok"></span><span ng-if="!device.feedId"
-                                                                                                 class="glyphicon glyphicon-ban-circle"></span>
+          {{ "DEVICE.HAS_FEED" | translate }}:
+          <span ng-if="device.feedId != null" class="glyphicon glyphicon-ok"></span>
+          <span ng-if="!device.feedId" class="glyphicon glyphicon-ban-circle"></span>
         </td>
         <td>
-          <button class="btn-default btn btn-sm" ng-click="removeDevice(device.id);"><span aria-hidden="true"
-                                                                                           class="glyphicon glyphicon-remove"></span>
+          <button class="btn-default btn btn-sm" ng-click="removeDevice(device.id);">
+            <span aria-hidden="true" class="glyphicon glyphicon-remove"></span>
           </button>
-          <a class="btn-default btn btn-sm" href="#!/device/edit/{{ device.id }}"><span aria-hidden="true"
-                                                                                        class="glyphicon glyphicon-edit"></span></a>
+          <a class="btn-default btn btn-sm" href="#!/device/edit/{{ device.id }}">
+            <span aria-hidden="true" class="glyphicon glyphicon-edit"></span>
+          </a>
         </td>
       </tr>
       </tbody>
@@ -74,7 +77,7 @@
       <tbody>
       <tr ng-repeat="feed in feeds">
         <td><a href="#!/feed/edit/{{ feed.uuid }}"><span aria-hidden="true"
-                                                         class="glyphicon glyphicon-folder-close"></span> {{feed.name }}
+                                                         class="glyphicon glyphicon-film"></span> {{feed.name }}
         </a></td>
         <td><span translate="BUNDLE.INSIDE" translate-values="{count: feed.bundleTags.length}"/></td>
         <td>
@@ -119,7 +122,7 @@
         <td>{{ bundle.validity.start }}</td>
         <td>{{ bundle.validity.end }}</td>
         <td>
-          <button class="btn-default btn btn-sm" ng-click="remove(bundle.tag);">
+          <button class="btn-default btn btn-sm" ng-click="removeBundle(bundle.tag);">
             <span aria-hidden="true" class="glyphicon glyphicon-remove"></span>
           </button>
           <a class="btn-default btn btn-sm" href="#!/bundle/edit/{{ bundle.tag }}">

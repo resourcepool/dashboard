@@ -6,8 +6,8 @@
 angular
   .module('dashboardFrontApp')
   .controller('HomeController',
-    [ '$scope', '$cookieStore', '$location', 'DATE', 'MSG', 'bundleService', 'feedService', 'firewallService', 'responseService', 'dateService',
-      function ($scope, $cookieStore, $location, DATE, MSG, bundleService, feedService, firewallService, responseService, dateService) {
+    [ '$scope', '$cookieStore', '$location', 'DATE', 'MSG', 'bundleService', 'feedService', 'deviceService', 'firewallService', 'responseService', 'dateService',
+      function ($scope, $cookieStore, $location, DATE, MSG, bundleService, feedService, deviceService, firewallService, responseService, dateService) {
         // Check authentication
         firewallService.isAuthenticated();
 
@@ -17,6 +17,40 @@ angular
         $scope.feeds = {};
         // Bundles
         $scope.bundles = {};
+
+        function getDevices() {
+          deviceService.getAll().then(function(response) {
+            console.log('Devices retrieved: ');
+            console.log(response);
+            if (responseService.isResponseOK($scope, response)) {
+              $scope.devices = response.data;
+            }
+          }, function(error) {
+            console.error('Error occured while retrieving devices: ');
+            console.error(error);
+            $scope.error = MSG.ERR.GET_DEVICES;
+          });
+        }
+
+        // on récupère tous les devices
+        getDevices();
+
+        // on bind la fonction de suppression de device
+        $scope.removeDevice = function(id) {
+          if (confirm(MSG.CONF.DELETE_DEVICE)) {
+            deviceService.remove(id).then(
+              function (response) {
+                if (responseService.isResponseOK($scope, response)) {
+                  getDevices();
+                }
+              },
+              function (response) {
+                $scope.error = MSG.CONF.ERR.DELETE_DEVICE;
+              }
+            )
+          }
+        };
+
 
         function getFeeds() {
           feedService.getAll().then(function(response) {
@@ -28,14 +62,14 @@ angular
           }, function(error) {
             console.error('Error occured while retrieving feeds: ');
             console.error(error);
-            $scope.error = MSG.ERR.GET_MEDIAS;
+            $scope.error = MSG.ERR.GET_FEEDS;
           });
         }
 
         // on récupère tous les feeds
         getFeeds();
 
-        // on bind la fonction de suppression de bundle
+        // on bind la fonction de suppression de feed
         $scope.removeFeed = function(uuid) {
           if (confirm(MSG.CONF.DELETE_FEED)) {
             feedService.remove(uuid).then(
@@ -61,7 +95,7 @@ angular
           }, function(error) {
             console.error('Error occured while retrieving bundles: ');
             console.error(error);
-            $scope.error = MSG.ERR.GET_MEDIAS;
+            $scope.error = MSG.ERR.GET_BUNDLES;
           });
         }
 

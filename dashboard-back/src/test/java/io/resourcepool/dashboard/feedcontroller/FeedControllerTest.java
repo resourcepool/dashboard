@@ -49,5 +49,36 @@ public class FeedControllerTest extends AbstractControllerTest {
       .andExpect(status().isBadRequest())
       .andReturn();
   }
+
+  @Test
+  public void deleteSuccess() throws Exception {
+
+    BundleMetadata bundle = new BundleMetadata.Builder().name("test").tag("test").build();
+    bundleService.save(bundle);
+    
+    // Simply create a new feed and check its model
+    MvcResult result = mockMvc.perform(postAuthenticated(("/feed"))
+      .content(toJson(FeedDto.builder().name("test").bundleTags(Arrays.asList(new String[]{bundle.getTag()})).build()))
+      .contentType(MediaType.APPLICATION_JSON_UTF8))
+      .andExpect(status().isOk())
+      .andReturn();
+
+    FeedDto feed = fromJson(result.getResponse().getContentAsString(), FeedDto.class);
+
+    // Delete active feed
+    mockMvc.perform(deleteAuthenticated(("/feed/" + feed.getUuid()))
+      .contentType(MediaType.APPLICATION_JSON_UTF8))
+      .andExpect(status().isOk())
+      .andReturn();
+    
+    // Check feed has been deleted indeed
+    result = mockMvc.perform(getAuthenticated(("/feed"))
+      .contentType(MediaType.APPLICATION_JSON_UTF8))
+      .andExpect(status().isOk())
+      .andReturn();
+
+    assertEquals("[]", result.getResponse().getContentAsString());
+    
+  }
   
 }
