@@ -11,7 +11,7 @@ public class Revision {
     }
 
     public enum Type {
-        BUNDLE, MEDIA
+        FEED, BUNDLE, DEVICE, MEDIA
     }
 
     private Long revision;

@@ -75,8 +75,8 @@ public class RevisionControllerFindTest extends AbstractRevisionControllerTest {
                 .andReturn();
 
         final long oldRevision = fromJson(resultOldRevision.getResponse().getContentAsString(), Long.class);
-
-        mockMvc.perform(getAuthenticated("/revision/" + oldRevision))
+        
+        mockMvc.perform(getAuthenticated("/revision/" + oldRevision + "/feed" + "sss"))
                 .andExpect(status().isOk());
     }
 

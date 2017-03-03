@@ -17,6 +17,8 @@ import java.io.IOException;
 import java.nio.file.FileSystem;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
@@ -73,6 +75,18 @@ public class BundleDaoImpl implements BundleDao {
         } catch (IOException e) {
             LOGGER.error("exception in BundleDaoImpl#getAll", e);
             throw new ResourceIoException(e);
+        }
+        return bundles;
+    }
+
+    @Override
+    public List<BundleMetadata> getSome(List<String> uuids) {
+        if (uuids == null || uuids.isEmpty()) {
+            return Collections.emptyList();
+        }
+        List<BundleMetadata> bundles = new ArrayList<>(uuids.size());
+        for (String uuid : uuids) {
+            bundles.add(get(uuid));
         }
         return bundles;
     }

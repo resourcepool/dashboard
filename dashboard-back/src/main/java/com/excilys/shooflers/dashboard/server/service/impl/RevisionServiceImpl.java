@@ -1,5 +1,7 @@
 package com.excilys.shooflers.dashboard.server.service.impl;
 
+import com.excilys.shooflers.dashboard.server.dao.BundleDao;
+import com.excilys.shooflers.dashboard.server.dao.FeedDao;
 import com.excilys.shooflers.dashboard.server.dao.RevisionDao;
 import com.excilys.shooflers.dashboard.server.model.Revision;
 import com.excilys.shooflers.dashboard.server.service.RevisionService;
@@ -21,6 +23,12 @@ public class RevisionServiceImpl implements RevisionService {
 
     @Autowired
     private RevisionDao revisionDao;
+    
+    @Autowired
+    private BundleDao bundleDao;
+
+    @Autowired
+    private FeedDao feedDao;
 
     @Override
     public List<Revision> getDiffs(long revision) {
@@ -87,7 +95,6 @@ public class RevisionServiceImpl implements RevisionService {
                     }
                     break;
             }
-
         }
         return diffs.entrySet().stream().map(Map.Entry::getValue).collect(Collectors.toList());
     }

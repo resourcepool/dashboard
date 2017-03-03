@@ -34,6 +34,13 @@ public interface BundleDao {
     List<BundleMetadata> getAll();
 
     /**
+     * Retrieve specific bundles from DB.
+     *
+     * @return the retrieved bundles or empty
+     */
+    List<BundleMetadata> getSome(List<String> uuids);
+
+    /**
      * Save a bundle into DB.
      *
      * @param bundle the bundle meta data

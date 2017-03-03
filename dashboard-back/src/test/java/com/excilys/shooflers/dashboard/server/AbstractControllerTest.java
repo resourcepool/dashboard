@@ -99,6 +99,14 @@ public abstract class AbstractControllerTest {
         return "Basic " + Base64.encodeBase64String((login + ":" + password).getBytes());
     }
 
+
+    /**
+     * @return Content of ApiKey header
+     */
+    protected String getHeaderApiKeyContent() {
+        return props.getApiKey();
+    }
+
     /**
      * Map an object to JSON
      *
@@ -146,6 +154,16 @@ public abstract class AbstractControllerTest {
      */
     protected MockHttpServletRequestBuilder postAuthenticated(String path) {
         return post(URI.create(path)).header(RequireValidUserTest.HEADER_AUTHORIZATION, getHeaderAuthenticationContent());
+    }
+
+    /**
+     * Make a POST with authentication for this webservice
+     *
+     * @param path Path to Post
+     * @return MockHttpServletRequestBuilder
+     */
+    protected MockHttpServletRequestBuilder postApiKey(String path) {
+        return post(URI.create(path)).header(RequireValidUserTest.HEADER_API_KEY, getHeaderApiKeyContent());
     }
 
     /**
@@ -236,4 +254,5 @@ public abstract class AbstractControllerTest {
             }
         });
     }
+
 }

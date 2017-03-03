@@ -38,6 +38,7 @@ public class RequireValidUserTest {
     // Consts
     //============================================================
     public static final String HEADER_AUTHORIZATION = "Authorization";
+    public static final String HEADER_API_KEY = "X-Api-Key";
 
     public static final String URL_TO_TEST = "/test1/requireUser";
 

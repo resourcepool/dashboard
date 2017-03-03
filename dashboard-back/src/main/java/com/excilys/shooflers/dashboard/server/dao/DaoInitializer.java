@@ -58,6 +58,8 @@ public class DaoInitializer {
         createEntityDbs(dbPath, BundleDao.ENTITY_NAME);
         createEntityDbs(dbPath, MediaDao.ENTITY_NAME);
         createEntityDbs(dbPath, RevisionDao.ENTITY_NAME);
+        createEntityDbs(dbPath, DeviceDao.ENTITY_NAME);
+        createEntityDbs(dbPath, FeedDao.ENTITY_NAME);
 
     }
 
