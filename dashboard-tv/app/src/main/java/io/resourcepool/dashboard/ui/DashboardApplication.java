@@ -33,10 +33,13 @@ public class DashboardApplication extends Application {
     }
 
     public void initServices() {
-        String serverHost = "http://" + DashboardPrefs.getServerHost(this);
-        mBundleService.initialize(serverHost);
-        mDiscoveryService.initialize(serverHost);
-        mNewsService.initialize(serverHost);
+        String host = DashboardPrefs.getServerHost(this);
+        if (host != null && !host.trim().isEmpty()) {
+            String serverHost = "http://" + host;
+            mBundleService.initialize(serverHost);
+            mDiscoveryService.initialize(serverHost);
+            mNewsService.initialize(serverHost);
+        }
     }
 
     public BundleService getBundleService() {

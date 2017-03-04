@@ -28,4 +28,9 @@ public class DashboardPrefs {
     public static String getFeed(Context ctx) {
         return ctx.getSharedPreferences(PREFS_KEY, Context.MODE_PRIVATE).getString(PREF_FEED, null);
     }
+
+    public static void clearServerHost(Context ctx) {
+        SharedPreferences p = ctx.getSharedPreferences(PREFS_KEY, Context.MODE_PRIVATE);
+        p.edit().remove(PREF_SERVER).apply();
+    }
 }

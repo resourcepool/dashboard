@@ -34,4 +34,6 @@ public interface SplashScreenView extends View {
      * @param listener the listener
      */
     void displayErrorDialog(int titleMessageId, int messageId, int retryMessageId, DialogInterface.OnClickListener listener);
+
+    void displayInvalidHostDialog(DialogInterface.OnClickListener onAuto, DialogInterface.OnClickListener onRetry);
 }

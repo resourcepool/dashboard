@@ -18,4 +18,8 @@
     <string name="cancel">Cancel</string>
     <string name="error_device_not_configured_title">TV not configured</string>
     <string name="error_device_not_configured_message">TV successfully registered to the Dashboard Server.\nBrowse your administration panel and configure your device from there.\nOnce configured, click on "Retry".</string>
+    <string name="enter_host">ex: servername:port</string>
+    <string name="host_invalid">The local Dashboard Server cannot be reached or discovered.\nPlease try again or enter the server host manually</string>
+    <string name="auto">Auto</string>
+    <string name="server_not_found">Server not found</string>
 </resources>

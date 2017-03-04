@@ -51,6 +51,8 @@ public class DeviceChecker extends Checker {
         eventBus.register(this);
         if (discoveryService.isInitialized()) {
             discoveryService.registerDevice();
+        } else {
+            setFailed(ERROR_REGISTRATION_FAILED);
         }
     }
 

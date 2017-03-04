@@ -6,14 +6,17 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import io.resourcepool.dashboard.R;
+import io.resourcepool.dashboard.database.DashboardPrefs;
 import io.resourcepool.dashboard.ui.DashboardApplication;
 import io.resourcepool.dashboard.ui.factories.AnimatorFactory;
 import io.resourcepool.dashboard.ui.utils.AndroidUtils;
@@ -109,6 +112,27 @@ public class SplashScreenFragment extends Fragment implements SplashScreenView {
                 getActivity().finish();
             }
         });
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
+    @Override
+    public void displayInvalidHostDialog(DialogInterface.OnClickListener onAuto, final DialogInterface.OnClickListener onRetry) {
+        FragmentActivity activity = getActivity();
+        LayoutInflater inflater = activity.getLayoutInflater();
+        AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+
+        View root = inflater.inflate(R.layout.dialog_dashboard_server, null);
+        final EditText host = (EditText) root.findViewById(R.id.host);
+        host.setText(DashboardPrefs.getServerHost(getActivity()));
+        builder.setView(root);
+        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                getActivity().finish();
+            }
+        });
+        builder.setNeutralButton(R.string.auto, onAuto);
+        builder.setPositiveButton(R.string.retry, onRetry);
         AlertDialog dialog = builder.create();
         dialog.show();
     }

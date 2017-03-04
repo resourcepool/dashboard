@@ -36,14 +36,21 @@ public class DashboardServerChecker extends Checker implements MulticastDNSResol
     @Override
     public void start() {
         super.start();
-        this.resolver = new MulticastDNSResolver(ctx, handler, this);
-        handler.post(resolver);
+        if (DashboardPrefs.getServerHost(ctx) != null) {
+            setReady(true);
+        } else {
+            setReady(false);
+            this.resolver = new MulticastDNSResolver(ctx, handler, this);
+            handler.post(resolver);
+        }
     }
 
     @Override
     public void stop() {
         super.stop();
-        resolver.stop(false);
+        if (resolver != null) {
+            resolver.stop(false);
+        }
     }
 
     public static DashboardServerChecker create(int checkerId, CheckerStatusListener listener, Context context) {

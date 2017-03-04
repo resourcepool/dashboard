@@ -33,6 +33,7 @@ public class MulticastDNSResolver implements Runnable {
     private NsdManager.DiscoveryListener discoveryListener;
     private Runnable stopper;
     private Handler handler;
+    private boolean active;
 
     public MulticastDNSResolver(Context ctx, Handler handler, DNSResolverListener listener) {
         this.nsdManager = (NsdManager) ctx.getSystemService(Context.NSD_SERVICE);
@@ -55,9 +56,12 @@ public class MulticastDNSResolver implements Runnable {
     }
 
     public void stop(boolean success) {
-        nsdManager.stopServiceDiscovery(discoveryListener);
-        handler.removeCallbacks(stopper);
-        listener.onFinished(success);
+        if (active) {
+            active = false;
+            nsdManager.stopServiceDiscovery(discoveryListener);
+            handler.removeCallbacks(stopper);
+            listener.onFinished(success);
+        }
     }
 
     private void initializeDiscoveryListener() {
@@ -114,10 +118,10 @@ public class MulticastDNSResolver implements Runnable {
             @Override
             public void onStopDiscoveryFailed(String serviceType, int errorCode) {
                 Log.e(TAG, "Discovery failed: Error code:" + errorCode);
-                nsdManager.stopServiceDiscovery(this);
+                stop(false);
             }
         };
-
+        active = true;
         nsdManager.discoverServices(SERVICE_TYPE, NsdManager.PROTOCOL_DNS_SD, discoveryListener);
     }
 }

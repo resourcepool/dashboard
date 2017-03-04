@@ -1,7 +1,9 @@
 package io.resourcepool.dashboard.ui.splashscreen;
 
 import android.content.DialogInterface;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
+import android.widget.EditText;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -10,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.resourcepool.dashboard.R;
+import io.resourcepool.dashboard.database.DashboardPrefs;
 import io.resourcepool.dashboard.database.dao.impl.BundleDaoImpl;
 import io.resourcepool.dashboard.model.entities.Media;
 import io.resourcepool.dashboard.rest.events.GetBundleResponseEvent;
@@ -141,8 +144,45 @@ public class SplashScreenPresenter extends AbstractPresenter<SplashScreenView> i
     @Override
     public void onCheckerStatusFailed(int checkerId, int errorCode) {
         switch (checkerId) {
+            case CHECKER_DASHBOARD_SERVER:
+                // Device was not configured
+                mSplashScreenView.displayInvalidHostDialog(
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                DashboardPrefs.clearServerHost(getApplicationContext());
+                                dashboardServerChecker.start();
+                            }
+                        },
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                EditText host = (EditText) ((AlertDialog) dialogInterface).findViewById(R.id.host);
+                                DashboardPrefs.saveServerHost(getApplicationContext(), host.getText().toString());
+                                dashboardServerChecker.start();
+                            }
+                        });
+                return;
             case CHECKER_DEVICE:
-                if (errorCode == DeviceChecker.ERROR_NOT_CONFIGURED) {
+                if (errorCode == DeviceChecker.ERROR_REGISTRATION_FAILED) {
+                    // Server can't be reached
+                    mSplashScreenView.displayInvalidHostDialog(
+                            new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    DashboardPrefs.clearServerHost(getApplicationContext());
+                                    dashboardServerChecker.start();
+                                }
+                            },
+                            new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    EditText host = (EditText) ((AlertDialog) dialogInterface).findViewById(R.id.host);
+                                    DashboardPrefs.saveServerHost(getApplicationContext(), host.getText().toString());
+                                    deviceChecker.start();
+                                }
+                            });
+                } else if (errorCode == DeviceChecker.ERROR_NOT_CONFIGURED) {
                     // Device was not configured
                     mSplashScreenView.displayErrorDialog(
                             R.string.error_device_not_configured_title,
