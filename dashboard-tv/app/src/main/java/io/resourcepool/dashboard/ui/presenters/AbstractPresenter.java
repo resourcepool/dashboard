@@ -9,4 +9,8 @@ public abstract class AbstractPresenter<T extends View> implements Presenter<T> 
     public AbstractPresenter(DashboardApplication dashboardApplication) {
         this.mDashboardApplication = dashboardApplication;
     }
+
+    public DashboardApplication getApplicationContext() {
+        return mDashboardApplication;
+    }
 }

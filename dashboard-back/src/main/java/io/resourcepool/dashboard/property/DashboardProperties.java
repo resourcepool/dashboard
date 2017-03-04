@@ -17,6 +17,7 @@ public class DashboardProperties {
     private long sessionTimeout = 10;
     private String baseUrl = "http://localhost:8080";
     private boolean serviceDiscoveryEnabled = true;
+    private boolean useSSL = false;
 
     public String getApiKey() {
         return apiKey;
@@ -76,6 +77,10 @@ public class DashboardProperties {
 
     public boolean isServiceDiscoveryEnabled() {
         return serviceDiscoveryEnabled;
+    }
+
+    public boolean isUseSSL() {
+        return useSSL;
     }
 
     public void setServiceDiscoveryEnabled(boolean serviceDiscoveryEnabled) {

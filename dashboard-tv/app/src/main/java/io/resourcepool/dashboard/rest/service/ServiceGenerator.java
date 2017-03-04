@@ -14,12 +14,12 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class ServiceGenerator {
     public static final String API_KEY_HEADER = "x-api-key";
 
-    private static Retrofit.Builder builder =
-            new Retrofit.Builder()
-                    .baseUrl(BuildConfig.API_URL)
-                    .addConverterFactory(GsonConverterFactory.create());
 
-    public static <S> S createService(Class<S> serviceClass) {
+    public static <S> S createService(String baseUrl, Class<S> serviceClass) {
+        Retrofit.Builder builder = new Retrofit.Builder()
+                .baseUrl(baseUrl)
+                .addConverterFactory(GsonConverterFactory.create());
+
         OkHttpClient.Builder clientBuilder = new OkHttpClient.Builder();
 
         clientBuilder.addInterceptor(new Interceptor() {

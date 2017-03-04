@@ -16,11 +16,16 @@ import java.util.Arrays;
 public class NewsService {
     private MessageApi mMessageApi;
     private EventBus mEventBus;
+    private boolean initialized;
 
     public NewsService(EventBus eventBus) {
         this.mEventBus = eventBus;
         mEventBus.register(this);
-        mMessageApi = ServiceGenerator.createService(MessageApi.class);
+    }
+
+    public void initialize(String baseUrl) {
+        mMessageApi = ServiceGenerator.createService(baseUrl, MessageApi.class);
+        initialized = true;
     }
 
     @Subscribe

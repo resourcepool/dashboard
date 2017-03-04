@@ -2,9 +2,11 @@ package io.resourcepool.dashboard.ui.splashscreen;
 
 import android.animation.AnimatorSet;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -41,7 +43,7 @@ public class SplashScreenFragment extends Fragment implements SplashScreenView {
     RelativeLayout mBackgroundLayout;
 
     @BindView(R.id.debug_message)
-    TextView mDebugTextView;
+    TextView mProgressTextView;
     @BindView(R.id.progress_view_layout)
     RelativeLayout mProgressViewLayout;
 
@@ -53,6 +55,18 @@ public class SplashScreenFragment extends Fragment implements SplashScreenView {
         mSplashScreenPresenter = new SplashScreenPresenter((DashboardApplication) getActivity().getApplication());
         mSplashScreenPresenter.attachView(this);
         return rootView;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        mSplashScreenPresenter.onResume();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        mSplashScreenPresenter.onPause();
     }
 
     /**
@@ -80,8 +94,23 @@ public class SplashScreenFragment extends Fragment implements SplashScreenView {
     }
 
     @Override
-    public void displayDebugMessage(int messageId) {
-        mDebugTextView.setText(getResources().getString(messageId));
+    public void displayProgressMessage(int messageId) {
+        mProgressTextView.setText(getResources().getString(messageId));
+    }
+
+    @Override
+    public void displayErrorDialog(int titleMessageId, int messageId, int retryMessageId, DialogInterface.OnClickListener listener) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle(titleMessageId)
+                .setMessage(messageId);
+        builder.setPositiveButton(retryMessageId, listener);
+        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                getActivity().finish();
+            }
+        });
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
 
     @Override

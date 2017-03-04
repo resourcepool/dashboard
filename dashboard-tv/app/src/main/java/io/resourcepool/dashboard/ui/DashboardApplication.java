@@ -2,8 +2,10 @@ package io.resourcepool.dashboard.ui;
 
 import android.app.Application;
 
+import io.resourcepool.dashboard.database.DashboardPrefs;
 import io.resourcepool.dashboard.database.DatabaseController;
 import io.resourcepool.dashboard.rest.service.BundleService;
+import io.resourcepool.dashboard.rest.service.DiscoveryService;
 import io.resourcepool.dashboard.rest.service.NewsService;
 import com.facebook.drawee.backends.pipeline.Fresco;
 
@@ -15,6 +17,7 @@ import org.greenrobot.eventbus.EventBus;
 public class DashboardApplication extends Application {
     private BundleService mBundleService;
     private NewsService mNewsService;
+    private DiscoveryService mDiscoveryService;
     private EventBus mEventBus;
     private DatabaseController mDatabaseController;
 
@@ -24,8 +27,16 @@ public class DashboardApplication extends Application {
         mEventBus = EventBus.getDefault();
         mBundleService = new BundleService(mEventBus);
         mNewsService = new NewsService(mEventBus);
+        mDiscoveryService = new DiscoveryService(this, mEventBus);
         mDatabaseController = new DatabaseController(getApplicationContext(), mEventBus);
         Fresco.initialize(getApplicationContext());
+    }
+
+    public void initServices() {
+        String serverHost = "http://" + DashboardPrefs.getServerHost(this);
+        mBundleService.initialize(serverHost);
+        mDiscoveryService.initialize(serverHost);
+        mNewsService.initialize(serverHost);
     }
 
     public BundleService getBundleService() {
@@ -42,5 +53,9 @@ public class DashboardApplication extends Application {
 
     public DatabaseController getDatabaseController() {
         return mDatabaseController;
+    }
+
+    public DiscoveryService getDiscoveryService() {
+        return mDiscoveryService;
     }
 }

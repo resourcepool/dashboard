@@ -25,10 +25,16 @@ public class BundleService {
     private static final String TAG = "BundleService";
     private BundleApi mBundleApi;
     private EventBus mEventBus;
+    private boolean initialized;
 
     public BundleService(EventBus eventBus) {
         this.mEventBus = eventBus;
-        mBundleApi = ServiceGenerator.createService(BundleApi.class);
+
+    }
+
+    public void initialize(String baseUrl) {
+        mBundleApi = ServiceGenerator.createService(baseUrl, BundleApi.class);
+        initialized = true;
     }
 
     public void checkRevision() {
@@ -36,6 +42,9 @@ public class BundleService {
     }
 
     public void getBundles() {
+        if (!initialized) {
+            throw new IllegalStateException("Service is not initialized");
+        }
         Call<List<BundleDto>> call = mBundleApi.getBundles();
         call.enqueue(new Callback<List<BundleDto>>() {
             @Override
@@ -55,6 +64,9 @@ public class BundleService {
     }
 
     public void getMedias(String bundleUuid) {
+        if (!initialized) {
+            throw new IllegalStateException("Service is not initialized");
+        }
         Call<List<MediaDto>> call = mBundleApi.getMedias(bundleUuid);
 
         call.enqueue(new Callback<List<MediaDto>>() {

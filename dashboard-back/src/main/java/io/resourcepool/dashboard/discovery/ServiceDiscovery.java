@@ -23,6 +23,10 @@ public class ServiceDiscovery implements ApplicationListener<EmbeddedServletCont
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ServiceDiscovery.class);
 
+    private static final String SERVICE_TYPE = "_http._tcp.local.";
+    private static final String SERVICE_NAME = "Resourcepool-Dashboard";
+    private static final String SERVICE_DETAILS = "The Resourcepool Dashboard Server";
+
     @Autowired
     DashboardProperties props;
 
@@ -37,6 +41,7 @@ public class ServiceDiscovery implements ApplicationListener<EmbeddedServletCont
         if (props.isServiceDiscoveryEnabled()) {
             port = event.getEmbeddedServletContainer().getPort();
             init();
+            LOGGER.info("Resourcepool-Dashboard Service Discovery enabled successfully");
         }
     }
 
@@ -46,9 +51,7 @@ public class ServiceDiscovery implements ApplicationListener<EmbeddedServletCont
     private void init() {
         try {
             jmDNS = JmDNS.create();
-            serviceInfo = ServiceInfo.create("_http._tcp.local.",
-                    "Shooflers-Dashboard", port,
-                    "An awesome webapp to handle your monitor dashboards");
+            serviceInfo = ServiceInfo.create(SERVICE_TYPE, SERVICE_NAME, port, SERVICE_DETAILS);
             jmDNS.registerService(serviceInfo);
         } catch (IOException e) {
             LOGGER.error("Couldn't initialize mDNS for service discovery.", e);
