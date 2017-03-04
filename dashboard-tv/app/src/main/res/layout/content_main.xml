@@ -8,13 +8,6 @@
     tools:context=".ui.activities.DashboardActivity"
     tools:showIn="@layout/activity_main">
 
-    <fragment
-        android:id="@+id/splash_fragment"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:name="io.resourcepool.dashboard.ui.fragments.SplashScreenFragment"
-        tools:layout="@layout/fragment_splash_screen"/>
-
     <io.resourcepool.dashboard.ui.utils.ViewPagerCustomDuration
         android:id="@+id/view_pager"
         android:layout_width="match_parent"

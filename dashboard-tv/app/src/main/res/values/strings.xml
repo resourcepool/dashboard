@@ -2,7 +2,7 @@
     <string name="app_name">Dashboard TV</string>
     <string name="action_settings">Settings</string>
     <string name="title">Dashboard</string>
-    <string name="debug_check_updates">Check for updates to the server…</string>
+    <string name="debug_check_updates">Checking for server updates…</string>
     <string name="debug_timout_error">Timeout error, trying to reconnect…</string>
     <string name="debug_no_connection_error">No internet connection…</string>
     <string name="debug_download_content">Downloading content…</string>

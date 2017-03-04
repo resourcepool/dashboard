@@ -257,7 +257,7 @@ public class AnimatorFactory {
         return animatorSet;
     }
 
-    public enum Position { TOP_LEFT, TOP_RIGHT, BOTTOM_LEFT, BOTTOM_RIGHT }
+    public enum Position { TOP_LEFT, TOP_RIGHT, BOTTOM_LEFT, BOTTOM_RIGHT, LEFT, BOTTOM, RIGHT, TOP }
 
     public static AnimatorSet createSquarePointAnimatorSet(final View point, int size, int transitionDuration, float scaleFactor, Position position) {
         float scale = size * scaleFactor;
@@ -273,13 +273,52 @@ public class AnimatorFactory {
             case TOP_RIGHT:
                 finalAnimatorSet = createSquarePointFromTopRightAnimatorSet(point, size, transitionDuration, scale);
                 break;
-
             case BOTTOM_LEFT:
                 finalAnimatorSet = createSquarePointFromBottomLeftAnimatorSet(point, size, transitionDuration, scale);
                 break;
-
             case BOTTOM_RIGHT:
                 finalAnimatorSet = createSquarePointFromBottomRightAnimatorSet(point, size, transitionDuration, scale);
+                break;
+
+        }
+
+        final AnimatorSet finalAnimatorSet1 = finalAnimatorSet;
+        finalAnimatorSet.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                super.onAnimationEnd(animation);
+                point.clearAnimation();
+                finalAnimatorSet1.setStartDelay(0);
+                finalAnimatorSet1.start();
+            }
+        });
+
+        finalAnimatorSet.setInterpolator(new AccelerateDecelerateInterpolator());
+
+        return finalAnimatorSet;
+    }
+
+    public static AnimatorSet createDiamondPointAnimatorSet(final View point, int size, int transitionDuration, float scaleFactor, Position position) {
+        float scale = size * scaleFactor;
+
+        if (position == null) {
+            position = Position.TOP;
+        }
+        AnimatorSet finalAnimatorSet = null;
+        switch (position) {
+            case TOP:
+                finalAnimatorSet = createDiamondPointAnimatorSet(Position.TOP, point, size, transitionDuration, scale);
+                break;
+            case LEFT:
+                finalAnimatorSet = createDiamondPointAnimatorSet(Position.LEFT, point, size, transitionDuration, scale);
+                break;
+
+            case BOTTOM:
+                finalAnimatorSet = createDiamondPointAnimatorSet(Position.BOTTOM, point, size, transitionDuration, scale);
+                break;
+
+            case RIGHT:
+                finalAnimatorSet = createDiamondPointAnimatorSet(Position.RIGHT, point, size, transitionDuration, scale);
                 break;
 
         }
@@ -398,6 +437,89 @@ public class AnimatorFactory {
 
         return animatorSet;
     }
+
+    private static Animator createRotateAnimator(Position p, View view, int duration) {
+        float value = 0;
+        switch (p) {
+            case TOP:
+            case BOTTOM:
+                value = (float) 45;
+                break;
+            case RIGHT:
+            case LEFT:
+                value = (float) -45;
+        }
+        Animator translateAnimator = ObjectAnimator.ofFloat(view, View.ROTATION, value, value);
+        translateAnimator.setDuration(duration);
+
+        return translateAnimator;
+    }
+
+    public static AnimatorSet createDiamondPointAnimatorSet(Position p, View point, int size, int transitionDuration, float scale) {
+        int pointSize = point.getLayoutParams().width;
+        AnimatorSet topLeftAnimatorSet = new AnimatorSet();
+        topLeftAnimatorSet.playTogether(
+                createTranslateAnimatorWithScaling(point, View.TRANSLATION_Y, View.SCALE_Y, 0, (size - pointSize) / 2, scale, transitionDuration),
+                createTranslateAnimatorWithScaling(point, View.TRANSLATION_X, View.SCALE_Y, (size - pointSize) / 2, 0, scale, transitionDuration),
+                createRotateAnimator(Position.TOP, point, transitionDuration));
+        AnimatorSet leftBottomAnimatorSet = new AnimatorSet();
+        leftBottomAnimatorSet.playTogether(
+                createTranslateAnimatorWithScaling(point, View.TRANSLATION_Y, View.SCALE_Y, (size - pointSize) / 2, (size - pointSize), scale, transitionDuration),
+                createTranslateAnimatorWithScaling(point, View.TRANSLATION_X, View.SCALE_Y, 0, (size - pointSize) / 2, scale, transitionDuration),
+                createRotateAnimator(Position.LEFT, point, transitionDuration));
+        AnimatorSet bottomRightAnimatorSet = new AnimatorSet();
+        bottomRightAnimatorSet.playTogether(
+                createTranslateAnimatorWithScaling(point, View.TRANSLATION_Y, View.SCALE_Y, (size - pointSize), (size - pointSize) / 2, scale, transitionDuration),
+                createTranslateAnimatorWithScaling(point, View.TRANSLATION_X, View.SCALE_Y, (size - pointSize) / 2, (size - pointSize), scale, transitionDuration),
+                createRotateAnimator(Position.BOTTOM, point, transitionDuration));
+        AnimatorSet rightTopAnimatorSet = new AnimatorSet();
+        rightTopAnimatorSet.playTogether(
+                createTranslateAnimatorWithScaling(point, View.TRANSLATION_Y, View.SCALE_Y, (size - pointSize) / 2, 0, scale, transitionDuration),
+                createTranslateAnimatorWithScaling(point, View.TRANSLATION_X, View.SCALE_Y, (size - pointSize), (size - pointSize) / 2, scale, transitionDuration),
+                createRotateAnimator(Position.RIGHT, point, transitionDuration));
+
+        AnimatorSet[] animatorSets = null;
+        switch (p) {
+            case TOP:
+                animatorSets = new AnimatorSet[]{
+                        topLeftAnimatorSet,
+                        leftBottomAnimatorSet,
+                        bottomRightAnimatorSet,
+                        rightTopAnimatorSet
+                };
+                break;
+            case LEFT:
+                animatorSets = new AnimatorSet[]{
+                        leftBottomAnimatorSet,
+                        bottomRightAnimatorSet,
+                        rightTopAnimatorSet,
+                        topLeftAnimatorSet
+                };
+                break;
+            case BOTTOM:
+                animatorSets = new AnimatorSet[]{
+                        bottomRightAnimatorSet,
+                        rightTopAnimatorSet,
+                        topLeftAnimatorSet,
+                        leftBottomAnimatorSet
+                };
+                break;
+            case RIGHT:
+                animatorSets = new AnimatorSet[]{
+                        rightTopAnimatorSet,
+                        topLeftAnimatorSet,
+                        leftBottomAnimatorSet,
+                        bottomRightAnimatorSet
+                };
+                break;
+        }
+
+        final AnimatorSet finalAnimatorSet = new AnimatorSet();
+        finalAnimatorSet.playSequentially(animatorSets);
+
+        return finalAnimatorSet;
+    }
+
 
     public static Animator createScrollWebViewAnimator(View view, String scrollProperty, int duration) {
         Animator scrollAnimator = ObjectAnimator.ofInt(view, scrollProperty, 0, view.getHeight());

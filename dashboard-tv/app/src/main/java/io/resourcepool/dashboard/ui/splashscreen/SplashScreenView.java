@@ -1,11 +1,13 @@
-package io.resourcepool.dashboard.ui.views;
+package io.resourcepool.dashboard.ui.splashscreen;
+
+import io.resourcepool.dashboard.ui.views.View;
 
 /**
  * @author Tommy Buonomo on 10/06/16.
  */
 public interface SplashScreenView extends View {
     /**
-     * Show the wainting animation on the dashboard background view
+     * Show the waiting animation on the dashboard background view
      * @param show
      */
     void showWaitingAnimation(boolean show);

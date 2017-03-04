@@ -1,4 +1,4 @@
-package io.resourcepool.dashboard.ui.presenters;
+package io.resourcepool.dashboard.ui.splashscreen;
 
 import android.util.Log;
 
@@ -9,7 +9,7 @@ import io.resourcepool.dashboard.rest.events.GetBundleResponseEvent;
 import io.resourcepool.dashboard.rest.events.GetMediaResponseEvent;
 import io.resourcepool.dashboard.rest.service.BundleService;
 import io.resourcepool.dashboard.ui.DashboardApplication;
-import io.resourcepool.dashboard.ui.views.SplashScreenView;
+import io.resourcepool.dashboard.ui.presenters.AbstractPresenter;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;

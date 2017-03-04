@@ -1,14 +1,14 @@
 package io.resourcepool.dashboard.ui.utils;
 
 import android.animation.Animator;
+import android.app.Activity;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 
-import io.resourcepool.dashboard.ui.activities.DashboardActivity;
-
 public class AndroidUtils {
-    public static void hideStatusBar(DashboardActivity activity) {
+
+    public static void hideStatusBar(Activity activity) {
         activity.requestWindowFeature(Window.FEATURE_NO_TITLE);
         activity.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
     }

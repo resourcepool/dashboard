@@ -1,4 +1,4 @@
-package io.resourcepool.dashboard.ui.fragments;
+package io.resourcepool.dashboard.ui.splashscreen;
 
 import android.animation.AnimatorSet;
 import android.content.Context;
@@ -14,9 +14,7 @@ import android.widget.TextView;
 import io.resourcepool.dashboard.R;
 import io.resourcepool.dashboard.ui.DashboardApplication;
 import io.resourcepool.dashboard.ui.factories.AnimatorFactory;
-import io.resourcepool.dashboard.ui.presenters.SplashScreenPresenter;
 import io.resourcepool.dashboard.ui.utils.AndroidUtils;
-import io.resourcepool.dashboard.ui.views.SplashScreenView;
 
 import butterknife.BindView;
 import butterknife.BindViews;
@@ -33,10 +31,10 @@ public class SplashScreenFragment extends Fragment implements SplashScreenView {
     /**
      * The waiting view points
      */
-    @BindViews({R.id.progress_view_top_left_point,
-            R.id.progress_view_top_right_point,
-            R.id.progress_view_bottom_right_point,
-            R.id.progress_view_bottom_left_point})
+    @BindViews({R.id.progress_view_top_point,
+            R.id.progress_view_left_point,
+            R.id.progress_view_bottom_point,
+            R.id.progress_view_right_point})
     View[] mProgressPointViews;
 
     @BindView(R.id.background_layout)
@@ -50,7 +48,7 @@ public class SplashScreenFragment extends Fragment implements SplashScreenView {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_splash_screen, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_splashscreen, container, false);
         ButterKnife.bind(this, rootView);
         mSplashScreenPresenter = new SplashScreenPresenter((DashboardApplication) getActivity().getApplication());
         mSplashScreenPresenter.attachView(this);
@@ -63,10 +61,10 @@ public class SplashScreenFragment extends Fragment implements SplashScreenView {
     @Override
     public void showWaitingAnimation(boolean show) {
         if (show) {
-            mProgressAnimators[0] = AnimatorFactory.createSquarePointAnimatorSet(mProgressPointViews[0], mProgressViewLayout.getLayoutParams().width, 300, 0.07f, AnimatorFactory.Position.TOP_LEFT);
-            mProgressAnimators[1] = AnimatorFactory.createSquarePointAnimatorSet(mProgressPointViews[3], mProgressViewLayout.getLayoutParams().width, 300, 0.07f, AnimatorFactory.Position.BOTTOM_LEFT);
-            mProgressAnimators[2] = AnimatorFactory.createSquarePointAnimatorSet(mProgressPointViews[2], mProgressViewLayout.getLayoutParams().width, 300, 0.07f, AnimatorFactory.Position.BOTTOM_RIGHT);
-            mProgressAnimators[3] = AnimatorFactory.createSquarePointAnimatorSet(mProgressPointViews[1], mProgressViewLayout.getLayoutParams().width, 300, 0.07f, AnimatorFactory.Position.TOP_RIGHT);
+            mProgressAnimators[0] = AnimatorFactory.createDiamondPointAnimatorSet(mProgressPointViews[0], mProgressViewLayout.getLayoutParams().width, 300, 0.03f, AnimatorFactory.Position.TOP);
+            mProgressAnimators[1] = AnimatorFactory.createDiamondPointAnimatorSet(mProgressPointViews[1], mProgressViewLayout.getLayoutParams().width, 300, 0.03f, AnimatorFactory.Position.LEFT);
+            mProgressAnimators[2] = AnimatorFactory.createDiamondPointAnimatorSet(mProgressPointViews[2], mProgressViewLayout.getLayoutParams().width, 300, 0.03f, AnimatorFactory.Position.BOTTOM);
+            mProgressAnimators[3] = AnimatorFactory.createDiamondPointAnimatorSet(mProgressPointViews[3], mProgressViewLayout.getLayoutParams().width, 300, 0.03f, AnimatorFactory.Position.RIGHT);
 
             AndroidUtils.setVisibility(View.VISIBLE, mProgressPointViews);
             AndroidUtils.startAnimators(mProgressAnimators);

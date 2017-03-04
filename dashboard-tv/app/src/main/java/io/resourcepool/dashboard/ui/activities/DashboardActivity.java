@@ -11,13 +11,13 @@ import io.resourcepool.dashboard.ui.displayables.AbstractDisplayable;
 import io.resourcepool.dashboard.ui.displayables.Displayable;
 import io.resourcepool.dashboard.ui.displayables.DisplayableFactory;
 import io.resourcepool.dashboard.ui.fragments.NewsFragment;
-import io.resourcepool.dashboard.ui.fragments.SplashScreenFragment;
+import io.resourcepool.dashboard.ui.splashscreen.SplashScreenFragment;
 import io.resourcepool.dashboard.ui.presenters.DashboardPresenter;
 import io.resourcepool.dashboard.ui.utils.AndroidUtils;
 import io.resourcepool.dashboard.ui.utils.ViewPagerCustomDuration;
 import io.resourcepool.dashboard.ui.utils.ZoomOutPageTransformer;
 import io.resourcepool.dashboard.ui.views.DashboardView;
-import io.resourcepool.dashboard.ui.views.SplashScreenView;
+import io.resourcepool.dashboard.ui.splashscreen.SplashScreenView;
 
 import java.util.ArrayList;
 import java.util.List;
