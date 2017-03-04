@@ -69,7 +69,7 @@ public class BundleControllerFindTest extends AbstractBundleControllerTest {
 
         BundleMetadataDto bundleMetadataDto = bundleDtoMapper.toDto(bundleMetadata);
 
-        MvcResult result = mockMvc.perform(getAuthenticated(("/bundle/" + bundleMetadataDto.getTag())))
+        MvcResult result = mockMvc.perform(getAuthenticated(("/bundle/tag/" + bundleMetadataDto.getTag())))
                 .andExpect(status().isOk())
                 .andReturn();
 

@@ -39,7 +39,7 @@ public class BundleControllerDeleteTest extends AbstractBundleControllerTest {
         final long previousRevision = revisionService.getLatest();
 
 
-        mockMvc.perform(deleteAuthenticated("/bundle/wrongtag"))
+        mockMvc.perform(deleteAuthenticated("/bundle/tag/wrongtag"))
                 .andExpect(status().isNotFound());
         assertEquals(previousSize, bundleService.getAll().size());
         assertEquals(previousRevision, revisionService.getLatest());
@@ -61,10 +61,10 @@ public class BundleControllerDeleteTest extends AbstractBundleControllerTest {
 
         assertNotNull(bundleService.getByTag(bundleMetadata.getTag()));
 
-        mockMvc.perform(deleteAuthenticated("/bundle/" + bundleMetadata.getTag()))
+        mockMvc.perform(deleteAuthenticated("/bundle/tag/" + bundleMetadata.getTag()))
                 .andExpect(status().isOk());
 
-        mockMvc.perform(deleteAuthenticated("/bundle/" + bundleMetadata.getTag()))
+        mockMvc.perform(deleteAuthenticated("/bundle/tag/" + bundleMetadata.getTag()))
                 .andExpect(status().isNotFound());
 
         assertFalse(Files.exists(fileSystem.getPath(props.getBasePath(), BundleDaoImpl.ENTITY_NAME, bundleMetadata.getUuid() + ".yaml")));
@@ -136,7 +136,7 @@ public class BundleControllerDeleteTest extends AbstractBundleControllerTest {
         assertNotNull(mediaService.get(mediaMetadataDto.getUuid()));
 
         // Action
-        mockMvc.perform(deleteAuthenticated("/bundle/" + bundleMetaDataDto.getTag()))
+        mockMvc.perform(deleteAuthenticated("/bundle/tag/" + bundleMetaDataDto.getTag()))
                 .andExpect(status().isOk());
 
         assertNull(bundleService.getByTag(bundleMetaDataDto.getTag()));
@@ -147,7 +147,7 @@ public class BundleControllerDeleteTest extends AbstractBundleControllerTest {
         assertEquals(previousMediaSize - 2, mediaService.getAll().size());
         assertEquals(previousRevision + 3, revisionService.getLatest());
 
-        mockMvc.perform(deleteAuthenticated("/bundle/" + bundleMetaDataDto.getUuid()))
+        mockMvc.perform(deleteAuthenticated("/bundle/tag/" + bundleMetaDataDto.getUuid()))
                 .andExpect(status().isNotFound());
     }
 }
