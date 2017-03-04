@@ -40,6 +40,11 @@ public class BundleServiceImpl implements BundleService {
   }
 
   @Override
+  public BundleMetadata get(String uuid) {
+    return bundleDao.get(uuid);
+  }
+
+  @Override
   public List<BundleMetadata> getAll() {
     return bundleDao.getAll();
   }

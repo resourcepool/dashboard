@@ -1,4 +1,4 @@
-package io.resourcepool.dashboard.ui.splashscreen;
+package io.resourcepool.dashboard.domain.splashscreen;
 
 import android.content.DialogInterface;
 
@@ -15,10 +15,14 @@ public interface SplashScreenView extends View {
     void showWaitingAnimation(boolean show);
 
     /**
-     * Show the background
-     * @param show
+     * Launch update activity
      */
-    void showBackground(boolean show);
+    void launchUpdateActivity();
+
+    /**
+     * Launch dashboard activity
+     */
+    void launchDashboardActivity();
 
     /**
      * Display the debug message in center of the background view

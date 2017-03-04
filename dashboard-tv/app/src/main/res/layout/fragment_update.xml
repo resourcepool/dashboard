@@ -81,16 +81,30 @@
                 android:background="@drawable/progress_view_point" />
         </RelativeLayout>
 
+        <ProgressBar
+            style="@android:style/Widget.ProgressBar.Horizontal"
+            android:id="@+id/progress_bar"
+            android:layout_width="match_parent"
+            android:layout_height="10dp"
+            android:layout_marginLeft="40dp"
+            android:layout_marginRight="40dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:layout_below="@id/progress_view_layout"
+            />
+
         <io.resourcepool.dashboard.ui.utils.TypeFaceTextView
-            android:id="@+id/debug_message"
+            android:id="@+id/progress_message"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/progress_view_layout"
+            android:layout_below="@id/progress_bar"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="25dp"
-            android:text="@string/progress_check_updates"
+            android:text="@string/progress_updating"
             android:textColor="@android:color/white"
             android:textSize="14sp"
             text:typeface="Roboto-Light.ttf" />
+
+
     </RelativeLayout>
 </RelativeLayout>

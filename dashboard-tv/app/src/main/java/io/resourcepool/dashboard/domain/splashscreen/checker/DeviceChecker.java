@@ -1,4 +1,4 @@
-package io.resourcepool.dashboard.ui.splashscreen.checker;
+package io.resourcepool.dashboard.domain.splashscreen.checker;
 
 import android.os.Handler;
 
@@ -73,6 +73,9 @@ public class DeviceChecker extends Checker {
         if (device.getFeedId() == null) {
             setFailed(ERROR_NOT_CONFIGURED);
             return;
+        }
+        if (!device.getFeedId().equals(DashboardPrefs.getFeed(ctx))) {
+            // Feed Ids have changed... Should we purge?
         }
         DashboardPrefs.saveFeed(ctx, device.getFeedId());
         setReady(true);

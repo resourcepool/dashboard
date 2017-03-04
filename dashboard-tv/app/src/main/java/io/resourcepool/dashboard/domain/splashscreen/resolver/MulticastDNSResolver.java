@@ -1,4 +1,4 @@
-package io.resourcepool.dashboard.ui.splashscreen.resolver;
+package io.resourcepool.dashboard.domain.splashscreen.resolver;
 
 /**
  * Created by loicortola on 04/03/2017.

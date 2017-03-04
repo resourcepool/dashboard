@@ -2,17 +2,15 @@ package io.resourcepool.dashboard.rest.events;
 
 import io.resourcepool.dashboard.model.entities.Media;
 
-import java.util.List;
-
 
 public class GetMediaResponseEvent {
-    private List<Media> mMedias;
+    private Media mMedia;
 
-    public GetMediaResponseEvent(List<Media> medias) {
-        mMedias = medias;
+    public GetMediaResponseEvent(Media media) {
+        mMedia = media;
     }
 
-    public List<Media> getMedias() {
-        return mMedias;
+    public Media getMedia() {
+        return mMedia;
     }
 }

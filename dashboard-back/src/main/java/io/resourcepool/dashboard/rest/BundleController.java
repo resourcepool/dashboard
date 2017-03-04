@@ -65,10 +65,27 @@ public class BundleController {
      * @param tag tag to find
      * @return Bundle found if bundle exists
      */
-    @RequestMapping(value = "{tag}", method = RequestMethod.GET)
+    @RequestMapping(value = "/tag/{tag}", method = RequestMethod.GET)
     @RequireValidApiKey
     public BundleMetadataDto get(@PathVariable("tag") String tag) {
         BundleMetadata result = bundleService.getByTag(tag);
+        if (result == null) {
+            throw new ResourceNotFoundException("Bound not found");
+        } else {
+            return mapper.toDto(result);
+        }
+    }
+
+    /**
+     * Get a particular Bundle by its id.
+     *
+     * @param uuid uuid to find
+     * @return Bundle found if bundle exists
+     */
+    @RequestMapping(value = "/{uuid}", method = RequestMethod.GET)
+    @RequireValidApiKey
+    public BundleMetadataDto getById(@PathVariable("uuid") String uuid) {
+        BundleMetadata result = bundleService.get(uuid);
         if (result == null) {
             throw new ResourceNotFoundException("Bound not found");
         } else {
@@ -101,7 +118,7 @@ public class BundleController {
      *
      * @param tag tag to delete
      */
-    @RequestMapping(value = "{tag}", method = RequestMethod.DELETE)
+    @RequestMapping(value = "/tag/{tag}", method = RequestMethod.DELETE)
     public void delete(@PathVariable("tag") String tag) {
         BundleMetadata result = bundleService.getByTag(tag);
         if (result == null) {

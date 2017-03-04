@@ -1,4 +1,4 @@
-package io.resourcepool.dashboard.ui.splashscreen.checker;
+package io.resourcepool.dashboard.domain.splashscreen.checker;
 
 import android.content.Context;
 import android.net.nsd.NsdServiceInfo;
@@ -7,7 +7,7 @@ import android.util.Log;
 
 import io.resourcepool.dashboard.R;
 import io.resourcepool.dashboard.database.DashboardPrefs;
-import io.resourcepool.dashboard.ui.splashscreen.resolver.MulticastDNSResolver;
+import io.resourcepool.dashboard.domain.splashscreen.resolver.MulticastDNSResolver;
 
 /**
  * Created by loicortola on 04/03/2017.

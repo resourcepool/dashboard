@@ -1,4 +1,4 @@
-package io.resourcepool.dashboard.ui.splashscreen.checker;
+package io.resourcepool.dashboard.domain.splashscreen.checker;
 
 /**
  * Created by loicortola on 04/03/2017.
@@ -40,7 +40,12 @@ public abstract class Checker {
 
     protected final void setReady(boolean ready) {
         this.ready = ready;
-        listener.onCheckerStatusChanged(checkerId, ready);
+        listener.onCheckerStatusChanged(checkerId, ready, null);
+    }
+
+    protected final void setReady(boolean ready, Object result) {
+        this.ready = ready;
+        listener.onCheckerStatusChanged(checkerId, ready, result);
     }
 
     protected final void setFailed() {
@@ -54,7 +59,7 @@ public abstract class Checker {
     }
 
     public interface CheckerStatusListener {
-        void onCheckerStatusChanged(int checkerId, boolean ready);
+        void onCheckerStatusChanged(int checkerId, boolean ready, Object result);
 
         void onCheckerStatusFailed(int checkerId, int code);
     }

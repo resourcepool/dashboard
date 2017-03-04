@@ -83,13 +83,9 @@ public class DashboardPresenter extends AbstractPresenter<DashboardView> {
 
     @Override
     public void onPause() {
-//        mEventBus.unregister(this);
     }
 
     @Override
     public void onResume() {
-//        if (!mEventBus.isRegistered(this)) {
-//            mEventBus.register(this);
-//        }
     }
 }

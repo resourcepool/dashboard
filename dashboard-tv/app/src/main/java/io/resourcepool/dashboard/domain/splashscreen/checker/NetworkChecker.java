@@ -1,4 +1,4 @@
-package io.resourcepool.dashboard.ui.splashscreen.checker;
+package io.resourcepool.dashboard.domain.splashscreen.checker;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;

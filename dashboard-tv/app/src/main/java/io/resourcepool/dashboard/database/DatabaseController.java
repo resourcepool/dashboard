@@ -34,4 +34,12 @@ public class DatabaseController {
         mBundleDao = new BundleDaoImpl();
         mMediaDao = new MediaDaoImpl();
     }
+
+    public BundleDao getBundleDao() {
+        return mBundleDao;
+    }
+
+    public MediaDao getMediaDao() {
+        return mMediaDao;
+    }
 }

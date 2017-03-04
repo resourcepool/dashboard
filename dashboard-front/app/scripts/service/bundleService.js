@@ -10,7 +10,7 @@ angular
     this.getAll = getAll;
 
     function getByTag(tag) {
-      return $http.get(API.BASE_URL + "/bundle/" + tag).then(function(response) {
+      return $http.get(API.BASE_URL + "/bundle/tag/" + tag).then(function(response) {
         return response;
       }, function(error) {
         return error;
@@ -34,7 +34,7 @@ angular
     }
 
     function removeByTag(tag) {
-      return $http.delete(API.BASE_URL + "/bundle/" + tag)
+      return $http.delete(API.BASE_URL + "/bundle/tag/" + tag)
         .then(function(response) {
           return response;
         }, function (error){

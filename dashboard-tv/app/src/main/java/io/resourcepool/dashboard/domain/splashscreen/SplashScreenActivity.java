@@ -1,4 +1,4 @@
-package io.resourcepool.dashboard.ui.splashscreen;
+package io.resourcepool.dashboard.domain.splashscreen;
 
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;

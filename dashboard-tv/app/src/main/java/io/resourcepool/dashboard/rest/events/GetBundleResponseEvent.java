@@ -2,17 +2,15 @@ package io.resourcepool.dashboard.rest.events;
 
 import io.resourcepool.dashboard.model.entities.Bundle;
 
-import java.util.List;
-
 
 public class GetBundleResponseEvent {
-    private List<Bundle> mBundles;
+    private Bundle mBundle;
 
-    public GetBundleResponseEvent(List<Bundle> bundles) {
-        mBundles = bundles;
+    public GetBundleResponseEvent(Bundle bundle) {
+        mBundle = bundle;
     }
 
-    public List<Bundle> getBundles() {
-        return mBundles;
+    public Bundle getBundle() {
+        return mBundle;
     }
 }

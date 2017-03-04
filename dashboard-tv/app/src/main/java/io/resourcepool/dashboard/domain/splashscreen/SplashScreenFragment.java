@@ -1,8 +1,9 @@
-package io.resourcepool.dashboard.ui.splashscreen;
+package io.resourcepool.dashboard.domain.splashscreen;
 
 import android.animation.AnimatorSet;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -19,6 +20,7 @@ import io.resourcepool.dashboard.R;
 import io.resourcepool.dashboard.database.DashboardPrefs;
 import io.resourcepool.dashboard.ui.DashboardApplication;
 import io.resourcepool.dashboard.ui.factories.AnimatorFactory;
+import io.resourcepool.dashboard.domain.update.UpdateActivity;
 import io.resourcepool.dashboard.ui.utils.AndroidUtils;
 
 import butterknife.BindView;
@@ -92,8 +94,14 @@ public class SplashScreenFragment extends Fragment implements SplashScreenView {
     }
 
     @Override
-    public void showBackground(boolean show) {
-        mBackgroundLayout.setVisibility(show ? View.VISIBLE : View.INVISIBLE);
+    public void launchUpdateActivity() {
+        Intent intent = new Intent(getActivity(), UpdateActivity.class);
+        startActivity(intent);
+    }
+
+    @Override
+    public void launchDashboardActivity() {
+
     }
 
     @Override
@@ -143,7 +151,7 @@ public class SplashScreenFragment extends Fragment implements SplashScreenView {
         if (context instanceof OnSplashScreenFragmentInteraction) {
             mListener = (OnSplashScreenFragmentInteraction) context;
         } else {
-            throw new RuntimeException("The activity " + context.toString() + "must implements OnSplashScreenActivityFragment");
+            throw new RuntimeException("The activity " + context.toString() + "must implements OnSplashScreenFragmentInteraction");
         }
     }
 

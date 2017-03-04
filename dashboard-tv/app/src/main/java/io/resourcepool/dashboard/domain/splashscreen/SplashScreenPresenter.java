@@ -1,29 +1,24 @@
-package io.resourcepool.dashboard.ui.splashscreen;
+package io.resourcepool.dashboard.domain.splashscreen;
 
 import android.content.DialogInterface;
 import android.support.v7.app.AlertDialog;
-import android.util.Log;
 import android.widget.EditText;
 
 import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import io.resourcepool.dashboard.R;
 import io.resourcepool.dashboard.database.DashboardPrefs;
-import io.resourcepool.dashboard.database.dao.impl.BundleDaoImpl;
-import io.resourcepool.dashboard.model.entities.Media;
-import io.resourcepool.dashboard.rest.events.GetBundleResponseEvent;
-import io.resourcepool.dashboard.rest.events.GetMediaResponseEvent;
+import io.resourcepool.dashboard.domain.splashscreen.checker.Checker;
+import io.resourcepool.dashboard.domain.splashscreen.checker.DashboardServerChecker;
+import io.resourcepool.dashboard.domain.splashscreen.checker.DeviceChecker;
+import io.resourcepool.dashboard.domain.splashscreen.checker.NetworkChecker;
+import io.resourcepool.dashboard.domain.splashscreen.checker.UpdateChecker;
 import io.resourcepool.dashboard.rest.service.BundleService;
 import io.resourcepool.dashboard.ui.DashboardApplication;
 import io.resourcepool.dashboard.ui.presenters.AbstractPresenter;
-import io.resourcepool.dashboard.ui.splashscreen.checker.Checker;
-import io.resourcepool.dashboard.ui.splashscreen.checker.DashboardServerChecker;
-import io.resourcepool.dashboard.ui.splashscreen.checker.DeviceChecker;
-import io.resourcepool.dashboard.ui.splashscreen.checker.NetworkChecker;
 
 /**
  * @author Tommy Buonomo on 10/06/16.
@@ -34,6 +29,7 @@ public class SplashScreenPresenter extends AbstractPresenter<SplashScreenView> i
     private static final int CHECKER_NETWORK = 1;
     private static final int CHECKER_DASHBOARD_SERVER = 2;
     private static final int CHECKER_DEVICE = 3;
+    private static final int CHECKER_UPDATE = 4;
 
     private final EventBus mEventBus;
     private final BundleService mBundleService;
@@ -42,6 +38,7 @@ public class SplashScreenPresenter extends AbstractPresenter<SplashScreenView> i
     private Checker networkChecker;
     private Checker dashboardServerChecker;
     private Checker deviceChecker;
+    private Checker updateChecker;
 
     public SplashScreenPresenter(DashboardApplication dashboardApplication) {
         super(dashboardApplication);
@@ -60,7 +57,7 @@ public class SplashScreenPresenter extends AbstractPresenter<SplashScreenView> i
             }
         }
         // All checkers are ok
-        mSplashScreenView.displayProgressMessage(R.string.debug_check_updates);
+        mSplashScreenView.displayProgressMessage(R.string.progress_check_updates);
     }
 
     private void initCheckers() {
@@ -68,9 +65,11 @@ public class SplashScreenPresenter extends AbstractPresenter<SplashScreenView> i
         networkChecker = NetworkChecker.create(CHECKER_NETWORK, this, getApplicationContext());
         dashboardServerChecker = DashboardServerChecker.create(CHECKER_DASHBOARD_SERVER, this, getApplicationContext());
         deviceChecker = DeviceChecker.create(CHECKER_DEVICE, this, getApplicationContext());
+        updateChecker = UpdateChecker.create(CHECKER_UPDATE, this, getApplicationContext());
         checkers.add(networkChecker);
         checkers.add(dashboardServerChecker);
         checkers.add(deviceChecker);
+        checkers.add(updateChecker);
     }
 
     @Override
@@ -82,7 +81,7 @@ public class SplashScreenPresenter extends AbstractPresenter<SplashScreenView> i
 
     @Override
     public void onPause() {
-        mEventBus.unregister(this);
+        //mEventBus.unregister(this);
         stopCheckers();
     }
 
@@ -98,44 +97,28 @@ public class SplashScreenPresenter extends AbstractPresenter<SplashScreenView> i
     @Override
     public void onResume() {
         if (!mEventBus.isRegistered(this)) {
-            mEventBus.register(this);
+            //mEventBus.register(this);
         }
         checkProgress();
     }
 
-    /****************************************************
-     * EVENTS
-     ****************************************************/
-    @Subscribe
-    @SuppressWarnings("unused")
-    public void onGetBundleResponseEvent(GetBundleResponseEvent getBundleResponseEvent) {
-//        addBundles(getBundleResponseEvent.getBundles());
-        new BundleDaoImpl().save(getBundleResponseEvent.getBundles());
-    }
-
-    @Subscribe
-    @SuppressWarnings("unused")
-    public void onGetMediasResponseEvent(GetMediaResponseEvent getMediaResponseEvent) {
-        List<Media> medias = getMediaResponseEvent.getMedias();
-        Log.i(TAG, "onGetMediasResponseEvent: " + medias);
-        mSplashScreenView.showWaitingAnimation(false);
-//        if (mCurrentBundle != null) {
-//            if (medias.size() > 0) {
-//                mDashboardView.clearMedias();
-//                mDashboardView.addMedias(medias);
-//            } else {
-//                Log.i(TAG, "onGetMediasResponseEvent: The contents are empty!!");
-//            }
-//        }
-    }
-
     @Override
-    public void onCheckerStatusChanged(int checkerId, boolean ready) {
+    public void onCheckerStatusChanged(int checkerId, boolean ready, Object result) {
         switch (checkerId) {
             case CHECKER_DASHBOARD_SERVER:
                 if (ready) {
                     // Init services when dashboard server is found
                     getApplicationContext().initServices();
+                }
+                break;
+            case CHECKER_UPDATE:
+                if (ready) {
+                    if (result != null && ((Boolean) result)) {
+                        // We have updates. Load update activity
+                        mSplashScreenView.launchUpdateActivity();
+                    }
+                } else {
+                    // No updates. Load dashboard TV
                 }
         }
         checkProgress();

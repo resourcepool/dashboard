@@ -9,10 +9,10 @@
     tools:showIn="@layout/activity_splashscreen">
 
     <fragment
-        android:id="@+id/splash_fragment"
+        android:id="@+id/update_fragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:name="io.resourcepool.dashboard.domain.splashscreen.SplashScreenFragment"
-        tools:layout="@layout/fragment_splashscreen"/>
+        android:name="io.resourcepool.dashboard.domain.update.UpdateFragment"
+        tools:layout="@layout/fragment_update"/>
 
 </RelativeLayout>
